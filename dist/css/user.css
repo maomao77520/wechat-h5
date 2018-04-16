@@ -1,0 +1,48 @@
+html {
+  background: #e7e7e7; }
+
+.normal-btn {
+  width: 90%; }
+
+.user-wrap .user-banner {
+  padding: 0.3rem 0.25rem;
+  background: lightblue; }
+  .user-wrap .user-banner .user-icon {
+    float: left;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 0.5rem;
+    border: 1px solid #eee; }
+  .user-wrap .user-banner .user-detail {
+    height: 1.5rem;
+    margin-left: 2.4rem;
+    font-size: 0.4rem;
+    color: #333; }
+  .user-wrap .user-banner .user-name, .user-wrap .user-banner .user-phone {
+    height: 0.75rem;
+    line-height: 0.75rem; }
+
+.user-list-wrap {
+  margin-top: 0; }
+
+.user-list-wrap-2 {
+  margin-top: 0.1rem; }
+
+.account-wrap .head-icon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #eee; }
+
+.setPhone-wrap {
+  margin-top: 30px;
+  text-align: center; }
+  .setPhone-wrap .top-title {
+    font-size: 0.45rem;
+    color: #333; }
+  .setPhone-wrap .top-des {
+    font-size: 0.35rem;
+    color: #aaa; }
+
+.submit-btn {
+  margin-top: 20px;
+  width: 90%; }

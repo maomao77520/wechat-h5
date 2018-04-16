@@ -60,39 +60,36 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(1);
+var css = __webpack_require__(3);
 
-$(document).on('ready', function () {
-    $('.city-select').width($('.select-text').width());
+$(document).ready(function () {
 
-    $('.city-select').on('change', function (e) {
-        var text = $(this).find('option:selected').text();
-        $('.select-text').text(text);
-    });
+    $('#J_head_icon').on('click', function () {
 
-    $('.list-item-wrap').on('click', function () {
-        window.location.href = $(this).data('link');
-    });
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            }
+        });
+    })
 
-    $('.price-btn').on('click', function (e) {
-        $('.price-btn').removeClass('active-btn');
-        $(this).addClass('active-btn');
-    });
-
+    
 });
 
-
-
-
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

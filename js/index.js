@@ -11,6 +11,12 @@ $(document).on('ready', function () {
     $('.list-item-wrap').on('click', function () {
         window.location.href = $(this).data('link');
     });
+
+    $('.price-btn').on('click', function (e) {
+        $('.price-btn').removeClass('active-btn');
+        $(this).addClass('active-btn');
+    });
+
 });
 
 

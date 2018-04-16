@@ -1,0 +1,27 @@
+$font-color: #333;
+$light-font-color: #aaa;
+$primary-color: #f00;
+$border-color: #e7e7e7;
+
+$top-bar-height: 1rem;
+
+$xl-font-size: 0.5rem;
+$lg-font-size: 0.45rem;
+$md-font-size: 0.4rem;
+$sm-font-size: 0.35rem;
+
+
+$item-icon-size: 0.45rem;
+$free-bg: #0f0;
+$busy-bg: #f00;
+$total-bg: #00f;
+
+$primary-padding-left: 0.25rem;
+$primary-padding-top: 0.3rem;
+
+html {
+    background: $border-color;
+}
+.normal-btn {
+    width: 90%;
+}

@@ -1,0 +1,54 @@
+@import "./style.scss";
+
+.user-wrap {
+    .user-banner {
+        padding: $primary-padding-top $primary-padding-left;
+        background: lightblue;
+        .user-icon {
+            float: left;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-left: 0.5rem;
+            border: 1px solid #eee;
+        }
+        .user-detail {
+            height: 1.5rem;
+            margin-left: 2.4rem;
+            font-size: $md-font-size;
+            color: $font-color;
+        }
+        .user-name, .user-phone {
+            height: 0.75rem;
+            line-height: 0.75rem;
+        }
+    }
+}
+.user-list-wrap {
+    margin-top: 0;
+}
+.user-list-wrap-2 {
+    margin-top: 0.1rem;
+}
+.account-wrap {
+    .head-icon {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #eee;
+    }
+}
+.setPhone-wrap {
+    margin-top: 30px;
+    text-align: center;
+    .top-title {
+        font-size: $lg-font-size;
+        color: $font-color;
+    }
+    .top-des {
+        font-size: $sm-font-size;
+        color: $light-font-color;
+    }
+}
+.submit-btn {
+    margin-top: 20px;
+    width: 90%;
+}
