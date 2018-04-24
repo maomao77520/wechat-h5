@@ -1,14 +1,15 @@
-$font-color: #333;
-$light-font-color: #aaa;
-$primary-color: #f00;
-$border-color: #e7e7e7;
+$font-color: #111;
+$dark-font-color: #666;
+$light-font-color: #999;
+$primary-color: #ff8500;
+$border-color: #eaeaea;
 
 $top-bar-height: 1rem;
 
 $xl-font-size: 0.5rem;
-$lg-font-size: 0.45rem;
+$lg-font-size: 0.425rem;
 $md-font-size: 0.4rem;
-$sm-font-size: 0.35rem;
+$sm-font-size: 0.32rem;
 
 
 $item-icon-size: 0.45rem;
@@ -16,11 +17,11 @@ $free-bg: #0f0;
 $busy-bg: #f00;
 $total-bg: #00f;
 
-$primary-padding-left: 0.25rem;
-$primary-padding-top: 0.3rem;
+$primary-padding-left: 0.32rem;
+$primary-padding-top: 0.32rem;
 
 html {
-    background: $border-color;
+    background: #f9f9f9;
 }
 .normal-btn {
     width: 90%;

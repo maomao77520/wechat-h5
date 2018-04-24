@@ -18,7 +18,9 @@ module.exports = {
     // 页面入口文件配置
     entry: {
         index: './js/index.js',
-        user: './js/user.js'
+        charge: './js/charge.js',
+        user: './js/user.js',
+        record: './js/record.js'
     },
     // 入口文件输出配置
     output: {
@@ -47,6 +49,9 @@ module.exports = {
                     "sass-loader"
                 ]
             })
+        }, {
+            test: /\.(png|jpg)$/,
+            use: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
         }]
     },
     resolve: {

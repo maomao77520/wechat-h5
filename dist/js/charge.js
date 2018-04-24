@@ -60,80 +60,28 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(1);
+var css = __webpack_require__(3);
 
-$(document).on('ready', function () {
-    // index.html
-    $('.city-select').width($('.select-text').width());
+$(document).ready(function () {
 
-    $('.city-select').on('change', function (e) {
-        var text = $(this).find('option:selected').text();
-        $('.select-text span').text(text);
+    $('.price-btn').on('click', function (e) {
+        $('.price-btn').removeClass('active-btn');
+        $(this).addClass('active-btn');
     });
-
-
-
-
-    
 
 });
-
-$(function(){
-    var $searchBar = $('#searchBar'),
-        $searchResult = $('#searchResult'),
-        $searchText = $('#searchText'),
-        $searchInput = $('#searchInput'),
-        $searchClear = $('#searchClear'),
-        $searchCancel = $('#searchCancel');
-
-    function hideSearchResult(){
-        $searchResult.hide();
-        $searchInput.val('');
-    }
-    function cancelSearch(){
-        hideSearchResult();
-        $searchBar.removeClass('weui-search-bar_focusing');
-        $searchText.show();
-    }
-
-    $searchText.on('click', function(){
-        $searchBar.addClass('weui-search-bar_focusing');
-        $searchInput.focus();
-    });
-    $searchInput
-        .on('blur', function () {
-            if(!this.value.length) cancelSearch();
-        })
-        .on('input', function(){
-            if(this.value.length) {
-                $searchResult.show();
-            } else {
-                $searchResult.hide();
-            }
-        })
-    ;
-    $searchClear.on('click', function(){
-        hideSearchResult();
-        $searchInput.focus();
-    });
-    $searchCancel.on('click', function(){
-        cancelSearch();
-        $searchInput.blur();
-    });
-});
-
-
-
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

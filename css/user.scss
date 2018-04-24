@@ -3,7 +3,9 @@
 .user-wrap {
     .user-banner {
         padding: $primary-padding-top $primary-padding-left;
-        background: lightblue;
+        background: $primary-color;
+        display: flex;
+        align-items: center;
         .user-icon {
             float: left;
             width: 1.5rem;
@@ -12,8 +14,9 @@
             border: 1px solid #eee;
         }
         .user-detail {
+            flex: 1;
             height: 1.5rem;
-            margin-left: 2.4rem;
+            margin-left: 0.4rem;
             font-size: $md-font-size;
             color: $font-color;
         }
@@ -21,14 +24,50 @@
             height: 0.75rem;
             line-height: 0.75rem;
         }
+        .arrow-icon {
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid #c8c8cd;
+            border-right: 2px solid #c8c8cd;
+            transform: rotate(45deg);
+            float: right;
+            margin-right: 0.1rem;
+        }
     }
 }
 .user-list-wrap {
-    margin-top: 0;
+    margin-top: 0.2rem;
+    .charging-icon {
+        width: 16px;
+        height: 16px;
+        background-image: url(./images/charging-icon.png);
+        background-size: 16px 16px; 
+        margin-right: 6px;
+    }
+    .record-icon {
+        width: 16px;
+        height: 16px;
+        background-image: url(./images/record-icon.png);
+        background-size: 16px 16px; 
+        margin-right: 6px;
+    }
+    .near-icon {
+        width: 16px;
+        height: 17px;
+        background-image: url(./images/near-icon.png);
+        background-size: 16px 17px; 
+        margin-right: 6px;
+    }
+    .star-icon {
+        width: 16px;
+        height: 17px;
+        background-image: url(./images/star.png);
+        background-repeat: no-repeat;
+        background-size: 16px 16px; 
+        margin-right: 6px;
+    }
 }
-.user-list-wrap-2 {
-    margin-top: 0.1rem;
-}
+
 .account-wrap {
     .head-icon {
         width: 30px;
