@@ -18,9 +18,14 @@ module.exports = {
     // 页面入口文件配置
     entry: {
         index: './js/index.js',
+        detail: './js/detail.js',
+        list: './js/list.js',
         charge: './js/charge.js',
         user: './js/user.js',
-        record: './js/record.js'
+        record: './js/record.js',
+        favourite: './js/favourite.js',
+        progress: './js/progress.js',
+        map: './js/map.js'
     },
     // 入口文件输出配置
     output: {

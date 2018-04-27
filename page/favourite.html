@@ -9,48 +9,37 @@
 
     <script src="../lib/flexible.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
-    <!-- <script src="../lib/weixin-1.2.0.js"></script> -->
 
 
 </head>
 <body>
     <div class="wrap">
-        <div class="list-wrap">
+        <div class="list-wrap" id="J_favourite-list">
+        </div>
+
+        <script type="text/template" id="list-template">
+            {{~ it:item:index}}
             <div class="list-item-wrap clearfix">
                 <a class="item-left J_to_list" href="./list.html">
-                    <div class="item-name">良庆区政府1号机</div>
-                    <div class="item-addr">歌海路9号</div>
+                    <div class="item-name">{{= item.location}}</div>
+                    <div class="item-addr">{{= item.locationDetail}}</div>
                     <div class="item-detail">
                         <i class="free-icon"></i>
-                        <span class="item-free">可用3个</span>
+                        <span class="item-free">可用{{= item.availableCount}}个</span>
                         <i class="busy-icon"></i>
-                        <span class="item-busy">已用3个</span>
+                        <span class="item-busy">已用{{= item.usedCount}}个</span>
                     </div>
                 </a>
                 <div class="item-right">
                     <div class="item-dis-icon"></div>
-                    <div class="item-dis">1.4km</div>
+                    <div class="item-dis">{{= item.distance}}m</div>
                 </div>
             </div>
-            <div class="list-item-wrap clearfix">
-                <div class="item-left J_to_list" data-link="./list.html">
-                    <div class="item-name">良庆区政府1号机</div>
-                    <div class="item-addr">歌海路9号</div>
-                    <div class="item-detail">
-                        <i class="free-icon"></i>
-                        <span class="item-free">可用3个</span>
-                        <i class="busy-icon"></i>
-                        <span class="item-busy">已用3个</span>
-                    </div>
-                </div>
-                <div class="item-right">
-                    <div class="item-dis-icon"></div>
-                    <div class="item-dis">1.4km</div>
-                </div>
-            </div>
+            {{~}}
+        </script>
 
-        </div>
     </div>
-    <script src="../js/index.js"></script>
+    <script src="../lib/doT.min.js"></script>
+    <script src="../js/favourite.js"></script>
 </body>
 </html>

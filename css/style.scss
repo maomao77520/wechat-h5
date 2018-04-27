@@ -20,9 +20,77 @@ $total-bg: #00f;
 $primary-padding-left: 0.32rem;
 $primary-padding-top: 0.32rem;
 
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Helvetica;
+}
 html {
     background: #f9f9f9;
 }
 .normal-btn {
     width: 90%;
+}
+
+.list-item-wrap {
+    line-height: 1;
+    padding: $primary-padding-top 0;
+    margin: 0 $primary-padding-left;
+    padding-right: 0;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    align-items: center;
+    .item-left {
+        flex: 1;
+    }
+    .item-right {
+        width: 2rem;
+        text-align: center;
+        .item-dis-icon {
+            width: 20px;
+            height: 20px;
+            background-image: url(./images/gps-icon.png);
+            background-size: 20px 20px;
+            margin: 0 auto;
+        }
+        .item-dis {
+            font-size: $md-font-size;
+            color: $dark-font-color;
+            margin-top: 10px;
+        }
+    }
+    .item-name {
+        font-size: $lg-font-size;
+        color: $font-color;
+    }
+    .item-addr {
+        font-size: $md-font-size;
+        color: $light-font-color;
+        margin: 0.21rem 0 0.3rem;
+    }
+    .item-detail {
+        font-size: $sm-font-size;
+        color: $light-font-color;
+            height: 16px;
+            line-height: 16px;
+        .item-free, .item-busy {
+            margin-right: 8px;
+            vertical-align: middle; 
+        }
+        .free-icon, .busy-icon {
+            display: inline-block;
+            content: '';
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            background-size: 16px 16px;
+        }
+        .free-icon {
+            background-image: url(./images/free-icon.png);
+        }
+        .busy-icon {
+            background-image: url(./images/used-icon.png);
+        }
+    }
+    
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>附近电站</title>
     <link rel="stylesheet" href="../lib/weui.min.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/detail.css">
 
     <script src="../lib/flexible.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
@@ -30,66 +30,9 @@
             </div>
         </div>
 
-        <div class="middle-detail-wrap">
-            <div class="detail-item-line">
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-busy">
-                        <div class="left-time-text">剩余时间</div>
-                        <div class="left-time">03:00:00</div>
-                        <div class="battery-list">
-                            <div class="item-1"></div>
-                            <div class="item-2"></div>
-                            <div class="item-3"></div>
-                            <div class="item-4"></div>
-                            <div class="item-5"></div>
-                            <div class="item-6"></div>
-                            <div class="item-7"></div>
-                            <div class="item-8"></div>
-                            <div class="item-9"></div>
-                            <div class="item-10"></div>
-                        </div>
-                    </div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-            </div>
-            <div class="detail-item-line">
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-                <div class="detail-item-wrap">
-                    <div class="detail-item detail-item-free"></div>
-                    <div class="detail-item-status">01空闲</div>
-                </div>
-            </div>
+        <div class="middle-detail-wrap" id="J_detail-list">
+            
+            
         </div>
 
         <div class="bottom-detail-wrap">
@@ -114,7 +57,44 @@
             </a>
         </div>
         
+
+        <script type="text/template" id="detail-list-template">
+            <div class="detail-item-line">
+                {{~ it.slot:item:index}}
+                    {{? item.slotStatus == 0}}
+                        <a class="detail-item-wrap" href="./charge.html">
+                            <div class="detail-item detail-item-free"></div>
+                            <div class="detail-item-status">{{= item.slotId}}空闲</div>
+                        </a>
+                    {{??}}
+                        <a class="detail-item-wrap" href="./progress.html">
+                            <div class="detail-item detail-item-busy">
+                                <div class="left-time-text">剩余时间</div>
+                                <div class="left-time">{{= item.leftTime}}</div>
+                                <div class="battery-list">
+                                    <div class="item-1"></div>
+                                    <div class="item-2"></div>
+                                    <div class="item-3"></div>
+                                    <div class="item-4"></div>
+                                    <div class="item-5"></div>
+                                    <div class="item-6"></div>
+                                    <div class="item-7"></div>
+                                    <div class="item-8"></div>
+                                    <div class="item-9"></div>
+                                    <div class="item-10"></div>
+                                </div>
+                            </div>
+                            <div class="detail-item-status busy-text">{{= item.slotId}}充电中</div>
+                        </a>
+                    {{?}}
+                    
+                {{~}}
+            </div>
+        </script>
+
+
     </div>
-    <script src="../js/index.js"></script>
+    <script src="../lib/doT.min.js"></script>
+    <script src="../js/detail.js"></script>
 </body>
 </html>

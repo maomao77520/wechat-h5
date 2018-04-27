@@ -11,14 +11,19 @@
             width: 1.5rem;
             height: 1.5rem;
             margin-left: 0.5rem;
-            border: 1px solid #eee;
+            background-color: #f7f7f7;
+            border-radius: 1rem;
+            background-image: url(./images/default-head.png);
+            background-size: 1rem 1.2rem;
+            background-repeat: no-repeat;
+            background-position: center center;
         }
         .user-detail {
             flex: 1;
             height: 1.5rem;
             margin-left: 0.4rem;
             font-size: $md-font-size;
-            color: $font-color;
+            color: #fff;
         }
         .user-name, .user-phone {
             height: 0.75rem;
