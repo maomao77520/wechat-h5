@@ -60,25 +60,37 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 11:
+/***/ 12:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(12);
+var css = __webpack_require__(13);
 
 $(document).ready(function () {
-    var res = {
-        
-    }
+    $.ajax({
+        url: '/charger/getrecordcharging',
+        type: 'post',
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665',
+            userId: '565656'
+        }),
+        contentType: 'application/json',
+        success: function (res) {
+            if (res.status == 0) {
+                var tpl = doT.template($('#J_record_template').html())(res);
+                $('#J_record_wrap').html(tpl);
+            }
+        }
+    });
 });
 
 /***/ }),
 
-/***/ 12:
+/***/ 13:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

@@ -1,63 +1,46 @@
 var css = require('../css/index.scss');
 var com = require('./common.js');
+var scroll = require('./myScroll.js');
 
 $(document).on('ready', function () {
+    var currentLat;
+    var currentLng;
+    getList(1);
+    initSearch();
+
+    
     // 地点下拉框
-    $('.city-select').width($('.select-text').width());
-    $('.city-select').on('change', function (e) {
-        var text = $(this).find('option:selected').text();
-        $('.select-text span').text(text);
+    $('#J_city_picker').on('click', function () {
+        $this = $(this);
+        weui.picker([{
+            label: '南宁',
+            value: 1
+        }, {
+            label: '柳州',
+            value: 2
+        }, {
+            label: '防城港',
+            value: 3
+        },{
+            label: '北海',
+            value: 4
+        }, {
+            label: '桂林',
+            value: 5
+        }], {
+            onChange: function (result) {
+            },
+            onConfirm: function (result) {
+                $this.find('span').text(result[0].label);
+                $this.css({
+                    width:  (result[0].label.length + 2) + 'em'
+                });
+            }
+        });
     });
 
-    // $.ajax({
-    //     url: '',
-    //     type: 'get',
-    //     success: function (res) {
-            res = {
-                status: 0,
-                content: [{
-                    deviceId: 1,
-                    location: '南宁市厢竹海鲜市场',
-                    locationDetail: '南宁市厢竹大道14号',
-                    lat: '22.819330',
-                    lng: '108.380310',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 435
-                }, {
-                    deviceId: 2,
-                    location: '秀竹苑小区',
-                    locationDetail: '南宁市新竹街道办',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 2897
-                }, {
-                    deviceId: 3,
-                    location: '厢竹海鲜市场',
-                    locationDetail: '南宁市厢竹大道14号',
-                    usedCount: 23,
-                    availableCount: 15,
-                    distance: 435
-                }, {
-                    deviceId: 4,
-                    location: '秀竹苑小区',
-                    locationDetail: '南宁市新竹街道办',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 2897
-                }]
-            }
-            var tpl = doT.template($('#list-template').html())(res.content);
-            $('#J_list-wrap').html(tpl);
-
-    //     }
-    // });
-    
-    
-    
-
-
-    $('.J_Navigation').on('click', function () {
+    // 打开导航
+    $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
         var location = $(this).data('location');
         var addr = $(this).data('addr');
         var lat = $(this).data('lat');
@@ -67,54 +50,122 @@ $(document).on('ready', function () {
         });
     });
 
+    function getList(pageindex) {
+        com.getWxConfig();
+
+        wx.ready(function () {
+            wx.getLocation({
+                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                success: function (res) {
+                    currentLat = res.latitude;
+                    currentLng = res.longitude;
+                    $.ajax({
+                        url: '/charger/getnearcharging',
+                        type: 'post',
+                        async: false,
+                        data: JSON.stringify({
+                            lat: res.latitude,
+                            lng: res.longitude,
+                            accesstoken: 'asdasdwedf565665',
+                            pagesize: 20,
+                            pageindex: pageindex
+                        }),
+                        contentType: 'application/json',
+                        success: function (res) {    
+                            if (res.status == 0) {
+                                var tpl = doT.template($('#list-template').html())(res.data.content);
+                                $('#J_list-wrap').html(tpl);
+                            }
+
+                            scroll.init(function () {
+                                alert('pull up')
+                            }, function () {
+                                alert('pull down')
+                            });
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+                }
+            });
+        });
+        
+    }
+
+    function searchList() {
+        var word = $('#searchInput').val();
+        $.ajax({
+            url: '/charger/getsearchWordcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                search: word,
+                lat: currentLat,
+                lng: currentLng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                if (res.status == 0) {
+                    var tpl = doT.template($('#list-template').html())(res.content);
+                    $('#J_list-wrap').html(tpl);
+                }
+            },
+            error: function (err) {}
+
+        });
+    }
+
+
+    var deboun = com.debounce(function () {
+        searchList();
+    }, 1000, this);
+    function initSearch() {
+        var $searchBar = $('#searchBar'),
+            $searchResult = $('#searchResult'),
+            $searchText = $('#searchText'),
+            $searchInput = $('#searchInput'),
+            $searchClear = $('#searchClear'),
+            $searchCancel = $('#searchCancel');
+
+        function hideSearchResult(){
+            $searchResult.hide();
+            $searchInput.val('');
+        }
+        function cancelSearch(){
+            hideSearchResult();
+            $searchBar.removeClass('weui-search-bar_focusing');
+            $searchText.show();
+        }
+
+        $searchText.on('click', function(){
+            $searchBar.addClass('weui-search-bar_focusing');
+            $searchInput.focus();
+        });
+        $searchInput
+            .on('blur', function () {
+                if(!this.value.length) cancelSearch();
+            })
+            .on('input', function(){
+                deboun();
+            });
+        ;
+        $searchClear.on('click', function(){
+            hideSearchResult();
+            $searchInput.focus();
+        });
+        $searchCancel.on('click', function(){
+            cancelSearch();
+            $searchInput.blur();
+        });
+    }
+
 });
 
 
-$(function(){
-    var $searchBar = $('#searchBar'),
-        $searchResult = $('#searchResult'),
-        $searchText = $('#searchText'),
-        $searchInput = $('#searchInput'),
-        $searchClear = $('#searchClear'),
-        $searchCancel = $('#searchCancel');
 
-    function hideSearchResult(){
-        $searchResult.hide();
-        $searchInput.val('');
-    }
-    function cancelSearch(){
-        hideSearchResult();
-        $searchBar.removeClass('weui-search-bar_focusing');
-        $searchText.show();
-    }
 
-    $searchText.on('click', function(){
-        $searchBar.addClass('weui-search-bar_focusing');
-        $searchInput.focus();
-    });
-    $searchInput
-        .on('blur', function () {
-            if(!this.value.length) cancelSearch();
-        })
-        .on('input', function(){
-            if(this.value.length) {
-                $searchResult.show();
-            } else {
-                $searchResult.hide();
-            }
-        })
-    ;
-    $searchClear.on('click', function(){
-        hideSearchResult();
-        $searchInput.focus();
-    });
-    $searchCancel.on('click', function(){
-        cancelSearch();
-        $searchInput.blur();
-    });
-});
 
-// signature: "db0b8fe6d009bf3a49aabca683b6f7505572914c",
-// appId: "wxdbf5c24cf1e06f3e",
-// nonceStr: "febf9335-06ac-4307-9656-43b8a9b270e6",
-// timestamp: "1524563311"
+
+
+

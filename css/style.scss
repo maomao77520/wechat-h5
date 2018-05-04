@@ -8,7 +8,7 @@ $top-bar-height: 1rem;
 
 $xl-font-size: 0.5rem;
 $lg-font-size: 0.425rem;
-$md-font-size: 0.4rem;
+$md-font-size: 0.373rem;
 $sm-font-size: 0.32rem;
 
 
@@ -23,7 +23,8 @@ $primary-padding-top: 0.32rem;
 body {
     padding: 0;
     margin: 0;
-    font-family: Helvetica;
+    font-family: -apple-system-font, "Helvetica Neue", Helvetica, sans-serif;
+    // font-family: Helvetica;
 }
 html {
     background: #f9f9f9;
@@ -71,11 +72,13 @@ html {
     .item-detail {
         font-size: $sm-font-size;
         color: $light-font-color;
-            height: 16px;
-            line-height: 16px;
+        height: 16px;
+        line-height: 16px;
         .item-free, .item-busy {
             margin-right: 8px;
-            vertical-align: middle; 
+            vertical-align: middle;
+            width: 5em;
+            display: inline-block;
         }
         .free-icon, .busy-icon {
             display: inline-block;
@@ -93,4 +96,17 @@ html {
         }
     }
     
+}
+.pullUpLabel, .pullDownLabel {
+    display: none;
+    font-size: $sm-font-size;
+    color: $light-font-color;
+    text-align: center;
+}
+.list-empty {
+    font-size: $md-font-size;
+    color: $light-font-color;
+    text-align: center;
+    margin-top: 1rem;
+    background: #f9f9f9;
 }

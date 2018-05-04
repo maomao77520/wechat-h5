@@ -25,7 +25,8 @@ module.exports = {
         record: './js/record.js',
         favourite: './js/favourite.js',
         progress: './js/progress.js',
-        map: './js/map.js'
+        map: './js/map.js',
+        qrcode: './js/qrcode.js'
     },
     // 入口文件输出配置
     output: {
@@ -55,7 +56,7 @@ module.exports = {
                 ]
             })
         }, {
-            test: /\.(png|jpg)$/,
+            test: /\.(png|jpg|jpeg)$/,
             use: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
         }]
     },

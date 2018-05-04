@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>附近电站</title>
+    <title>充电站</title>
     <link rel="stylesheet" href="../lib/weui.min.css">
     <link rel="stylesheet" href="../css/detail.css">
 
@@ -14,26 +14,9 @@
 </head>
 <body>
     <div class="wrap">
-        <div class="top-detail-wrap">
-            <div class="list-item-wrap clearfix" data-link="./list.html">
-                <div class="item-left">
-                    <div class="item-name">良庆区政府1号机</div>
-                    <div class="item-addr">歌海路9号</div>
-                    <div class="detail-line">
-                        <span>编号：123456789-12345</span>
-                    </div>
-                </div>
-                <div class="item-right">
-                    <div class="item-dis-icon"></div>
-                    <div class="item-dis">1.4km</div>
-                </div>
-            </div>
-        </div>
+        <div class="top-detail-wrap" id="J_detail_info"></div>
 
-        <div class="middle-detail-wrap" id="J_detail-list">
-            
-            
-        </div>
+        <div class="middle-detail-wrap" id="J_detail_list"></div>
 
         <div class="bottom-detail-wrap">
             <div class="bottom-title">
@@ -48,7 +31,7 @@
                 <div>1元/3小时</div>
                 <div>1元/3小时</div>
             </div>
-            <p class="bottom-tips">充电过程中，充电器过载引起的以外中断，插座被人拔出等情况，充电剩余金额不予返还。</p>
+            <p class="bottom-tips">充电过程中，充电器过载引起的意外中断，插座被人拔出等情况，充电剩余金额不予返还。</p>
         </div>
         <div class="detail-btn-wrap">
             <a href="javascript:;" class="weui-btn weui-btn_primary detail-bottom-btn">
@@ -56,21 +39,43 @@
                 <span>扫码充电</span>
             </a>
         </div>
+
+        <script type="text/template" id="J_detail_top_template">
+            <div class="list-item-wrap clearfix" data-link="./list.html">
+                <div class="item-left">
+                    <div class="item-name">{{= it.location}}</div>
+                    <div class="item-addr">{{= it.locationDetail}}</div>
+                    <div class="detail-line">
+                        <span>编号：{{= it.deviceId}}</span>
+                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="item-dis-icon"></div>
+                    <div class="item-dis">{{= it.distance}}m</div>
+                </div>
+            </div>
+        </script>
         
 
-        <script type="text/template" id="detail-list-template">
+        <script type="text/template" id="J_detail_list_template">
             <div class="detail-item-line">
-                {{~ it.slot:item:index}}
+                {{~ it.content:item:index}}
                     {{? item.slotStatus == 0}}
-                        <a class="detail-item-wrap" href="./charge.html">
+                        <a class="detail-item-wrap" href="/charger/verify?deviceId={{= it.deviceId}}&slotIndex={{= item.slotIndex}}">
                             <div class="detail-item detail-item-free"></div>
-                            <div class="detail-item-status">{{= item.slotId}}空闲</div>
+                            <div class="detail-item-status">
+                                {{? item.slotIndex == 10}}
+                                    {{= item.slotIndex}}空闲
+                                {{??}}
+                                    0{{= item.slotIndex}}空闲
+                                {{?}}
+                            </div>
                         </a>
                     {{??}}
-                        <a class="detail-item-wrap" href="./progress.html">
+                        <a class="detail-item-wrap" href="./progress.html?deviceId={{= it.deviceId}}&slotIndex={{= item.slotIndex}}">
                             <div class="detail-item detail-item-busy">
                                 <div class="left-time-text">剩余时间</div>
-                                <div class="left-time">{{= item.leftTime}}</div>
+                                <div class="left-time">{{= item.time}}</div>
                                 <div class="battery-list">
                                     <div class="item-1"></div>
                                     <div class="item-2"></div>
@@ -84,7 +89,13 @@
                                     <div class="item-10"></div>
                                 </div>
                             </div>
-                            <div class="detail-item-status busy-text">{{= item.slotId}}充电中</div>
+                            <div class="detail-item-status busy-text">
+                                {{? item.slotIndex == 10}}
+                                    {{= item.slotIndex}}充电中
+                                {{??}}
+                                    0{{= item.slotIndex}}充电中
+                                {{?}}
+                            </div>
                         </a>
                     {{?}}
                     
@@ -95,6 +106,7 @@
 
     </div>
     <script src="../lib/doT.min.js"></script>
+    <script src="../lib/weixin-1.2.0.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 </html>

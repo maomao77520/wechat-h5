@@ -36,12 +36,13 @@
                 }
                 .question-icon {
                     float: right;
-                    width: 20px;
-                    height: 20px;
+                    width: 24px;
+                    height: 24px;
                     background-image: url(./images/question-icon.png);
-                    background-size: 20px 20px;
+                    background-size: 24px 24px;
                     background-repeat: no-repeat;
                     background-position: center center;
+                    margin-right: 0.18rem;
                 }
             }
             .right-detail {
@@ -94,7 +95,8 @@
             }
             .active-btn {
                 border-color: $primary-color;
-                color: $primary-color;
+                background: $primary-color;
+                color: #fff;
             }
         }
 
@@ -111,14 +113,17 @@
         background: $primary-color;
     }
     .pay-wrap {
+        display: flex;
+        align-items: center;
         i {
             width: 0.427rem;
-            height: 0.373rem;
+            height: 0.427rem;
             display: inline-block;
             margin-right: 6px;
             background-image: url(./images/pay-icon.png);
-            background-size: 0.427rem 0.373rem;
+            background-size: 0.427rem 0.427rem;
             background-position: center center;
+            background-repeat: no-repeat;
         }
         background: #fff;
         margin-top: 0.2rem;

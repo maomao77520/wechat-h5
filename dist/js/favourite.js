@@ -60,52 +60,44 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 0:
+/***/ 1:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 13:
+/***/ 14:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(0);
+var css = __webpack_require__(1);
 
 $(document).on('ready', function () {
 
-    // $.ajax({
-    //     url: '',
-    //     type: 'get',
-    //     success: function (res) {
-            res = {
-                status: 0,
-                content: [{
-                    deviceId: 1,
-                    location: '厢竹海鲜市场',
-                    locationDetail: '厢竹大道14号',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 435
-                }, {
-                    deviceId: 2,
-                    location: '厢竹海鲜市场',
-                    locationDetail: '厢竹大道14号',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 2897
-                }]
+    $.ajax({
+        url: '/charger/getcollectioncharging',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            accesstoken: 'asdasdwedf565665',
+            userId: 'asdasd',
+        }),
+        success: function (res) {
+            if (res.status == 0 && res.data && res.data.content) {
+                var tpl = doT.template($('#list-template').html())(res.data.content);
+                $('#J_favourite-list').html(tpl);
             }
-            var tpl = doT.template($('#list-template').html())(res.content);
-            $('#J_favourite-list').html(tpl);
 
-    //     }
-    // });
+        }
+    });
+            
+
+    
     
 
 });

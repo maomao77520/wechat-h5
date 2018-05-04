@@ -2,7 +2,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: Helvetica; }
+  font-family: -apple-system-font, "Helvetica Neue", Helvetica, sans-serif; }
 
 html {
   background: #f9f9f9; }
@@ -36,14 +36,14 @@ html {
       background-size: 20px 20px;
       margin: 0 auto; }
     .list-item-wrap .item-right .item-dis {
-      font-size: 0.4rem;
+      font-size: 0.373rem;
       color: #666;
       margin-top: 10px; }
   .list-item-wrap .item-name {
     font-size: 0.425rem;
     color: #111; }
   .list-item-wrap .item-addr {
-    font-size: 0.4rem;
+    font-size: 0.373rem;
     color: #999;
     margin: 0.21rem 0 0.3rem; }
   .list-item-wrap .item-detail {
@@ -53,7 +53,9 @@ html {
     line-height: 16px; }
     .list-item-wrap .item-detail .item-free, .list-item-wrap .item-detail .item-busy {
       margin-right: 8px;
-      vertical-align: middle; }
+      vertical-align: middle;
+      width: 5em;
+      display: inline-block; }
     .list-item-wrap .item-detail .free-icon, .list-item-wrap .item-detail .busy-icon {
       display: inline-block;
       content: '';
@@ -66,8 +68,22 @@ html {
     .list-item-wrap .item-detail .busy-icon {
       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkExNDJGRDFBNDZFOTExRTg5N0RGQjNCNjUwQkFCNjg4IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkExNDJGRDFCNDZFOTExRTg5N0RGQjNCNjUwQkFCNjg4Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTE0MkZEMTg0NkU5MTFFODk3REZCM0I2NTBCQUI2ODgiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTE0MkZEMTk0NkU5MTFFODk3REZCM0I2NTBCQUI2ODgiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4+s4H/AAACkElEQVR42rSXMWgUQRSG9yaxMhdBq2AhgWBzEEQQg6CYIgQtJCBCMGAbT1QQbFIJFirpFDSnpaDE4uDAShECChIEgyxcdxIL0SpNclYxxv/JP7KsOzNv1rsHX3O79/7HzD/vzVa6x44kyjgAZsAkGAejYIjPumAdpGAFtMCGJmlFUYCILYDzYI+y2G3QBHdZlDOM51kVLIFPYDZCPOG7s/zvEnNFFVADa+CyrFJSPirMscacqgImwHswlvQuxphzIlSAVPkKDCe9j2HmrrkKqNK9ZcW/gNs8Eb4iWllPZAtY/I9l/wxOglvgrWI7FvMFyFGbV4q94BHLip8GX8EcOKPIMU/NvwUsRLj9JrgAGgXiT5V5KtT804ikw31XnvNf4CzNJEn2s+NZcROxbdKsRgzbq1b8EsUldil+3CMuK3SOR7CoWc0Y9nZN3ADPCn7/AJ44xGV7XoKPjpyTxpohEG/AA8czWYkr9ESRMevgmmvODHKqheJO4LktQmIqJ/7I879RMeFuIPkPsA/sKN1tjRkSD05DG9+U4lljntKI2wK6gXeGSnTGdzlPuKJreJPxxQg4FFmA9UQz8N66Cd1YGPXIAqbBQfAz8F46yDvcXKABpRHiMV1xxXA8bge633Ol+PUIcdFsGbq26RHPdr+L4F7OEwPspq/B/Yh5IJob9lY8zgtkdpI9BFc9SysDbIt7vbeESUU4tclkjx8XvOTbVzkdh0uIJ9RK898FVd5e7a1oh1fqAV4gTNKb6ICjXL1/PkxqHJ39uJRKbIIToO1qxW2e4c0+iU9nxV2zYJVVdnoo3mHOVe0wanOfGjkzJiXc3mCuduw03GILFpMse5qVq8ks8791a7iyX8d9/Tz/LcAAw4ekvhFLzocAAAAASUVORK5CYII=); }
 
+.pullUpLabel, .pullDownLabel {
+  display: none;
+  font-size: 0.32rem;
+  color: #999;
+  text-align: center; }
+
+.list-empty {
+  font-size: 0.373rem;
+  color: #999;
+  text-align: center;
+  margin-top: 1rem;
+  background: #f9f9f9; }
+
 /* 附近电桩 */
 .wrap {
+  height: 100%;
   line-height: 1; }
   .wrap .clearfix:after {
     display: block;
@@ -76,7 +92,6 @@ html {
     clear: both;
     visibility: hidden; }
   .wrap .top-bar {
-    margin-top: 0;
     background: #efeff4;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -84,19 +99,27 @@ html {
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    border-bottom: 1px solid #eaeaea; }
+    border-bottom: 1px solid #eaeaea;
+    height: 1rem; }
+  .wrap #pull-down, .wrap #pull-up {
+    font-size: 12px;
+    color: #999;
+    text-align: center; }
   .wrap .city-select-wrap {
     display: inline-block;
-    margin-right: 0.3rem;
-    font-size: 0.4rem;
+    font-size: 0.373rem;
     padding: 0.32rem 0.32rem; }
-    .wrap .city-select-wrap .select-text {
-      vertical-align: middle; }
-      .wrap .city-select-wrap .select-text i {
+    .wrap .city-select-wrap .picker-wrap {
+      display: block;
+      vertical-align: middle;
+      color: #111;
+      width: 4em;
+      font-size: 0.373rem; }
+      .wrap .city-select-wrap .picker-wrap i {
         content: ' ';
         display: inline-block;
-        width: 7px;
-        height: 7px;
+        width: 5px;
+        height: 5px;
         vertical-align: middle;
         border-top: 1px solid #111;
         border-left: 1px solid #111;
@@ -105,12 +128,6 @@ html {
         position: relative;
         top: -1px;
         margin-left: 4px; }
-    .wrap .city-select-wrap .city-select {
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      height: 100%;
-      font-size: 0.425rem; }
   .wrap .search-bar-wrap {
     padding: 0; }
     .wrap .search-bar-wrap:before, .wrap .search-bar-wrap:after {
@@ -128,9 +145,11 @@ html {
         -ms-flex-pack: center;
             justify-content: center; }
   .wrap .history-wrap {
-    font-size: 0.4rem;
-    padding: 0.32rem 0.32rem;
-    margin-left: 0.2rem; }
+    font-size: 0.373rem;
+    padding: 0 0.32rem;
+    width: 4em;
+    height: 1rem;
+    line-height: 1rem; }
     .wrap .history-wrap a {
       color: #111;
       vertical-align: middle; }
@@ -144,6 +163,13 @@ html {
       background-size: 15px 15px;
       background-position: center center;
       background-repeat: no-repeat; }
+  .wrap #wrapper {
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    bottom: 0;
+    width: 100%;
+    z-index: 10; }
   .wrap .list-wrap {
     background: #fff;
     position: relative;
@@ -174,7 +200,7 @@ html {
       color: #ff8500;
       margin-bottom: 5px; }
     .qrcode-wrap .step-wrap .step {
-      font-size: 0.4rem;
+      font-size: 0.373rem;
       color: #111;
       line-height: 2.4; }
     .qrcode-wrap .step-wrap .step-icon {
@@ -187,14 +213,14 @@ html {
       color: #fff;
       text-align: center; }
   .qrcode-wrap .qrcode-block {
-    font-size: 0.4rem;
+    font-size: 0.373rem;
     color: #999;
     text-align: center;
     margin-top: 1.2rem; }
     .qrcode-wrap .qrcode-block .qrcode {
-      width: 160px;
-      height: 160px;
-      border: 1px solid #eee;
-      margin: 0 auto 4px; }
+      text-align: center; }
+
+.weui-picker__item {
+  font-size: 17px; }
 
 /* end */

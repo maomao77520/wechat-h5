@@ -7,7 +7,7 @@
         padding: $primary-padding-top $primary-padding-left;
         background: #fff;
         font-size: $lg-font-size;
-        color: $light-font-color;
+        color: $dark-font-color;
         .order-finish, .order-cancel {
             flex: 1;
         }
@@ -43,13 +43,17 @@
                 }
                 .right-block {
                     float: right;
-                    width: 35px;
-                    height: 35px;
-                    line-height: 35px;
-                    border-radius: 20px;
+                    width: 3em;
+                    height: 3em;
+                    line-height: 3em;
+                    border-radius: 2em;
                     background: $primary-color;
                     text-align: center;
                     color: #fff;
+                    span {
+                        font-size: $lg-font-size;
+                    }
+                    
                 }
                 .order-time-wrap {
                     margin-bottom: 0.15rem;
@@ -63,6 +67,7 @@
                     background-position: center center;
                     position: relative;
                     top: -1px;
+                    margin-right: 4px;
                 }
                 .time-icon {
                     background-image: url(./images/time-icon.png);

@@ -18,24 +18,30 @@
         </div>
 
         <script type="text/template" id="list-template">
-            {{~ it:item:index}}
-            <div class="list-item-wrap clearfix">
-                <a class="item-left J_to_list" href="./list.html">
-                    <div class="item-name">{{= item.location}}</div>
-                    <div class="item-addr">{{= item.locationDetail}}</div>
-                    <div class="item-detail">
-                        <i class="free-icon"></i>
-                        <span class="item-free">可用{{= item.availableCount}}个</span>
-                        <i class="busy-icon"></i>
-                        <span class="item-busy">已用{{= item.usedCount}}个</span>
+            {{? it.length > 0}}
+                {{~ it:item:index}}
+                <div class="list-item-wrap clearfix">
+                    <a class="item-left J_to_list" href="./list.html">
+                        <div class="item-name">{{= item.location}}</div>
+                        <div class="item-addr">{{= item.locationDetail}}</div>
+                        <div class="item-detail">
+                            <i class="free-icon"></i>
+                            <span class="item-free">可用{{= item.availableCount}}个</span>
+                            <i class="busy-icon"></i>
+                            <span class="item-busy">已用{{= item.usedCount}}个</span>
+                        </div>
+                    </a>
+                    <div class="item-right">
+                        <div class="item-dis-icon"></div>
+                        <div class="item-dis">{{= item.distance}}m</div>
                     </div>
-                </a>
-                <div class="item-right">
-                    <div class="item-dis-icon"></div>
-                    <div class="item-dis">{{= item.distance}}m</div>
                 </div>
-            </div>
-            {{~}}
+                {{~}}
+            {{??}}
+                <div class="list-empty">
+                    暂时没有常用电站哦~
+                </div>
+            {{?}}
         </script>
 
     </div>

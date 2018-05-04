@@ -36,22 +36,23 @@
                 font-size: $sm-font-size;
                 color: $light-font-color;
                 line-height: 1.5;
-                span {
-                    margin-right: 0.14rem;
-                    &:before {
+                .icon-wrap {
+                    .icon-text {
+                        width: 5em;
+                        display: inline-block;
+                    }
+                    i {
                         width: 8px;
                         height: 8px;
-                        content: '';
                         display: inline-block;
                         border-radius: 4px;
-                        margin-right: 4px;
 
                     }
                 }
-                .free-icon:before {
+                .free-icon i {
                     background: #09bb07;
                 }
-                .used-icon:before {
+                .used-icon i {
                     background: #f43530;
                 }
             }

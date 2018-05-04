@@ -298,18 +298,22 @@
     .bottom-title {
         padding-bottom: $primary-padding-top;
         font-size: $lg-font-size;
+        display: flex;
     }
     .pay-way-wrap {
         font-size: $md-font-size;
         color: $light-font-color;
-        margin-left: 6px;
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
         i {
             width: 0.427rem;
-            height: 0.373rem;
+            height: 0.427rem;
             display: inline-block;
             background-image: url(./images/pay-icon.png);
-            background-size: 0.427rem 0.373rem;
+            background-size: 0.427rem 0.427rem;
             background-position: center center;
+            margin-right: 4px;
         }
     }
     .bottom-price-line {

@@ -1,0 +1,1 @@
+// var img = require('../images/qrcode.jpeg');

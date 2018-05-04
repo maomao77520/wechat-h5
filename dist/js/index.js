@@ -60,171 +60,45 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var css = __webpack_require__(0);
-var com = __webpack_require__(2);
-
-$(document).on('ready', function () {
-    // 地点下拉框
-    $('.city-select').width($('.select-text').width());
-    $('.city-select').on('change', function (e) {
-        var text = $(this).find('option:selected').text();
-        $('.select-text span').text(text);
-    });
-
-    // $.ajax({
-    //     url: '',
-    //     type: 'get',
-    //     success: function (res) {
-            res = {
-                status: 0,
-                content: [{
-                    deviceId: 1,
-                    location: '南宁市厢竹海鲜市场',
-                    locationDetail: '南宁市厢竹大道14号',
-                    lat: '22.819330',
-                    lng: '108.380310',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 435
-                }, {
-                    deviceId: 2,
-                    location: '秀竹苑小区',
-                    locationDetail: '南宁市新竹街道办',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 2897
-                }, {
-                    deviceId: 3,
-                    location: '厢竹海鲜市场',
-                    locationDetail: '南宁市厢竹大道14号',
-                    usedCount: 23,
-                    availableCount: 15,
-                    distance: 435
-                }, {
-                    deviceId: 4,
-                    location: '秀竹苑小区',
-                    locationDetail: '南宁市新竹街道办',
-                    usedCount: 20,
-                    availableCount: 10,
-                    distance: 2897
-                }]
-            }
-            var tpl = doT.template($('#list-template').html())(res.content);
-            $('#J_list-wrap').html(tpl);
-
-    //     }
-    // });
-    
-    
-    
-
-
-    $('.J_Navigation').on('click', function () {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
-        com.convert(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-        });
-    });
-
-});
-
-
-$(function(){
-    var $searchBar = $('#searchBar'),
-        $searchResult = $('#searchResult'),
-        $searchText = $('#searchText'),
-        $searchInput = $('#searchInput'),
-        $searchClear = $('#searchClear'),
-        $searchCancel = $('#searchCancel');
-
-    function hideSearchResult(){
-        $searchResult.hide();
-        $searchInput.val('');
-    }
-    function cancelSearch(){
-        hideSearchResult();
-        $searchBar.removeClass('weui-search-bar_focusing');
-        $searchText.show();
-    }
-
-    $searchText.on('click', function(){
-        $searchBar.addClass('weui-search-bar_focusing');
-        $searchInput.focus();
-    });
-    $searchInput
-        .on('blur', function () {
-            if(!this.value.length) cancelSearch();
-        })
-        .on('input', function(){
-            if(this.value.length) {
-                $searchResult.show();
-            } else {
-                $searchResult.hide();
-            }
-        })
-    ;
-    $searchClear.on('click', function(){
-        hideSearchResult();
-        $searchInput.focus();
-    });
-    $searchCancel.on('click', function(){
-        cancelSearch();
-        $searchInput.blur();
-    });
-});
-
-// signature: "db0b8fe6d009bf3a49aabca683b6f7505572914c",
-// appId: "wxdbf5c24cf1e06f3e",
-// nonceStr: "febf9335-06ac-4307-9656-43b8a9b270e6",
-// timestamp: "1524563311"
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
 var Common = {
-    getWxConfig: function () {
-        return $.ajax({
-            url: '/config',
+    getWxConfig: function (cb) {
+        $.ajax({
+            url: '/charger/config',
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                wx.config({
-                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                    appId: res.appId, // 必填，公众号的唯一标识
-                    timestamp: res.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: res.nonceStr, // 必填，生成签名的随机串
-                    signature: res.signature,// 必填，签名
-                    jsApiList: [
-                        'checkJsApi',
-                        'openLocation',
-                        'getLocation',
-                        'onMenuShareTimeline',
-                        'onMenuShareAppMessage'
-                    ] // 必填，需要使用的JS接口列表
-                });
-            }
+                // if (res.status == 0) {
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: res.appId, // 必填，公众号的唯一标识
+                        timestamp: res.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: res.nonceStr, // 必填，生成签名的随机串
+                        signature: res.signature,// 必填，签名
+                        jsApiList: [
+                            'checkJsApi',
+                            'openLocation',
+                            'getLocation',
+                            'scanQRCode',
+                            'onMenuShareTimeline',
+                            'onMenuShareAppMessage'
+                        ] // 必填，需要使用的JS接口列表
+                    });
+
+                // }
+            },
+            error: function (err) {}
         });
     },
+
 
     openMap: function(name, addr, latitude, longitude) {
         this.getWxConfig().done(function () {
@@ -248,10 +122,362 @@ var Common = {
                 // openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
             }
         });
+    },
+
+    parseQuery: function (name) { 
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //定义正则表达式 
+        
+        var r = decodeURIComponent(window.location.search).substr(1).match(reg);  
+        if (r != null) {
+            return unescape(r[2]);
+        } 
+        return null; 
+    },
+
+    timer: function (fun, timeout, debounce, context) {
+        var running;
+        return function() {
+            var args = arguments;
+            context = context || this;
+            if (debounce && running) {
+                running = clearTimeout(running);
+            }
+            running = running || setTimeout(function() {
+                running = null;
+                fun.apply(context, args);
+            }, timeout);
+        };
+    },
+    debounce: function(fun, timeout, context) {
+        console.log('debounce')
+        return this.timer(fun, timeout, true, context);
+    },
+
+    sendMsg: function () {
+        $.ajax({
+            url: 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN',
+            type: 'post',
+            data: {
+                "touser": "OPENID", // 发送对象openId
+                "template_id": "ngqIpbwh8bUfcSsECmogfXcV14J0tQlEpBO27izEYtY",
+                "url": "",   // 跳转url          
+                "data":{
+                    "first": {
+                        "value":"恭喜你购买成功！",
+                        "color":"#173177"
+                    },
+                    "keyword1":{
+                        "value":"巧克力",
+                        "color":"#173177"
+                    },
+                    "keyword2": {
+                        "value":"39.8元",
+                        "color":"#173177"
+                    },
+                    "keyword3": {
+                        "value":"2014年9月22日",
+                        "color":"#173177"
+                    },
+                    "remark":{
+                        "value":"欢迎再次购买！",
+                        "color":"#173177"
+                    }
+                }
+            },
+            success: function (res) {},
+            error: function (err) {}
+        });
+        
     }
 };
 
 module.exports = Common;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var css = __webpack_require__(1);
+var com = __webpack_require__(0);
+var scroll = __webpack_require__(3);
+
+$(document).on('ready', function () {
+    var currentLat;
+    var currentLng;
+    getList(1);
+    initSearch();
+
+    
+    // 地点下拉框
+    $('#J_city_picker').on('click', function () {
+        $this = $(this);
+        weui.picker([{
+            label: '南宁',
+            value: 1
+        }, {
+            label: '柳州',
+            value: 2
+        }, {
+            label: '防城港',
+            value: 3
+        },{
+            label: '北海',
+            value: 4
+        }, {
+            label: '桂林',
+            value: 5
+        }], {
+            onChange: function (result) {
+            },
+            onConfirm: function (result) {
+                $this.find('span').text(result[0].label);
+                $this.css({
+                    width:  (result[0].label.length + 2) + 'em'
+                });
+            }
+        });
+    });
+
+    // 打开导航
+    $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
+        var location = $(this).data('location');
+        var addr = $(this).data('addr');
+        var lat = $(this).data('lat');
+        var lng = $(this).data('lng');
+        com.convert(lat, lng).done(function (res) {
+            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+        });
+    });
+
+    function getList(pageindex) {
+        com.getWxConfig();
+
+        wx.ready(function () {
+            wx.getLocation({
+                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                success: function (res) {
+                    currentLat = res.latitude;
+                    currentLng = res.longitude;
+                    $.ajax({
+                        url: '/charger/getnearcharging',
+                        type: 'post',
+                        async: false,
+                        data: JSON.stringify({
+                            lat: res.latitude,
+                            lng: res.longitude,
+                            accesstoken: 'asdasdwedf565665',
+                            pagesize: 20,
+                            pageindex: pageindex
+                        }),
+                        contentType: 'application/json',
+                        success: function (res) {    
+                            if (res.status == 0) {
+                                var tpl = doT.template($('#list-template').html())(res.data.content);
+                                $('#J_list-wrap').html(tpl);
+                            }
+
+                            scroll.init(function () {
+                                alert('pull up')
+                            }, function () {
+                                alert('pull down')
+                            });
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+                }
+            });
+        });
+        
+    }
+
+    function searchList() {
+        var word = $('#searchInput').val();
+        $.ajax({
+            url: '/charger/getsearchWordcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                search: word,
+                lat: currentLat,
+                lng: currentLng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                if (res.status == 0) {
+                    var tpl = doT.template($('#list-template').html())(res.content);
+                    $('#J_list-wrap').html(tpl);
+                }
+            },
+            error: function (err) {}
+
+        });
+    }
+
+
+    var deboun = com.debounce(function () {
+        searchList();
+    }, 1000, this);
+    function initSearch() {
+        var $searchBar = $('#searchBar'),
+            $searchResult = $('#searchResult'),
+            $searchText = $('#searchText'),
+            $searchInput = $('#searchInput'),
+            $searchClear = $('#searchClear'),
+            $searchCancel = $('#searchCancel');
+
+        function hideSearchResult(){
+            $searchResult.hide();
+            $searchInput.val('');
+        }
+        function cancelSearch(){
+            hideSearchResult();
+            $searchBar.removeClass('weui-search-bar_focusing');
+            $searchText.show();
+        }
+
+        $searchText.on('click', function(){
+            $searchBar.addClass('weui-search-bar_focusing');
+            $searchInput.focus();
+        });
+        $searchInput
+            .on('blur', function () {
+                if(!this.value.length) cancelSearch();
+            })
+            .on('input', function(){
+                deboun();
+            });
+        ;
+        $searchClear.on('click', function(){
+            hideSearchResult();
+            $searchInput.focus();
+        });
+        $searchCancel.on('click', function(){
+            cancelSearch();
+            $searchInput.blur();
+        });
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var Scroll = {
+    init: function (pullUpAction, pullDownAction) {
+        var pullDownEl, pullDownOffset, pullUpEl, pullUpOffset, myScroll;
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        pullDownEl = document.getElementById('pullDown');
+        pullDownOffset = pullDownEl.offsetHeight;
+        pullUpEl = document.getElementById('pullUp');   
+        pullUpOffset = pullUpEl.offsetHeight;
+        
+        /**
+         * 初始化iScroll控件
+         */
+        myScroll = new iScroll('wrapper', {
+            vScrollbar : false,
+            topOffset : pullDownOffset,
+            onRefresh : function () {
+                if (pullDownEl.className.match('loading')) {
+                    pullDownEl.className = '';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+                } else if (pullUpEl.className.match('loading')) {
+                    pullUpEl.className = '';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+                }
+            },
+            onScrollMove: function () {
+                if (this.y > 5 && !pullDownEl.className.match('flip')) {
+                    pullDownEl.className = 'flip';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
+                    this.minScrollY = 0;
+                } else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                    pullUpEl.className = 'flip';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+                }
+            },
+            onScrollEnd: function () {
+                if (pullDownEl.className.match('flip')) {
+                    pullDownEl.className = 'loading';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';             
+                    pullDownAction();
+                } else if (pullUpEl.className.match('flip')) {
+                    pullUpEl.className = 'loading';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';                
+                    pullUpAction();
+                }
+            }
+        });
+    }
+};
+
+module.exports = Scroll;
+// document.addEventListener('DOMContentLoaded', loaded, false);
+
+// function loaded() {
+//     pullDownEl = document.getElementById('pullDown');
+//     pullDownOffset = pullDownEl.offsetHeight;
+//     pullUpEl = document.getElementById('pullUp');   
+//     pullUpOffset = pullUpEl.offsetHeight;
+    
+//     /**
+//      * 初始化iScroll控件
+//      */
+//     myScroll = new iScroll('wrapper', {
+//         vScrollbar : false,
+//         topOffset : pullDownOffset,
+//         onRefresh : function () {
+//             if (pullDownEl.className.match('loading')) {
+//                 pullDownEl.className = '';
+//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+//             } else if (pullUpEl.className.match('loading')) {
+//                 pullUpEl.className = '';
+//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+//             }
+//         },
+//         onScrollMove: function () {
+//             if (this.y > 5 && !pullDownEl.className.match('flip')) {
+//                 pullDownEl.className = 'flip';
+//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
+//                 this.minScrollY = 0;
+//             } else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+//                 pullUpEl.className = 'flip';
+//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+//             }
+//         },
+//         onScrollEnd: function () {
+//             if (pullDownEl.className.match('flip')) {
+//                 pullDownEl.className = 'loading';
+//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';
+//                 alert('^^^')              
+//                 // pullDownAction();
+//             } else if (pullUpEl.className.match('flip')) {
+//                 pullUpEl.className = 'loading';
+//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';                
+//                 alert('****')
+//                 // pullUpAction();
+//             }
+//         }
+//     });
+// }
 
 /***/ })
 /******/ ]);
