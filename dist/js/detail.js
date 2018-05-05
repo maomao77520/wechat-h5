@@ -101,15 +101,13 @@ var Common = {
 
 
     openMap: function(name, addr, latitude, longitude) {
-        this.getWxConfig().done(function () {
-            wx.openLocation({
-                latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
-                longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
-                name: name, // 位置名
-                address: addr, // 地址详情说明
-                scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
-                infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-            });
+        wx.openLocation({
+            latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
+            longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
+            name: name, // 位置名
+            address: addr, // 地址详情说明
+            scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
+            infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
         });
     },
 
@@ -206,6 +204,8 @@ var com = __webpack_require__(0);
 $(document).on('ready', function () {
     var search = window.location.search.substring(1);
     var id = search.split('=')[1];
+
+    var targetLat, targetLng, currentLat, currentLng, location, addr;
     $.ajax({
         url: '/charger/getslotcharging',
         type: 'post',
@@ -215,12 +215,18 @@ $(document).on('ready', function () {
         }),
         contentType: 'application/json',
         success: function (res) {
+            targetLat = res.data.lat;
+            targetLng = res.data.lng;
+            location = res.data.location;
+            addr = res.data.locationDetail;
             if (res.status == 0) {
                 var tpl1 = doT.template($('#J_detail_top_template').html())(res.data);
                 $('#J_detail_info').html(tpl1);
 
                 var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
                 $('#J_detail_list').html(tpl2);
+
+                initEvent();
             }
         },
         error: function (err) {
@@ -228,17 +234,28 @@ $(document).on('ready', function () {
         }
     });
     
-    com.getWxConfig().done(function () {
-        $('.detail-bottom-btn').on('click', function () {
-            wx.scanQRCode({
-                needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                success: function (res) {
-                    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                }
+
+
+    function initEvent() {
+        com.getWxConfig();  
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+
+            $('#J_detail_info').on('click', '#J_click_open_map', function (e) {
+                com.convert(targetLat, targetLng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
             });
         });
-    });
+    }
 
 });
 

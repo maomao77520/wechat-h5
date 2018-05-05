@@ -5,7 +5,31 @@ var scroll = require('./myScroll.js');
 $(document).on('ready', function () {
     var currentLat;
     var currentLng;
-    getList(1);
+
+    com.getWxConfig();
+    wx.ready(function () {
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                currentLat = res.latitude;
+                currentLng = res.longitude;
+                getList(1, currentLat, currentLng);
+            }
+        });
+
+        // 打开导航
+        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
+            var location = $(this).data('location');
+            var addr = $(this).data('addr');
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            com.convert(lat, lng).done(function (res) {
+                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+            });
+            
+        });
+    });
+    
     initSearch();
 
     
@@ -39,58 +63,36 @@ $(document).on('ready', function () {
         });
     });
 
-    // 打开导航
-    $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
-        com.convert(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-        });
-    });
 
-    function getList(pageindex) {
-        com.getWxConfig();
-
-        wx.ready(function () {
-            wx.getLocation({
-                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-                success: function (res) {
-                    currentLat = res.latitude;
-                    currentLng = res.longitude;
-                    $.ajax({
-                        url: '/charger/getnearcharging',
-                        type: 'post',
-                        async: false,
-                        data: JSON.stringify({
-                            lat: res.latitude,
-                            lng: res.longitude,
-                            accesstoken: 'asdasdwedf565665',
-                            pagesize: 20,
-                            pageindex: pageindex
-                        }),
-                        contentType: 'application/json',
-                        success: function (res) {    
-                            if (res.status == 0) {
-                                var tpl = doT.template($('#list-template').html())(res.data.content);
-                                $('#J_list-wrap').html(tpl);
-                            }
-
-                            scroll.init(function () {
-                                alert('pull up')
-                            }, function () {
-                                alert('pull down')
-                            });
-                        },
-                        error: function (err) {
-
-                        }
-                    });
+    function getList(pageindex, lat, long) {
+        $.ajax({
+            url: '/charger/getnearcharging',
+            type: 'post',
+            async: false,
+            data: JSON.stringify({
+                lat: lat,
+                lng: long,
+                accesstoken: 'asdasdwedf565665',
+                pagesize: 20,
+                pageindex: pageindex
+            }),
+            contentType: 'application/json',
+            success: function (res) {    
+                if (res.status == 0) {
+                    var tpl = doT.template($('#list-template').html())(res.data.content);
+                    $('#J_list-wrap').html(tpl);
                 }
-            });
+
+                scroll.init(function () {
+                    alert('pull up')
+                }, function () {
+                    alert('pull down')
+                });
+            },
+            error: function (err) {
+
+            }
         });
-        
     }
 
     function searchList() {

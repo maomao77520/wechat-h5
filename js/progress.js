@@ -21,8 +21,8 @@ $(document).ready(function () {
     //     }),
     //     success: function (res) {
     //         if (res.status == 0) {
-                // var progress = res.data.progress;
-    var progress = 90;
+    //             var progress = res.data.progress;
+    var progress = 80;
                 var top = winHeight - 25;
                 $('.top-num-wrap .num').text(progress);
                 if (progress == 100) {
@@ -37,8 +37,8 @@ $(document).ready(function () {
                 $('.wave').css({
                     'background-position': '0 ' + top + 'px'
                 });
-        //     }
-        // },
+            // }
+    //     },
     //     error: function (error) {}
     // });
     

@@ -101,15 +101,13 @@ var Common = {
 
 
     openMap: function(name, addr, latitude, longitude) {
-        this.getWxConfig().done(function () {
-            wx.openLocation({
-                latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
-                longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
-                name: name, // 位置名
-                address: addr, // 地址详情说明
-                scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
-                infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-            });
+        wx.openLocation({
+            latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
+            longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
+            name: name, // 位置名
+            address: addr, // 地址详情说明
+            scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
+            infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
         });
     },
 
@@ -210,7 +208,31 @@ var scroll = __webpack_require__(3);
 $(document).on('ready', function () {
     var currentLat;
     var currentLng;
-    getList(1);
+
+    com.getWxConfig();
+    wx.ready(function () {
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                currentLat = res.latitude;
+                currentLng = res.longitude;
+                getList(1, currentLat, currentLng);
+            }
+        });
+
+        // 打开导航
+        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
+            var location = $(this).data('location');
+            var addr = $(this).data('addr');
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            com.convert(lat, lng).done(function (res) {
+                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+            });
+            
+        });
+    });
+    
     initSearch();
 
     
@@ -244,58 +266,36 @@ $(document).on('ready', function () {
         });
     });
 
-    // 打开导航
-    $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
-        com.convert(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-        });
-    });
 
-    function getList(pageindex) {
-        com.getWxConfig();
-
-        wx.ready(function () {
-            wx.getLocation({
-                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-                success: function (res) {
-                    currentLat = res.latitude;
-                    currentLng = res.longitude;
-                    $.ajax({
-                        url: '/charger/getnearcharging',
-                        type: 'post',
-                        async: false,
-                        data: JSON.stringify({
-                            lat: res.latitude,
-                            lng: res.longitude,
-                            accesstoken: 'asdasdwedf565665',
-                            pagesize: 20,
-                            pageindex: pageindex
-                        }),
-                        contentType: 'application/json',
-                        success: function (res) {    
-                            if (res.status == 0) {
-                                var tpl = doT.template($('#list-template').html())(res.data.content);
-                                $('#J_list-wrap').html(tpl);
-                            }
-
-                            scroll.init(function () {
-                                alert('pull up')
-                            }, function () {
-                                alert('pull down')
-                            });
-                        },
-                        error: function (err) {
-
-                        }
-                    });
+    function getList(pageindex, lat, long) {
+        $.ajax({
+            url: '/charger/getnearcharging',
+            type: 'post',
+            async: false,
+            data: JSON.stringify({
+                lat: lat,
+                lng: long,
+                accesstoken: 'asdasdwedf565665',
+                pagesize: 20,
+                pageindex: pageindex
+            }),
+            contentType: 'application/json',
+            success: function (res) {    
+                if (res.status == 0) {
+                    var tpl = doT.template($('#list-template').html())(res.data.content);
+                    $('#J_list-wrap').html(tpl);
                 }
-            });
+
+                scroll.init(function () {
+                    alert('pull up')
+                }, function () {
+                    alert('pull down')
+                });
+            },
+            error: function (err) {
+
+            }
         });
-        
     }
 
     function searchList() {

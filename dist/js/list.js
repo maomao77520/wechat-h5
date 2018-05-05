@@ -101,15 +101,13 @@ var Common = {
 
 
     openMap: function(name, addr, latitude, longitude) {
-        this.getWxConfig().done(function () {
-            wx.openLocation({
-                latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
-                longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
-                name: name, // 位置名
-                address: addr, // 地址详情说明
-                scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
-                infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-            });
+        wx.openLocation({
+            latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
+            longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
+            name: name, // 位置名
+            address: addr, // 地址详情说明
+            scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
+            infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
         });
     },
 
@@ -207,43 +205,54 @@ var com = __webpack_require__(0);
 
 $(document).ready(function () {
  
-    getList();   
+    getList(); 
 
 
-    $('.J_Navigation').on('click', function () {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
-        com.convert(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+    function getList() {
+        var search = window.location.search.substring(1);
+        var id = search.split('=')[1];
+        $.ajax({
+            url: '/charger/getcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                locationId: id
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                if (res.status == 0) {
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
+                }
+
+                initEvent();
+            },
+            error: function (err) {
+
+            }
         });
-    });
+    }  
+
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.J_Navigation').on('click', function () {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                com.convert(lat, lng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+            });
+        })
+        
+    }
+    
 
 });
 
-function getList() {
-    var search = window.location.search.substring(1);
-    var id = search.split('=')[1];
-    $.ajax({
-        url: '/charger/getcharging',
-        type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665',
-            locationId: id
-        }),
-        contentType: 'application/json',
-        success: function (res) {
-            if (res.status == 0) {
-                var tpl = doT.template($('#second-list-template').html())(res.data);
-                $('#J_second-list').html(tpl);
-            }
-        },
-        error: function (err) {
 
-        }
-    });
-}
 
 /***/ }),
 /* 7 */

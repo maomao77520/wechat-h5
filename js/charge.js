@@ -9,8 +9,6 @@ $(document).ready(function () {
 
     localStorage.setItem('openId', openId);
 
-    console.log('>>',localStorage.getItem('openId'))
-
     $.ajax({
         url: '/charger/getpaycharging',
         type: 'post',
@@ -67,54 +65,56 @@ $(document).ready(function () {
             error: function (err) {
             }
         });
-    })
+    });
+
+    function onBridgeReady(appId, timeStamp, nonceStr, prepay_id, paySign, out_trade_no){
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+               document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            }else if (document.attachEvent){
+               document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+               document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        }else{
+            WeixinJSBridge.invoke(
+               'getBrandWCPayRequest', {
+                   "appId": appId,     //公众号名称，由商户传入     
+                   "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
+                   "nonceStr": nonceStr, //随机串     
+                   "package": "prepay_id=" + prepay_id,     
+                   "signType": "MD5",         //微信签名方式：     
+                   "paySign": paySign //微信签名 
+                }, function (res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        window.location.href = "http://www.shouyifenxi.com/dist/page/progress.html?deviceId="
+                        + deviceId + '&slotIndex=' + slotIndex;
+                    }
+                    else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
+                        alert("取消支付!");
+                    }
+                    else {  
+                        alert("支付失败!");
+                    }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+                }
+            ); 
+        }
+    }
+
+    function checkOrderStatus(out_trade_no, cb) {
+        $.ajax({
+            url: '/charger/getPayStatus',
+            type: 'post',
+            data: JSON.stringify({
+                out_trade_no: out_trade_no
+            }),
+            success: function (res) {
+                if (res.status) {
+                    cb && cb(res);
+                }
+            }
+        });
+    }
     
 
 });
-function onBridgeReady(appId, timeStamp, nonceStr, prepay_id, paySign, out_trade_no){
-    if (typeof WeixinJSBridge == "undefined"){
-        if( document.addEventListener ){
-           document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-        }else if (document.attachEvent){
-           document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
-           document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-        }
-    }else{
-        WeixinJSBridge.invoke(
-           'getBrandWCPayRequest', {
-               "appId": appId,     //公众号名称，由商户传入     
-               "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
-               "nonceStr": nonceStr, //随机串     
-               "package": "prepay_id=" + prepay_id,     
-               "signType": "MD5",         //微信签名方式：     
-               "paySign": paySign //微信签名 
-            }, function (res) {
-                if (res.err_msg == "get_brand_wcpay_request:ok") {  
-                    window.location.href = "http://www.shouyifenxi.com/dist/page/progress.html?deviceId="
-                    + deviceId + '&slotIndex=' + slotIndex;
-                }
-                else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
-                    alert("取消支付!");
-                }
-                else {  
-                    alert("支付失败!");
-                }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
-            }
-        ); 
-    }
-}
 
-function checkOrderStatus(out_trade_no, cb) {
-    $.ajax({
-        url: '/charger/getPayStatus',
-        type: 'post',
-        data: JSON.stringify({
-            out_trade_no: out_trade_no
-        }),
-        success: function (res) {
-            if (res.status) {
-                cb && cb(res);
-            }
-        }
-    });
-}
