@@ -217,6 +217,9 @@ $(document).on('ready', function () {
                 currentLat = res.latitude;
                 currentLng = res.longitude;
                 getList(1, currentLat, currentLng);
+            },
+            fail: function (err) {
+                getList(1, '', '');
             }
         });
 

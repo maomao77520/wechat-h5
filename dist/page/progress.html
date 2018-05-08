@@ -27,9 +27,16 @@
         <div class="logo"></div>
         <div class="question"></div>
 
+        
         <div class="top-num-wrap">
-            <span class="num">80</span>
-            <span class="percent">%</span>
+            <div class="left-time-text">剩余时间</div>
+            <div class="left-time-wrap">
+                <span class="hour">00</span>
+                <span class="icon">:</span>
+                <span class="minite">00</span>
+                <span class="icon">:</span>
+                <span class="second">00</span>
+            </div>
         </div>
         <div class="bottom-detail-wrap">
             <div class="dot-wrap">
@@ -58,51 +65,68 @@
             <div class="mobile-img mobile-line"></div>
             <div class="mobile-img mobile-light"></div>
             
+            <div id="J_progress_detail"></div>
 
-            <div class="time-wrap">
-                <div class="time-item">
-                    <div class="time-title">已充时间</div>
-                    <div class="time-text">01:21:30</div>
-                </div>
-                <div class="time-item">
-                    <div class="time-title">剩余时间</div>
-                    <div class="time-text">06:38:30</div>
-                </div>
-                <div class="time-item">
-                    <div class="time-title">预计结束</div>
-                    <div class="time-text">17:58:00</div>
-                </div>
-            </div>
-            <div class="detail-wrap">
-                <div class="detail-name">秀园小区01号充电桩1号机</div>
-                <div class="block-wrap">
-                    <div class="detail-left">
-                        <div class="detail-item">
-                            <i class="place-icon"></i>
-                            <span>歌海路9号</span>
-                        </div>
-                        <div class="detail-item">
-                            <i class="num-icon"></i>
-                            <span>设备编号: 0001VH</span>
-                        </div>
-                        <div class="detail-item">
-                            <i class="socket-icon"></i>
-                            <span>插座编号: 201801111</span>
-                        </div>
+
+            <script type="text/template" id="J_progress_template">
+                <div class="time-wrap">
+                    <div class="time-item">
+                        <div class="time-title">开始时间<span>（{{= it.startDateStr}}）</span></div>
+                        <div class="time-text">{{= it.startTimeStr}}</div>
                     </div>
-                    <div class="detail-right">
-                        <div class="circle-wrap">
-                            <div class="detail-num-text"></div>
-                            <span>01</span>
-                        </div>
-                        
-                        <div class="detail-num">插座号</div>
+                    <div class="time-item">
+                        <div class="time-title">结束时间<span>（{{= it.endDateStr}}）</span></div>
+                        <div class="time-text">{{= it.endTimeStr}}</div>
                     </div>
                 </div>
-            </div>
+                <div class="detail-wrap">
+                    <div class="detail-name">{{= it.location}}
+                    {{? it.chargerIndex >=10 }}
+                        {{= it.chargerIndex}}号充电桩
+                    {{??}}
+                        0{{= it.chargerIndex}}号充电桩
+                    {{?}}
+                    {{? it.slotIndex >= 10}}
+                        {{= it.slotIndex}}号机
+                    {{??}}
+                        0{{= it.slotIndex}}号机
+                    {{?}}</div>
+                    <div class="block-wrap">
+                        <div class="detail-left">
+                            <div class="detail-item">
+                                <i class="place-icon"></i>
+                                <span>{{= it.locationDetail}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="num-icon"></i>
+                                <span>设备编号: {{= it.deviceId}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="socket-icon"></i>
+                                <span>插座编号: {{= it.slotSN}}</span>
+                            </div>
+                        </div>
+                        <div class="detail-right">
+                            <div class="circle-wrap">
+                                <div class="detail-num-text"></div>
+                                <span>
+                                {{? it.slotIndex >= 10}}
+                                    {{= it.slotIndex}}
+                                {{??}}
+                                    0{{= it.slotIndex}}
+                                {{?}}
+                                </span>
+                            </div>
+                            
+                            <div class="detail-num">插座号</div>
+                        </div>
+                    </div>
+                </div>
+            </script>
         </div>
     </div>
 
+    <script src="../lib/doT.min.js"></script>
     <script src="../js/progress.js"></script>
 </body>
 </html>

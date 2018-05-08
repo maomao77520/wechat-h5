@@ -35,32 +35,11 @@
     }
 }
 
-
-// @for $i from 1 through 20 {
-//     @keyframes dot-move-#{$i} {
-//         0% {
-//             left: percentage(random());
-//             top: percentage(random());
-//             opacity: 0.3;
-//         }
-//         70% {
-//             top: 1rem;
-//             left: #{7 - random() - random()}rem;
-//             opacity: 0.8;
-//         }
-//         75% {
-//             opacity: 0.1;
-//         }
-//         100% {
-//             opacity: 0;
-//         }
-//     }
-// }
 @keyframes dot-move-1 {
     0% {
-        transform: scale(0.7);
-        top: 1%;
-        left: 10%;
+        transform: scale(0.6);
+        top: -7%;
+        left: 7%;
         opacity: 0.2
     }
     50% {
@@ -70,9 +49,9 @@
         opacity: 0.8
     }
     100% {
-        transform: scale(0.7);
+        transform: scale(0.6);
         top: 5%;
-        left: 38%;
+        left: 40%;
         opacity: 0;
     }
 }
@@ -566,29 +545,37 @@
         z-index: 999;
     }
     .top-num-wrap {
-        height: 40%;
+        height: 38%;
         line-height: 1;
         text-align: center;
-        box-sizing: border-box;
         position: relative;
         padding-top: 25%;
         z-index: 100;
-        font-size: 0;
-        .num {
-            font-size: 3rem;
-            position: relative;
-            left: 12px;
+        font-size: 1.46rem;
+        box-sizing: border-box;
+        width: 4.6em;
+        margin: 0 auto;
+        .left-time-text {
+            font-size: 0.4rem;
+            margin-bottom: 0.25rem;
+            text-align: left;
+
         }
-        .percent {
-            position: relative;
-            font-size: 24px;
-            left: 12px;
+        .left-time-wrap {
+            .hour, .minite, .second {
+                display: inline-block;
+                width: 1.3em;
+            }
+        }
+        .icon {
+            margin-left: -0.25em;
+            margin-right: -0.25em;
         }
     }
     .bottom-detail-wrap {
         position: relative;
         z-index: 101;
-        height: 60%;
+        height: 62%;
         .mobile-img {
             width: 7rem;
             height: 4rem;
@@ -633,12 +620,15 @@
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            padding-top: 4.5rem;
+            padding-top: 5.5rem;
             .time-title {
                 font-size: $md-font-size;
+                span {
+                    font-size: 0.24rem;
+                }
             }
             .time-text {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
             }
         }
         .detail-wrap {
