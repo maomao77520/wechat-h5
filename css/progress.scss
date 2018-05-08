@@ -559,7 +559,7 @@
             font-size: 0.4rem;
             margin-bottom: 0.25rem;
             text-align: left;
-
+            opacity: 0.8;
         }
         .left-time-wrap {
             .hour, .minite, .second {
@@ -620,9 +620,10 @@
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            padding-top: 5.5rem;
+            padding-top: 5.1rem;
             .time-title {
                 font-size: $md-font-size;
+                opacity: 0.8;
                 span {
                     font-size: 0.24rem;
                 }
@@ -637,7 +638,7 @@
             font-size: $sm-font-size;
             width: 88%;
             left: 6%;
-            opacity: 0.8;
+            opacity: 0.6;
             .detail-name {
                 font-size: $md-font-size;
                 margin-bottom: 0.1rem;
