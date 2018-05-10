@@ -208,6 +208,7 @@ var scroll = __webpack_require__(3);
 $(document).on('ready', function () {
     var currentLat;
     var currentLng;
+    var currentPage = 1;
 
     com.getWxConfig();
     wx.ready(function () {
@@ -216,10 +217,12 @@ $(document).on('ready', function () {
             success: function (res) {
                 currentLat = res.latitude;
                 currentLng = res.longitude;
-                getList(1, currentLat, currentLng);
+                getList(currentPage, currentLat, currentLng, initScroll);
             },
             fail: function (err) {
-                getList(1, '', '');
+                currentLat = '';
+                currentLng = '';
+                getList(currentPage, currentLat, currentLng, initScroll);
             }
         });
 
@@ -269,31 +272,41 @@ $(document).on('ready', function () {
         });
     });
 
+    function initScroll() {
+        scroll.init(function () {
+            currentPage++;
+            getList(currentPage, currentLat, currentLng);
+        }, function () {
+            currentPage = 1;
+            getList(currentPage, currentLat, currentLng);
+        });
+    }
 
-    function getList(pageindex, lat, long) {
+
+    function getList(pageIndex, lat, lng, cb) {
         $.ajax({
             url: '/charger/getnearcharging',
             type: 'post',
             async: false,
             data: JSON.stringify({
                 lat: lat,
-                lng: long,
+                lng: lng,
                 accesstoken: 'asdasdwedf565665',
                 pagesize: 20,
-                pageindex: pageindex
+                pageindex: pageIndex
             }),
             contentType: 'application/json',
             success: function (res) {    
                 if (res.status == 0) {
                     var tpl = doT.template($('#list-template').html())(res.data.content);
-                    $('#J_list-wrap').html(tpl);
+                    if (pageIndex == 1) {
+                        $('#J_list-wrap').html(tpl);
+                    }
+                    else {
+                        $('#J_list-wrap').append(tpl);
+                    }
+                    cb && cb();
                 }
-
-                scroll.init(function () {
-                    alert('pull up')
-                }, function () {
-                    alert('pull down')
-                });
             },
             error: function (err) {
 
@@ -433,54 +446,7 @@ var Scroll = {
 };
 
 module.exports = Scroll;
-// document.addEventListener('DOMContentLoaded', loaded, false);
 
-// function loaded() {
-//     pullDownEl = document.getElementById('pullDown');
-//     pullDownOffset = pullDownEl.offsetHeight;
-//     pullUpEl = document.getElementById('pullUp');   
-//     pullUpOffset = pullUpEl.offsetHeight;
-    
-//     /**
-//      * 初始化iScroll控件
-//      */
-//     myScroll = new iScroll('wrapper', {
-//         vScrollbar : false,
-//         topOffset : pullDownOffset,
-//         onRefresh : function () {
-//             if (pullDownEl.className.match('loading')) {
-//                 pullDownEl.className = '';
-//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
-//             } else if (pullUpEl.className.match('loading')) {
-//                 pullUpEl.className = '';
-//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
-//             }
-//         },
-//         onScrollMove: function () {
-//             if (this.y > 5 && !pullDownEl.className.match('flip')) {
-//                 pullDownEl.className = 'flip';
-//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
-//                 this.minScrollY = 0;
-//             } else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
-//                 pullUpEl.className = 'flip';
-//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
-//             }
-//         },
-//         onScrollEnd: function () {
-//             if (pullDownEl.className.match('flip')) {
-//                 pullDownEl.className = 'loading';
-//                 pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';
-//                 alert('^^^')              
-//                 // pullDownAction();
-//             } else if (pullUpEl.className.match('flip')) {
-//                 pullUpEl.className = 'loading';
-//                 pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';                
-//                 alert('****')
-//                 // pullUpAction();
-//             }
-//         }
-//     });
-// }
 
 /***/ })
 /******/ ]);

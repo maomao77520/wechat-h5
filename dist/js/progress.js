@@ -210,23 +210,32 @@ $(document).ready(function () {
         'padding-left': $('.top-num-wrap .hour').position().left
     });
 
-    var deviceId = com.parseQuery('deviceId')
-    var slotIndex = com.parseQuery('slotIndex')
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
 
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex
+    }
+
+    if (!deviceId || !slotIndex) {
+        url = '/charger/getmycharging';
+        params = {
+            accesstoken: 'asdasdwedf565665',
+            userId: localStorage.getItem('openId')
+        }
+    }
 
     $.ajax({
-        url: '/charger/getChargingProgress',
+        url: url,
         type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665',
-            deviceId: deviceId,
-            slotIndex: slotIndex
-        }),
+        data: JSON.stringify(params),
         contentType: 'application/json',
         success: function (res) {
             if (res.status == 0) {
-                countDown(res.data.time);
-    res.data.totalTime = 8
+                countDown(res.data.totalTime);
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
                 var year = endTime.getFullYear();
                 var month = endTime.getMonth() + 1;
@@ -263,23 +272,38 @@ $(document).ready(function () {
 
                 var tpl = doT.template($('#J_progress_template').html())(res.data);
                 $('#J_progress_detail').html(tpl);
+
+            }
+            else {
+                showToast();
             }
         },
-        error: function (error) {}
+        error: function (error) {
+            showToast();
+        }
     });
 
-
-    function analyszeTime(time) {
-        var arr = time.split(':');
-        return {
-            hour: arr[0],
-            minite: arr[1],
-            second: arr[2]
-        };
+    function showToast() {
+        var $toast = $('#toast');
+        if ($toast.css('display') != 'none') {
+            return;
+        }
+        $toast.fadeIn(100);
+        setTimeout(function () {
+            $toast.fadeOut(100);
+        }, 2000);
     }
 
+
     function countDown(time) {
-        var leftTime = analyszeTime(time);
+        time = (time-1) >= 10 ? (time-1) : '0' + (time-1);
+        console.log(time)
+        var leftTime = {
+            hour: time,
+            minite: '59',
+            second: '59'
+        }
+        console.log(leftTime)
         $('.top-num-wrap .hour').text(leftTime.hour);
         $('.top-num-wrap .minite').text(leftTime.minite);
         $('.top-num-wrap .second').text(leftTime.second);

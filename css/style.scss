@@ -103,10 +103,24 @@ html {
     color: $light-font-color;
     text-align: center;
 }
+.flip .pullDownLabel {
+    display: block;
+}
 .list-empty {
     font-size: $md-font-size;
     color: $light-font-color;
     text-align: center;
     margin-top: 1rem;
     background: #f9f9f9;
+}
+#toast .toast-wrap {
+    width: 8em;
+    min-height: 8em;
+    margin-left: -4em;
+    font-size: $xl-font-size;
+    .toast-text {
+        height: 8em;
+        line-height: 8em;
+        margin-bottom: 0;
+    }
 }

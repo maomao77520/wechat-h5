@@ -5,6 +5,7 @@ var scroll = require('./myScroll.js');
 $(document).on('ready', function () {
     var currentLat;
     var currentLng;
+    var currentPage = 1;
 
     com.getWxConfig();
     wx.ready(function () {
@@ -13,10 +14,12 @@ $(document).on('ready', function () {
             success: function (res) {
                 currentLat = res.latitude;
                 currentLng = res.longitude;
-                getList(1, currentLat, currentLng);
+                getList(currentPage, currentLat, currentLng, initScroll);
             },
             fail: function (err) {
-                getList(1, '', '');
+                currentLat = '';
+                currentLng = '';
+                getList(currentPage, currentLat, currentLng, initScroll);
             }
         });
 
@@ -66,31 +69,41 @@ $(document).on('ready', function () {
         });
     });
 
+    function initScroll() {
+        scroll.init(function () {
+            currentPage++;
+            getList(currentPage, currentLat, currentLng);
+        }, function () {
+            currentPage = 1;
+            getList(currentPage, currentLat, currentLng);
+        });
+    }
 
-    function getList(pageindex, lat, long) {
+
+    function getList(pageIndex, lat, lng, cb) {
         $.ajax({
             url: '/charger/getnearcharging',
             type: 'post',
             async: false,
             data: JSON.stringify({
                 lat: lat,
-                lng: long,
+                lng: lng,
                 accesstoken: 'asdasdwedf565665',
                 pagesize: 20,
-                pageindex: pageindex
+                pageindex: pageIndex
             }),
             contentType: 'application/json',
             success: function (res) {    
                 if (res.status == 0) {
                     var tpl = doT.template($('#list-template').html())(res.data.content);
-                    $('#J_list-wrap').html(tpl);
+                    if (pageIndex == 1) {
+                        $('#J_list-wrap').html(tpl);
+                    }
+                    else {
+                        $('#J_list-wrap').append(tpl);
+                    }
+                    cb && cb();
                 }
-
-                scroll.init(function () {
-                    alert('pull up')
-                }, function () {
-                    alert('pull down')
-                });
             },
             error: function (err) {
 

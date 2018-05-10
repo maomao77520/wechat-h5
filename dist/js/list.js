@@ -207,7 +207,6 @@ $(document).ready(function () {
  
     getList(); 
 
-
     function getList() {
         var search = window.location.search.substring(1);
         var id = search.split('=')[1];
@@ -245,11 +244,8 @@ $(document).ready(function () {
                     com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
                 });
             });
-        })
-        
+        });
     }
-    
-
 });
 
 

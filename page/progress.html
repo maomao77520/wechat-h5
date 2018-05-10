@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>正在充电</title>
     <link rel="stylesheet" href="../css/progress.css">
+    <link rel="stylesheet" href="../lib/weui.min.css">
 
     <script src="../lib/flexible.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
@@ -12,7 +13,12 @@
 </head>
 <body>
     <div class="progress-wrap">
-
+        <div id="toast" style="display: none;">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast toast-wrap">
+                <p class="weui-toast__content toast-text">加载失败</p>
+            </div>
+        </div>
 
         <div class="wave-wrap top">
             <div class="wave wave-top"></div>
