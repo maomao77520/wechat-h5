@@ -38,7 +38,8 @@ $(document).ready(function () {
         price = $(this).data('price');
     });
 
-    $('#J_open_dialog').on('click', function (e) {
+
+    $('#J_top_detail').on('click', '#J_open_dialog', function (e) {
         $('#iosDialog2').fadeIn(200);
     });
 

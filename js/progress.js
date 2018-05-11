@@ -11,6 +11,14 @@ $(document).ready(function () {
         'padding-left': $('.top-num-wrap .hour').position().left
     });
 
+    $('#J_question_icon').on('click', function (e) {
+        $('#iosDialog2').fadeIn(200);
+    });
+
+    $('#J_close_dialog').on('click', function (e) {
+        $('#iosDialog2').fadeOut(200);
+    });
+
     var deviceId = com.parseQuery('deviceId');
     var slotIndex = com.parseQuery('slotIndex');
 

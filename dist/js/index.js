@@ -321,14 +321,14 @@ $(document).on('ready', function () {
             type: 'post',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
-                search: word,
+                search: encodeURIComponent(word),
                 lat: currentLat,
                 lng: currentLng
             }),
             contentType: 'application/json',
             success: function (res) {
                 if (res.status == 0) {
-                    var tpl = doT.template($('#list-template').html())(res.content);
+                    var tpl = doT.template($('#list-template').html())(res.data.content);
                     $('#J_list-wrap').html(tpl);
                 }
             },
