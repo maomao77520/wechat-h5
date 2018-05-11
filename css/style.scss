@@ -113,11 +113,13 @@ html {
     margin-top: 1rem;
     background: #f9f9f9;
 }
-#toast .toast-wrap {
+#toast .toast-wrap, #loadingToast .toast-wrap {
     width: 8em;
     min-height: 8em;
     margin-left: -4em;
     font-size: $xl-font-size;
+}
+#toast .toast-wrap {
     .toast-text {
         height: 8em;
         line-height: 8em;

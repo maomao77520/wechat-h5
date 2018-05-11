@@ -83,15 +83,16 @@ html {
   margin-top: 1rem;
   background: #f9f9f9; }
 
-#toast .toast-wrap {
+#toast .toast-wrap, #loadingToast .toast-wrap {
   width: 8em;
   min-height: 8em;
   margin-left: -4em;
   font-size: 0.5rem; }
-  #toast .toast-wrap .toast-text {
-    height: 8em;
-    line-height: 8em;
-    margin-bottom: 0; }
+
+#toast .toast-wrap .toast-text {
+  height: 8em;
+  line-height: 8em;
+  margin-bottom: 0; }
 
 .record-wrap {
   line-height: 1; }
@@ -109,10 +110,9 @@ html {
               flex: 1; }
   .record-wrap .record-list {
     margin-top: 0.2rem;
-    background: #fff;
-    padding: 0.32rem 0.32rem; }
+    background: #fff; }
     .record-wrap .record-list .record-item {
-      padding: 0.32rem 0;
+      padding: 0.32rem 0.32rem;
       border-bottom: 1px solid #eaeaea; }
       .record-wrap .record-list .record-item .line-1 {
         display: -webkit-box;

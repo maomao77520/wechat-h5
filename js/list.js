@@ -7,6 +7,8 @@ $(document).ready(function () {
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
 
+    $('#loadingToast').fadeIn(100);
+
     getList();
     function getList() {
         var search = window.location.search.substring(1);
@@ -22,15 +24,19 @@ $(document).ready(function () {
             }),
             contentType: 'application/json',
             success: function (res) {
+                $('#loadingToast').fadeOut(100);
                 if (res.status == 0) {
                     var tpl = doT.template($('#second-list-template').html())(res.data);
                     $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
                 }
 
                 initEvent();
             },
             error: function (err) {
-
+                com.showToast();
             }
         });
     }  

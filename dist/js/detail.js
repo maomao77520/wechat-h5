@@ -112,12 +112,12 @@ var Common = {
     },
 
     convert: function (lat, lng) {
+        var url = '/ws/geocoder/v1/?location='
         return $.ajax({
-            url: '/ws/coord/v1/translate?locations=' + lat + ',' + lng
-            + '&type=1&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
             success: function (res) {
-                return res.locations;
-                // openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                return res;
             }
         });
     },
@@ -184,8 +184,17 @@ var Common = {
             },
             success: function (res) {},
             error: function (err) {}
-        });
-        
+        }); 
+    },
+    showToast: function () {
+        var $toast = $('#toast');
+        if ($toast.css('display') != 'none') {
+            return;
+        }
+        $toast.fadeIn(100);
+        setTimeout(function () {
+            $toast.fadeOut(100);
+        }, 2000);
     }
 };
 
@@ -202,6 +211,8 @@ var css = __webpack_require__(5);
 var com = __webpack_require__(0);
 
 $(document).on('ready', function () {
+    $('#loadingToast').fadeIn(100);
+    
     var search = window.location.search.substring(1);
     var id = search.split('=')[1];
 
@@ -215,6 +226,7 @@ $(document).on('ready', function () {
         }),
         contentType: 'application/json',
         success: function (res) {
+            $('#loadingToast').fadeOut(100);
             targetLat = res.data.lat;
             targetLng = res.data.lng;
             location = res.data.location;
@@ -228,9 +240,12 @@ $(document).on('ready', function () {
 
                 initEvent();
             }
+            else {
+                com.showToast();
+            }
         },
         error: function (err) {
-
+            com.showToast();
         }
     });
     

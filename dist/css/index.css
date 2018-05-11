@@ -84,15 +84,16 @@ html {
   margin-top: 1rem;
   background: #f9f9f9; }
 
-#toast .toast-wrap {
+#toast .toast-wrap, #loadingToast .toast-wrap {
   width: 8em;
   min-height: 8em;
   margin-left: -4em;
   font-size: 0.5rem; }
-  #toast .toast-wrap .toast-text {
-    height: 8em;
-    line-height: 8em;
-    margin-bottom: 0; }
+
+#toast .toast-wrap .toast-text {
+  height: 8em;
+  line-height: 8em;
+  margin-bottom: 0; }
 
 /* 附近电桩 */
 .wrap {
@@ -185,8 +186,7 @@ html {
     z-index: 10; }
   .wrap .list-wrap {
     background: #fff;
-    position: relative;
-    z-index: 2; }
+    position: relative; }
   .wrap .bottom-tips {
     font-size: 0.32rem;
     color: #aaa;

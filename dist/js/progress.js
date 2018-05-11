@@ -113,12 +113,12 @@ var Common = {
     },
 
     convert: function (lat, lng) {
+        var url = '/ws/geocoder/v1/?location='
         return $.ajax({
-            url: '/ws/coord/v1/translate?locations=' + lat + ',' + lng
-            + '&type=1&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
             success: function (res) {
-                return res.locations;
-                // openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                return res;
             }
         });
     },
@@ -185,8 +185,17 @@ var Common = {
             },
             success: function (res) {},
             error: function (err) {}
-        });
-        
+        }); 
+    },
+    showToast: function () {
+        var $toast = $('#toast');
+        if ($toast.css('display') != 'none') {
+            return;
+        }
+        $toast.fadeIn(100);
+        setTimeout(function () {
+            $toast.fadeOut(100);
+        }, 2000);
     }
 };
 
@@ -242,7 +251,7 @@ $(document).ready(function () {
         data: JSON.stringify(params),
         contentType: 'application/json',
         success: function (res) {
-            if (res.status == 0) {
+            if (res.status == 0 && res.data) {
                 countDown(res.data.totalTime);
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
                 var year = endTime.getFullYear();
@@ -283,24 +292,14 @@ $(document).ready(function () {
 
             }
             else {
-                showToast();
+                com.showToast();
             }
         },
         error: function (error) {
-            showToast();
+            com.showToast();
         }
     });
 
-    function showToast() {
-        var $toast = $('#toast');
-        if ($toast.css('display') != 'none') {
-            return;
-        }
-        $toast.fadeIn(100);
-        setTimeout(function () {
-            $toast.fadeOut(100);
-        }, 2000);
-    }
 
 
     function countDown(time) {

@@ -19,8 +19,16 @@ $(document).ready(function () {
             slotIndex: slotIndex
         }),
         success: function (res) {
-            var tpl = doT.template($('#J_top_detail_template').html())(res.data);
-            $('#J_top_detail').html(tpl);
+            if (res.status == 0) {
+                var tpl = doT.template($('#J_top_detail_template').html())(res.data);
+                $('#J_top_detail').html(tpl);
+            }
+            else {
+                com.showToast();
+            }
+        },
+        fail: function (err) {
+            com.showToast();
         }
     })
     

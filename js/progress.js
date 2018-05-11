@@ -43,7 +43,7 @@ $(document).ready(function () {
         data: JSON.stringify(params),
         contentType: 'application/json',
         success: function (res) {
-            if (res.status == 0) {
+            if (res.status == 0 && res.data) {
                 countDown(res.data.totalTime);
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
                 var year = endTime.getFullYear();
@@ -84,24 +84,14 @@ $(document).ready(function () {
 
             }
             else {
-                showToast();
+                com.showToast();
             }
         },
         error: function (error) {
-            showToast();
+            com.showToast();
         }
     });
 
-    function showToast() {
-        var $toast = $('#toast');
-        if ($toast.css('display') != 'none') {
-            return;
-        }
-        $toast.fadeIn(100);
-        setTimeout(function () {
-            $toast.fadeOut(100);
-        }, 2000);
-    }
 
 
     function countDown(time) {

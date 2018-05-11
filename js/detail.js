@@ -2,6 +2,8 @@ var css = require('../css/detail.scss');
 var com = require('./common.js');
 
 $(document).on('ready', function () {
+    $('#loadingToast').fadeIn(100);
+    
     var search = window.location.search.substring(1);
     var id = search.split('=')[1];
 
@@ -15,6 +17,7 @@ $(document).on('ready', function () {
         }),
         contentType: 'application/json',
         success: function (res) {
+            $('#loadingToast').fadeOut(100);
             targetLat = res.data.lat;
             targetLng = res.data.lng;
             location = res.data.location;
@@ -28,9 +31,12 @@ $(document).on('ready', function () {
 
                 initEvent();
             }
+            else {
+                com.showToast();
+            }
         },
         error: function (err) {
-
+            com.showToast();
         }
     });
     

@@ -112,12 +112,12 @@ var Common = {
     },
 
     convert: function (lat, lng) {
+        var url = '/ws/geocoder/v1/?location='
         return $.ajax({
-            url: '/ws/coord/v1/translate?locations=' + lat + ',' + lng
-            + '&type=1&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
             success: function (res) {
-                return res.locations;
-                // openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                return res;
             }
         });
     },
@@ -184,8 +184,17 @@ var Common = {
             },
             success: function (res) {},
             error: function (err) {}
-        });
-        
+        }); 
+    },
+    showToast: function () {
+        var $toast = $('#toast');
+        if ($toast.css('display') != 'none') {
+            return;
+        }
+        $toast.fadeIn(100);
+        setTimeout(function () {
+            $toast.fadeOut(100);
+        }, 2000);
     }
 };
 
@@ -206,9 +215,13 @@ var com = __webpack_require__(0);
 var scroll = __webpack_require__(3);
 
 $(document).on('ready', function () {
+    var cityList = [];
     var currentLat;
     var currentLng;
     var currentPage = 1;
+    var currentCity = '南宁';
+
+    $('#loadingToast').fadeIn(100);
 
     com.getWxConfig();
     wx.ready(function () {
@@ -217,7 +230,22 @@ $(document).on('ready', function () {
             success: function (res) {
                 currentLat = res.latitude;
                 currentLng = res.longitude;
-                getList(currentPage, currentLat, currentLng, initScroll);
+                com.convert(currentLat, currentLng).done(function (res) {
+                    if (res.status == 0) {
+                        currentCity = res.result.address_component.city;
+                        currentCity = currentCity.substring(0, currentCity.length - 1);
+                        $.when(p1).done(function () {
+                            if (checkValidCity(currentCity, cityList)) {
+                                $('#J_city_name').text(currentCity);
+                                getList(currentPage, currentLat, currentLng, initScroll);
+                            }
+                            else {
+                                $('#J_list-wrap').html('<div class="list-empty">该地区暂不支持~</div>');
+                            }
+                        });
+                    }
+                });
+                
             },
             fail: function (err) {
                 currentLat = '';
@@ -238,39 +266,61 @@ $(document).on('ready', function () {
             
         });
     });
-    
-    initSearch();
 
-    
-    // 地点下拉框
-    $('#J_city_picker').on('click', function () {
-        $this = $(this);
-        weui.picker([{
-            label: '南宁',
-            value: 1
-        }, {
-            label: '柳州',
-            value: 2
-        }, {
-            label: '防城港',
-            value: 3
-        },{
-            label: '北海',
-            value: 4
-        }, {
-            label: '桂林',
-            value: 5
-        }], {
-            onChange: function (result) {
-            },
-            onConfirm: function (result) {
-                $this.find('span').text(result[0].label);
-                $this.css({
-                    width:  (result[0].label.length + 2) + 'em'
+    var p1 = $.ajax({
+        url: '/charger/getCity',
+        type: 'post',
+        data: JSON.stringify({
+            accesstoken: 'asdasdwedf565665'
+        }),
+        contentType: 'application/json',
+        success: function (res) {
+            if (res.status == 0) {
+                for (var i = 0; i < res.data.length; i++) {
+                    cityList.push({
+                        label: res.data[i].city,
+                        value: res.data[i].city,
+                        province: res.data[i].province,
+                    });
+                }
+                // 地点下拉框
+                $('#J_city_picker').on('click', function () {
+                    $this = $(this);
+                    weui.picker(cityList, {
+                        onChange: function (result) {
+                        },
+                        onConfirm: function (result) {
+                            var preVal = $this.find('span').text();
+                            if (result[0].label == preVal) {
+                                return;
+                            }
+                            currentCity = result[0].label;
+                            $this.find('span').text(currentCity);
+                            $this.css({
+                                width:  (result[0].label.length + 2) + 'em'
+                            });
+                            searchList();
+                        }
+                    });
                 });
             }
-        });
+        },
+        fail: function (err) {
+
+        },
     });
+
+    initSearch();
+
+    function checkValidCity(city, cityList) {
+        for (var i = 0; i < cityList.length; i++) {
+            if (city.indexOf(cityList[i].label) > -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
     function initScroll() {
         scroll.init(function () {
@@ -296,7 +346,8 @@ $(document).on('ready', function () {
                 pageindex: pageIndex
             }),
             contentType: 'application/json',
-            success: function (res) {    
+            success: function (res) {
+                $('#loadingToast').fadeOut(100);   
                 if (res.status == 0) {
                     var tpl = doT.template($('#list-template').html())(res.data.content);
                     if (pageIndex == 1) {
@@ -307,9 +358,12 @@ $(document).on('ready', function () {
                     }
                     cb && cb();
                 }
+                else {
+                    com.showToast();
+                }
             },
             error: function (err) {
-
+                com.showToast();
             }
         });
     }
@@ -321,15 +375,23 @@ $(document).on('ready', function () {
             type: 'post',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
-                search: encodeURIComponent(word),
+                searchWord: encodeURIComponent(word),
+                city: encodeURIComponent(currentCity),
                 lat: currentLat,
                 lng: currentLng
             }),
             contentType: 'application/json',
             success: function (res) {
                 if (res.status == 0) {
+                    if (res.data.content.length == 0) {
+                        $('#J_list-wrap').html('<div class="list-empty">该区域暂不支持~</div>');
+                        return;
+                    }
                     var tpl = doT.template($('#list-template').html())(res.data.content);
                     $('#J_list-wrap').html(tpl);
+                }
+                else {
+
                 }
             },
             error: function (err) {}
@@ -340,7 +402,7 @@ $(document).on('ready', function () {
 
     var deboun = com.debounce(function () {
         searchList();
-    }, 1000, this);
+    }, 500, this);
     function initSearch() {
         var $searchBar = $('#searchBar'),
             $searchResult = $('#searchResult'),

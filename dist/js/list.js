@@ -112,12 +112,12 @@ var Common = {
     },
 
     convert: function (lat, lng) {
+        var url = '/ws/geocoder/v1/?location='
         return $.ajax({
-            url: '/ws/coord/v1/translate?locations=' + lat + ',' + lng
-            + '&type=1&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
             success: function (res) {
-                return res.locations;
-                // openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                return res;
             }
         });
     },
@@ -184,8 +184,17 @@ var Common = {
             },
             success: function (res) {},
             error: function (err) {}
-        });
-        
+        }); 
+    },
+    showToast: function () {
+        var $toast = $('#toast');
+        if ($toast.css('display') != 'none') {
+            return;
+        }
+        $toast.fadeIn(100);
+        setTimeout(function () {
+            $toast.fadeOut(100);
+        }, 2000);
     }
 };
 
@@ -209,6 +218,8 @@ $(document).ready(function () {
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
 
+    $('#loadingToast').fadeIn(100);
+
     getList();
     function getList() {
         var search = window.location.search.substring(1);
@@ -224,15 +235,19 @@ $(document).ready(function () {
             }),
             contentType: 'application/json',
             success: function (res) {
+                $('#loadingToast').fadeOut(100);
                 if (res.status == 0) {
                     var tpl = doT.template($('#second-list-template').html())(res.data);
                     $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
                 }
 
                 initEvent();
             },
             error: function (err) {
-
+                com.showToast();
             }
         });
     }  

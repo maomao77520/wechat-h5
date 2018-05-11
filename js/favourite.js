@@ -1,4 +1,5 @@
 var css = require('../css/index.scss');
+var com = require('./common.js');
 
 $(document).on('ready', function () {
 
@@ -15,6 +16,12 @@ $(document).on('ready', function () {
                 var tpl = doT.template($('#list-template').html())(res.data.content);
                 $('#J_favourite-list').html(tpl);
             }
+            else {
+                com.showToast();
+            }
+        },
+        fail: function () {
+            com.showToast();
         }
     });
 

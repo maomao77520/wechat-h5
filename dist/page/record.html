@@ -32,7 +32,7 @@
                     <div class="left-block">
                         <div class="order-time-wrap">
                             <i class="time-icon"></i>
-                            <span>充电开始时间：{{= item.startTime}}</span>
+                            <span>充电开始时间：{{= item.paytime}}</span>
                         </div>
                         <div>
                             <i class="price-icon"></i>
@@ -40,13 +40,26 @@
                         </div>
                     </div>
                     <div class="right-block">
-                        <span>{{= item.deviceId}}</span>
+                        <span>
+                        {{? item.chargerIndex >= 10}}
+                            {{= item.chargerIndex}}
+                        {{??}}
+                            0{{= item.chargerIndex}}
+                        {{?}}
+                        </span>
                     </div>
                 </div>
             </div>
             {{~}}
         </div>
     </script>
+
+    <div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast toast-wrap">
+            <p class="weui-toast__content toast-text">加载失败</p>
+        </div>
+    </div>
 
     <script src="../lib/doT.min.js"></script>
     <script src="../js/record.js"></script>

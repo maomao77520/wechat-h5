@@ -25,7 +25,6 @@ module.exports = {
         record: './js/record.js',
         favourite: './js/favourite.js',
         progress: './js/progress.js',
-        map: './js/map.js',
         qrcode: './js/qrcode.js'
     },
     // 入口文件输出配置

@@ -15,9 +15,8 @@
     .record-list {
         margin-top: 0.2rem;
         background: #fff;
-        padding: $primary-padding-top $primary-padding-left;
         .record-item {
-            padding: $primary-padding-top 0;
+            padding: $primary-padding-top $primary-padding-left;
             border-bottom: 1px solid $border-color;
             .line-1 {
                 display: flex;

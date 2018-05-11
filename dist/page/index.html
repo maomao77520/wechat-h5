@@ -19,7 +19,7 @@
         <div class="top-bar">
             <div class="city-select-wrap">
                 <a href="javascript:;" class="picker-wrap" id="J_city_picker">
-                    <span>南宁</span>
+                    <span id="J_city_name"></span>
                     <i></i>
                 </a>
             </div>
@@ -83,6 +83,20 @@
             </div>
             {{~}}
         </script>
+    </div>
+
+    <div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast toast-wrap">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content toast-text">数据加载中</p>
+        </div>
+    </div>
+    <div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast toast-wrap">
+            <p class="weui-toast__content toast-text">加载失败</p>
+        </div>
     </div>
     <script src="../lib/doT.min.js"></script>
     <script src="../lib/weui.min.js"></script>
