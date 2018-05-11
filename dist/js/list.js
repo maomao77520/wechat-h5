@@ -205,8 +205,11 @@ var com = __webpack_require__(0);
 
 $(document).ready(function () {
  
-    getList(); 
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
 
+    getList();
     function getList() {
         var search = window.location.search.substring(1);
         var id = search.split('=')[1];
@@ -215,7 +218,9 @@ $(document).ready(function () {
             type: 'post',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
-                locationId: id
+                locationId: locationId,
+                lat: lat,
+                lng: lng
             }),
             contentType: 'application/json',
             success: function (res) {
