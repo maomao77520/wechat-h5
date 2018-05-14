@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>充电桩</title>
+    <title>充电站列表</title>
     <link rel="stylesheet" href="../lib/weui.min.css">
     <link rel="stylesheet" href="../css/list.css">
 
@@ -54,9 +54,9 @@
                 <div class="second-item-right">
                     <div class="second-item-name">
                     {{? item.chargerIndex == 10}}
-                        {{= item.chargerIndex}}号充电桩
+                        {{= item.chargerIndex}}号充电站
                     {{??}}
-                        0{{= item.chargerIndex}}号充电桩
+                        0{{= item.chargerIndex}}号充电站
                     {{?}}
                     </div>
                     <div class="second-item-detail">

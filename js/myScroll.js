@@ -27,7 +27,7 @@ var Scroll = {
                     pullDownEl.className = 'flip';
                     pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
                     this.minScrollY = 0;
-                } else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                } else if (this.y < 0 && this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
                     pullUpEl.className = 'flip';
                     pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
                 }
