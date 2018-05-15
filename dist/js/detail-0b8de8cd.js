@@ -60,12 +60,11 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 var Common = {
@@ -114,6 +113,17 @@ var Common = {
 
     convert: function (lat, lng) {
         var url = '/ws/geocoder/v1/?location='
+        return $.ajax({
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            success: function (res) {
+                return res;
+            }
+        });
+    },
+
+    translateLocation: function (lat, lng) {
+        var url = '/ws/coord/v1/translate?type=1&locations='
         return $.ajax({
             url: url + lat + ',' + lng
             + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
@@ -202,44 +212,86 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-
-/***/ 12:
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(13);
+var css = __webpack_require__(7);
 var com = __webpack_require__(0);
 
-$(document).ready(function () {
+$(document).on('ready', function () {
+    $('#loadingToast').fadeIn(100);
+    
+    var search = window.location.search.substring(1);
+    var id = search.split('=')[1];
+
+    var targetLat, targetLng, currentLat, currentLng, location, addr;
     $.ajax({
-        url: '/charger/getrecordcharging',
+        url: '/charger/getslotcharging',
         type: 'post',
         data: JSON.stringify({
-            accessToken: 'asdasdwedf565665',
-            userId: localStorage.getItem('openId')
+            accesstoken: 'asdasdwedf565665',
+            deviceId: id
         }),
         contentType: 'application/json',
         success: function (res) {
+            $('#loadingToast').fadeOut(100);
+            targetLat = res.data.lat;
+            targetLng = res.data.lng;
+            location = res.data.location;
+            addr = res.data.locationDetail;
             if (res.status == 0) {
-                var tpl = doT.template($('#J_record_template').html())(res.data);
-                $('#J_record_wrap').html(tpl);
+                var tpl1 = doT.template($('#J_detail_top_template').html())(res.data);
+                $('#J_detail_info').html(tpl1);
+
+                var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
+                $('#J_detail_list').html(tpl2);
+
+                initEvent();
             }
             else {
                 com.showToast();
             }
         },
-        fail: function () {
+        error: function (err) {
             com.showToast();
         }
     });
+    
+
+
+    function initEvent() {
+        com.getWxConfig();  
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+
+            $('#J_detail_info').on('click', '#J_click_open_map', function (e) {
+                com.convert(targetLat, targetLng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+            });
+        });
+    }
+
 });
 
 /***/ }),
-
-/***/ 13:
+/* 7 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-
-/******/ });
+/******/ ]);

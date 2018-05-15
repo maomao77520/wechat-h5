@@ -1,37 +1,12 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-
-const config = require('./config.js');
-const path = require('path');
-let pages = config.pages;
-let hbsHtmlWebpackPlugins = [];
-
-for (let i = 0; i < pages.length; i++) {
-
-    let subJs = '../js/';
-    let js = config.js.concat(subJs + pages[i] + '.js');
-
-    let subCss = '../css/';
-    let css = config.css.concat(subCss + pages[i] + '.css');
-
-    hbsHtmlWebpackPlugins.push(new HtmlWebpackPlugin({
-        // params: config.dev,
-        js: config.js,
-        css: config.css,
-        prejs: config.prejs,
-        filename: path.join('page', pages[i] + '.html'),
-        inject: 'body',
-        template: path.join(__dirname, 'page', pages[i] + '.html'),
-        chunks: [pages[i]]
-    }));
-}
-
 module.exports = {
     // 插件项
     plugins: [
-        new ExtractTextPlugin('css/[name]-[chunkhash:8].css'),
+
+        /*new CommonsChunkPlugin('common'),*/
+        new ExtractTextPlugin('css/[name].css'),
         new CopyWebpackPlugin([{
             from: __dirname + '/lib',
             to: __dirname + '/dist/lib'
@@ -39,20 +14,23 @@ module.exports = {
             from: __dirname + '/page',
             to: __dirname + '/dist/page'
         }])
-    ].concat(hbsHtmlWebpackPlugins),
+    ],
     // 页面入口文件配置
-    entry: (function() {
-        let obj = {};
-        for (let i = 0; i < pages.length; i++) {
-            let base = pages[i];
-            obj[base] = path.join(__dirname, 'js', base)
-        }
-        return obj;
-    })(),
+    entry: {
+        index: './js/index.js',
+        detail: './js/detail.js',
+        list: './js/list.js',
+        charge: './js/charge.js',
+        user: './js/user.js',
+        record: './js/record.js',
+        favourite: './js/favourite.js',
+        progress: './js/progress.js',
+        qrcode: './js/qrcode.js'
+    },
     // 入口文件输出配置
     output: {
         path: __dirname + '/dist',
-        filename: 'js/[name]-[chunkhash:8].js',
+        filename: 'js/[name].js',
         publicPath: '../'
     },
     module: {

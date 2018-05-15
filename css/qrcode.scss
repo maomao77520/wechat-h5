@@ -1,0 +1,55 @@
+@import "./style.scss";
+.qrcode-wrap {
+    background: #fff;
+    padding: 0.4rem 0.3rem;
+    .title {
+        font-size: $xl-font-size;
+        color: $font-color;
+    }
+    .time-wrap {
+        font-size: $lg-font-size;
+        color: $light-font-color;
+        .icon {
+
+        }
+        a {
+            color: $primary-color;
+        }
+    }
+    .step-wrap {
+        margin-top: 1rem;
+        .step-title {
+            font-size: $xl-font-size;
+            color: $primary-color;
+            margin-bottom: 5px;
+        }
+        .step {
+            font-size: $md-font-size;
+            color: $font-color;
+            line-height: 2.4;
+        }
+        .step-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 10px;
+            background: $primary-color;
+            color: #fff;
+            text-align: center;
+        }
+    }
+    .qrcode-block {
+        font-size: $md-font-size;
+        color: $light-font-color;
+        text-align: center;
+        margin-top: 1.2rem;
+        .qrcode {
+            text-align: center;
+        }
+    }
+
+}
+.weui-picker__item {
+    font-size: 17px;
+}

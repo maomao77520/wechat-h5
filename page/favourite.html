@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>附近电站</title>
-    <link rel="stylesheet" href="../lib/weui.min.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
 
-    <script src="../lib/flexible.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
 
 
 </head>
@@ -21,7 +23,7 @@
             {{? it.length > 0}}
                 {{~ it:item:index}}
                 <div class="list-item-wrap clearfix">
-                    <a class="item-left J_to_list" href="./list.html">
+                    <a class="item-left J_to_list" href="./list.html?locationId={{= item.locationId}}&lat={{= it.userLat}}&lng={{= it.userLng}}">
                         <div class="item-name">{{= item.location}}</div>
                         <div class="item-addr">{{= item.locationDetail}}</div>
                         <div class="item-detail">
@@ -51,7 +53,8 @@
             <p class="weui-toast__content toast-text">加载失败</p>
         </div>
     </div>
-    <script src="../lib/doT.min.js"></script>
-    <script src="../js/favourite.js"></script>
+    <% for (var js in htmlWebpackPlugin.options.js) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.js[js] %>"></script>
+    <% } %>
 </body>
 </html>

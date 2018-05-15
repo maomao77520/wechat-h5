@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>充电站列表</title>
-    <link rel="stylesheet" href="../lib/weui.min.css">
-    <link rel="stylesheet" href="../css/list.css">
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
 
-    <script src="../lib/flexible.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
 
 
 </head>
@@ -91,8 +93,8 @@
         </div>
     </div>
 
-    <script src="../lib/doT.min.js"></script>
-    <script src="../lib/weixin-1.2.0.js"></script>
-    <script src="../js/list.js"></script>
+    <% for (var js in htmlWebpackPlugin.options.js) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.js[js] %>"></script>
+    <% } %>
 </body>
 </html>

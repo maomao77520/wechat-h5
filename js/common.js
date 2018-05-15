@@ -53,6 +53,17 @@ var Common = {
         });
     },
 
+    translateLocation: function (lat, lng) {
+        var url = '/ws/coord/v1/translate?type=1&locations='
+        return $.ajax({
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            success: function (res) {
+                return res;
+            }
+        });
+    },
+
     parseQuery: function (name) { 
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //定义正则表达式 
         

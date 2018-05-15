@@ -122,6 +122,17 @@ var Common = {
         });
     },
 
+    translateLocation: function (lat, lng) {
+        var url = '/ws/coord/v1/translate?type=1&locations='
+        return $.ajax({
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            success: function (res) {
+                return res;
+            }
+        });
+    },
+
     parseQuery: function (name) { 
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //定义正则表达式 
         
@@ -245,12 +256,15 @@ $(document).on('ready', function () {
                         });
                     }
                 });
+
+                $('#J_favourite').attr('href', './favourite.html?lat=' + currentLat + '&lng=' + currentLng);
                 
             },
             fail: function (err) {
                 currentLat = '';
                 currentLng = '';
                 getList(currentPage, currentLat, currentLng, initScroll);
+                $('#J_favourite').attr('href', './favourite.html?lat=' + currentLat + '&lng=' + currentLng);
             }
         });
 
@@ -260,7 +274,7 @@ $(document).on('ready', function () {
             var addr = $(this).data('addr');
             var lat = $(this).data('lat');
             var lng = $(this).data('lng');
-            com.convert(lat, lng).done(function (res) {
+            com.translateLocation(lat, lng).done(function (res) {
                 com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
             });
             
@@ -334,6 +348,7 @@ $(document).on('ready', function () {
 
 
     function getList(pageIndex, lat, lng, cb) {
+        console.log('>>>>',lat, lng)
         $.ajax({
             url: '/charger/getnearcharging',
             type: 'post',
@@ -349,6 +364,8 @@ $(document).on('ready', function () {
             success: function (res) {
                 $('#loadingToast').fadeOut(100);   
                 if (res.status == 0) {
+                    res.data.content.userLat = lat;
+                    res.data.content.userLng = lng;
                     var tpl = doT.template($('#list-template').html())(res.data.content);
                     if (pageIndex == 1) {
                         $('#J_list-wrap').html(tpl);
@@ -387,6 +404,8 @@ $(document).on('ready', function () {
                         $('#J_list-wrap').html('<div class="list-empty">该区域暂不支持~</div>');
                         return;
                     }
+                    res.data.content.userLat = currentLat;
+                    res.data.content.userLng = currentLng;
                     var tpl = doT.template($('#list-template').html())(res.data.content);
                     $('#J_list-wrap').html(tpl);
                 }
@@ -489,7 +508,7 @@ var Scroll = {
                     this.minScrollY = 0;
                 } else if (this.y < 0 && this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
                     pullUpEl.className = 'flip';
-                    pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = '数据加载中...';
                 }
             },
             onScrollEnd: function () {

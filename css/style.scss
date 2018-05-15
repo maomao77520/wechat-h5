@@ -47,6 +47,8 @@ html {
     .item-right {
         width: 2rem;
         text-align: center;
+        display: flex;
+        flex-direction: column;
         .item-dis-icon {
             width: 20px;
             height: 20px;

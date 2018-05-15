@@ -60,12 +60,11 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 var Common = {
@@ -114,6 +113,17 @@ var Common = {
 
     convert: function (lat, lng) {
         var url = '/ws/geocoder/v1/?location='
+        return $.ajax({
+            url: url + lat + ',' + lng
+            + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
+            success: function (res) {
+                return res;
+            }
+        });
+    },
+
+    translateLocation: function (lat, lng) {
+        var url = '/ws/coord/v1/translate?type=1&locations='
         return $.ajax({
             url: url + lat + ',' + lng
             + '&key=C5YBZ-MJ4C6-HXBSF-MJ6LD-OYABF-N6FNI',
@@ -202,46 +212,78 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ 1:
+var css = __webpack_require__(5);
+var com = __webpack_require__(0);
+
+$(document).ready(function () {
+ 
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+
+    $('#loadingToast').fadeIn(100);
+
+    getList();
+    function getList() {
+        var search = window.location.search.substring(1);
+        var id = search.split('=')[1];
+        $.ajax({
+            url: '/charger/getcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                locationId: locationId,
+                lat: lat,
+                lng: lng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                $('#loadingToast').fadeOut(100);
+                if (res.status == 0) {
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
+                }
+
+                initEvent();
+            },
+            error: function (err) {
+                com.showToast();
+            }
+        });
+    }  
+
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.J_Navigation').on('click', function () {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                com.convert(lat, lng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+            });
+        });
+    }
+});
+
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
-/***/ }),
-
-/***/ 14:
-/***/ (function(module, exports, __webpack_require__) {
-
-var css = __webpack_require__(1);
-var com = __webpack_require__(0);
-
-$(document).on('ready', function () {
-
-    $.ajax({
-        url: '/charger/getcollectioncharging',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665',
-            openId: localStorage.getItem('openId')
-        }),
-        success: function (res) {
-            if (res.status == 0 && res.data && res.data.content) {
-                var tpl = doT.template($('#list-template').html())(res.data.content);
-                $('#J_favourite-list').html(tpl);
-            }
-            else {
-                com.showToast();
-            }
-        },
-        fail: function () {
-            com.showToast();
-        }
-    });
-
-});
-
 /***/ })
-
-/******/ });
+/******/ ]);

@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>关注小太阳能量站</title>
-    <link rel="stylesheet" href="../lib/weui.min.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
 
-    <script src="../lib/flexible.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
 
 
 </head>

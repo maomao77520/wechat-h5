@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>我的</title>
-    <link rel="stylesheet" href="../lib/weui.min.css">
-    <link rel="stylesheet" href="../css/user.css">
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
 
-    <script src="../lib/flexible.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
 </head>
 <body>
     <div class="user-wrap">
@@ -17,7 +19,6 @@
             <div class="user-detail">
                 <div class="user-name"></div>
             </div>
-            <div class="arrow-icon"></div>
         </div>
 
         
@@ -52,6 +53,6 @@
             </a>
         </div>
     </div>
-    <script src="../js/user.js"></script>
+    
 </body>
 </html>
