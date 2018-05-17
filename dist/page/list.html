@@ -15,7 +15,7 @@
     
 
 
-<link href="../css/list-0a665d44.css" rel="stylesheet"></head>
+<link href="../css/list-5f0cb65c.css" rel="stylesheet"></head>
 <body>
     <div class="second-list-wrap" id="J_second-list">    
     </div>
@@ -47,7 +47,7 @@
         </div>
         <div class="second-list-block">
         {{~ it.content:item:index}}
-            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}">
+            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}&lat={{=it.lat}}&lng={{=it.lng}}">
                 <div class="second-item-left">
                     {{? item.chargerIndex == 10}}
                         {{= item.chargerIndex}}
@@ -100,5 +100,5 @@
     
         <script type="text/javascript" src="../lib/doT.min.js"></script>
     
-<script type="text/javascript" src="../js/list-0a665d44.js"></script></body>
+<script type="text/javascript" src="../js/list-5f0cb65c.js"></script></body>
 </html>

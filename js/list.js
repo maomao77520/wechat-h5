@@ -6,13 +6,12 @@ $(document).ready(function () {
     var locationId = com.parseQuery('locationId');
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
 
     $('#loadingToast').fadeIn(100);
 
     getList();
     function getList() {
-        var search = window.location.search.substring(1);
-        var id = search.split('=')[1];
         $.ajax({
             url: '/charger/getcharging',
             type: 'post',

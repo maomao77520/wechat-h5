@@ -4,8 +4,9 @@ var com = require('./common.js');
 $(document).on('ready', function () {
     $('#loadingToast').fadeIn(100);
     
-    var search = window.location.search.substring(1);
-    var id = search.split('=')[1];
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
 
     var targetLat, targetLng, currentLat, currentLng, location, addr;
     $.ajax({
@@ -13,7 +14,9 @@ $(document).on('ready', function () {
         type: 'post',
         data: JSON.stringify({
             accesstoken: 'asdasdwedf565665',
-            deviceId: id
+            deviceId: id,
+            lat: lat,
+            lng: lng
         }),
         contentType: 'application/json',
         success: function (res) {

@@ -125,7 +125,6 @@ $(document).on('ready', function () {
 
 
     function getList(pageIndex, lat, lng, cb) {
-        console.log('>>>>',lat, lng)
         $.ajax({
             url: '/charger/getnearcharging',
             type: 'post',

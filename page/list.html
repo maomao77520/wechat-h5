@@ -45,7 +45,7 @@
         </div>
         <div class="second-list-block">
         {{~ it.content:item:index}}
-            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}">
+            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}&lat={{=it.lat}}&lng={{=it.lng}}">
                 <div class="second-item-left">
                     {{? item.chargerIndex == 10}}
                         {{= item.chargerIndex}}
