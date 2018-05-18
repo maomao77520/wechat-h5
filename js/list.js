@@ -25,6 +25,8 @@ $(document).ready(function () {
             success: function (res) {
                 $('#loadingToast').fadeOut(100);
                 if (res.status == 0) {
+                    res.data.userLat = lat;
+                    res.data.userLng = lng;
                     var tpl = doT.template($('#second-list-template').html())(res.data);
                     $('#J_second-list').html(tpl);
                 }
@@ -35,6 +37,7 @@ $(document).ready(function () {
                 initEvent();
             },
             error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
         });

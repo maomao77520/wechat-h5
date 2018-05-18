@@ -144,6 +144,22 @@ html {
         margin-bottom: 0;
     }
 }
+#iosDialog2 {
+    .dialog-tips {
+        padding: 1.5em 20px 1em;
+        p {
+            margin: 0;
+            padding: 0;
+            font-size: $md-font-size;
+            color: $light-font-color;
+            text-align: left;
+            margin-bottom: 4px;
+        }
+    }
+    .dialog-btn {
+        font-size: 16px;
+    }
+}
 
 @keyframes weuiLoading {
     0% {

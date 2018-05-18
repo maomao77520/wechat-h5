@@ -53,7 +53,13 @@
                 </div>
                 <a class="item-right" id="J_click_open_map" href="javascript:;">
                     <div class="item-dis-icon"></div>
-                    <div class="item-dis">{{= it.distance}}m</div>
+                    <div class="item-dis">
+                    {{? it.distance >= 1}}
+                        {{= it.distance.toFixed(2)}}km
+                    {{??}}
+                        {{= parseInt(it.distance * 1000)}}m
+                    {{?}}
+                    </div>
                 </a>
             </div>
         </script>

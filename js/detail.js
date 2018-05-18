@@ -39,6 +39,7 @@ $(document).on('ready', function () {
             }
         },
         error: function (err) {
+            $('#loadingToast').fadeOut(100);
             com.showToast();
         }
     });

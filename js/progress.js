@@ -45,8 +45,8 @@ $(document).ready(function () {
         data: JSON.stringify(params),
         contentType: 'application/json',
         success: function (res) {
+            $('#loadingToast').fadeOut(100);
             if (res.status == 0 && res.data) {
-                $('#loadingToast').fadeOut(100);
                 $('.progress-wrap').show();
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
                 
@@ -96,6 +96,7 @@ $(document).ready(function () {
             }
         },
         error: function (error) {
+            $('#loadingToast').fadeOut(100);
             com.showToast();
         }
     });

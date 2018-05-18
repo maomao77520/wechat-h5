@@ -13,9 +13,13 @@
     
         <script type="text/javascript" src="../lib/flexible.min.js"></script>
     
+        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
+    
+        <script type="text/javascript" src="../lib/weui.min.js"></script>
+    
 
 
-<link href="../css/detail-d0597a7e.css" rel="stylesheet"></head>
+<link href="../css/detail-bbba894a.css" rel="stylesheet"></head>
 <body>
     <div class="wrap">
         <div class="top-detail-wrap" id="J_detail_info"></div>
@@ -55,7 +59,13 @@
                 </div>
                 <a class="item-right" id="J_click_open_map" href="javascript:;">
                     <div class="item-dis-icon"></div>
-                    <div class="item-dis">{{= it.distance}}m</div>
+                    <div class="item-dis">
+                    {{? it.distance >= 1}}
+                        {{= it.distance.toFixed(2)}}km
+                    {{??}}
+                        {{= parseInt(it.distance * 1000)}}m
+                    {{?}}
+                    </div>
                 </a>
             </div>
         </script>
@@ -125,9 +135,7 @@
         </div>
     </div>
     
-        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
-    
         <script type="text/javascript" src="../lib/doT.min.js"></script>
     
-<script type="text/javascript" src="../js/detail-d0597a7e.js"></script></body>
+<script type="text/javascript" src="../js/detail-bbba894a.js"></script></body>
 </html>

@@ -13,9 +13,13 @@
     
         <script type="text/javascript" src="../lib/flexible.min.js"></script>
     
+        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
+    
+        <script type="text/javascript" src="../lib/weui.min.js"></script>
+    
 
 
-<link href="../css/list-5f0cb65c.css" rel="stylesheet"></head>
+<link href="../css/list-ed705f85.css" rel="stylesheet"></head>
 <body>
     <div class="second-list-wrap" id="J_second-list">    
     </div>
@@ -47,7 +51,7 @@
         </div>
         <div class="second-list-block">
         {{~ it.content:item:index}}
-            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}&lat={{=it.lat}}&lng={{=it.lng}}">
+            <a class="second-list-item" href="./detail.html?id={{= item.deviceId}}&lat={{=it.userLat}}&lng={{=it.userLng}}">
                 <div class="second-item-left">
                     {{? item.chargerIndex == 10}}
                         {{= item.chargerIndex}}
@@ -96,9 +100,7 @@
     </div>
 
     
-        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
-    
         <script type="text/javascript" src="../lib/doT.min.js"></script>
     
-<script type="text/javascript" src="../js/list-5f0cb65c.js"></script></body>
+<script type="text/javascript" src="../js/list-ed705f85.js"></script></body>
 </html>

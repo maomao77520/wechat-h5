@@ -28,6 +28,8 @@ $(document).on('ready', function () {
                                 getList(currentPage, currentLat, currentLng, initScroll);
                             }
                             else {
+                                $('#loadingToast').fadeOut(100);
+                                $('#J_city_name').text(currentCity)
                                 $('#J_list-wrap').html('<div class="list-empty">该地区暂不支持~</div>');
                             }
                         });
@@ -156,6 +158,7 @@ $(document).on('ready', function () {
                 }
             },
             error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
         });

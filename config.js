@@ -13,9 +13,10 @@ module.exports = {
     prejs: [
         '../lib/jquery.min.js',
         '../lib/flexible.min.js',
+        '../lib/weixin-1.2.0.js',
+        '../lib/weui.min.js',
     ],
     js:[
-        '../lib/weixin-1.2.0.js',
         '../lib/doT.min.js',
     ],
     css:[
