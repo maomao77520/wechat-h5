@@ -48,10 +48,8 @@ $(document).ready(function () {
             $('#loadingToast').fadeOut(100);
             if (res.status == 0 && res.data) {
                 $('.progress-wrap').show();
-       res.data.totalTime = 1; 
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
-
-       console.log(endTime)        
+      
                 countDown(endTime);
                 var year = endTime.getFullYear();
                 var month = endTime.getMonth() + 1;

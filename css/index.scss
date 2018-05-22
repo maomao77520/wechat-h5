@@ -69,19 +69,26 @@
         padding: 0 $primary-padding-left;
         width: 5em;
         height: 1rem;
-        line-height: 1rem;
+        // line-height: 1rem;
+        position: relative;
         a {
             color: $font-color;
-            vertical-align: middle;
+            position: absolute;
+            top: 0.32rem;
+            left: 0.8rem;
+            // vertical-align: middle;
         }
         i {
+            position: absolute;
+            top: 50%;
+            margin-top: -7px;
             display: inline-block;
             content: '';
-            width: 15px;
-            height: 15px;
+            width: 0.4rem;
+            height: 0.4rem;
             vertical-align: middle;
             background-image: url(./images/star.png);
-            background-size: 15px 15px;
+            background-size: 0.4rem 0.4rem;
             background-position: center center;
             background-repeat: no-repeat;
         }
