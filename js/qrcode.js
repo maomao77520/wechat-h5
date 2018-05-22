@@ -1,1 +1,1 @@
-// var img = require('../images/qrcode.jpeg');
+var css = require('../css/qrcode.scss');
