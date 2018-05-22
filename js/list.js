@@ -46,14 +46,17 @@ $(document).ready(function () {
     function initEvent() {
         com.getWxConfig();
         wx.ready(function () {
-            $('.J_Navigation').on('click', function () {
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
                 var location = $(this).data('location');
                 var addr = $(this).data('addr');
                 var lat = $(this).data('lat');
                 var lng = $(this).data('lng');
-                com.convert(lat, lng).done(function (res) {
+                com.translateLocation(lat, lng).done(function (res) {
                     com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
                 });
+                
             });
         });
     }

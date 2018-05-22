@@ -48,8 +48,10 @@ $(document).ready(function () {
             $('#loadingToast').fadeOut(100);
             if (res.status == 0 && res.data) {
                 $('.progress-wrap').show();
+       res.data.totalTime = 1; 
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
-                
+
+       console.log(endTime)        
                 countDown(endTime);
                 var year = endTime.getFullYear();
                 var month = endTime.getMonth() + 1;
@@ -66,7 +68,7 @@ $(document).ready(function () {
 
 
                 var startTime = res.data.startTime.split(' ');
-                res.data.startDateStr = startTime[0].replace(/-/g, '.');
+                res.data.startDateStr = startTime[0];
                 res.data.startTimeStr = startTime[1];
 
                 var progress = res.data.progress;
@@ -199,7 +201,7 @@ $(document).ready(function () {
 
     function getEndTime(startTime, totalTime) {
         var arr = startTime.split(' ');
-        var date = arr[0].split('-');
+        var date = arr[0].split('.');
         var time = arr[1].split(':');
         var start = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]).getTime();
         return start + totalTime * 60 * 60 * 1000;

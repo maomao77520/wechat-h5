@@ -19,7 +19,7 @@
     
 
 
-<link href="../css/favourite-51d4f82a.css" rel="stylesheet"></head>
+<link href="../css/favourite-52f88d0e.css" rel="stylesheet"></head>
 <body>
     <div class="wrap">
         <div class="list-wrap" id="J_favourite-list">
@@ -39,10 +39,18 @@
                             <span class="item-busy">已用{{= item.usedCount}}个</span>
                         </div>
                     </a>
-                    <div class="item-right">
+                    <a class="item-right J_Navigation" data-location="{{= item.location}}" data-addr="{{= item.locationDetail}}" data-lat="{{= item.lat}}" data-lng="{{= item.lng}}" href="javascript:;">
                         <div class="item-dis-icon"></div>
-                        <div class="item-dis">{{= item.distance}}m</div>
-                    </div>
+                        {{? item.distance >= 1}}
+                            <div class="item-dis">{{= item.distance.toFixed(2)}}km</div>
+                        {{?? item.distance < 0}}
+
+                        {{??}}
+                            <div class="item-dis">{{= parseInt(item.distance * 1000)}}m</div>
+                        {{?}}
+                        </div>
+                    </a>
+                    
                 </div>
                 {{~}}
             {{??}}
@@ -62,5 +70,5 @@
     
         <script type="text/javascript" src="../lib/doT.min.js"></script>
     
-<script type="text/javascript" src="../js/favourite-51d4f82a.js"></script></body>
+<script type="text/javascript" src="../js/favourite-52f88d0e.js"></script></body>
 </html>

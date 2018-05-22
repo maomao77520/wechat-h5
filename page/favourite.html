@@ -33,10 +33,18 @@
                             <span class="item-busy">已用{{= item.usedCount}}个</span>
                         </div>
                     </a>
-                    <div class="item-right">
+                    <a class="item-right J_Navigation" data-location="{{= item.location}}" data-addr="{{= item.locationDetail}}" data-lat="{{= item.lat}}" data-lng="{{= item.lng}}" href="javascript:;">
                         <div class="item-dis-icon"></div>
-                        <div class="item-dis">{{= item.distance}}m</div>
-                    </div>
+                        {{? item.distance >= 1}}
+                            <div class="item-dis">{{= item.distance.toFixed(2)}}km</div>
+                        {{?? item.distance < 0}}
+
+                        {{??}}
+                            <div class="item-dis">{{= parseInt(item.distance * 1000)}}m</div>
+                        {{?}}
+                        </div>
+                    </a>
+                    
                 </div>
                 {{~}}
             {{??}}

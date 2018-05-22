@@ -281,10 +281,16 @@ $(document).on('ready', function () {
                 });
             });
 
-            $('#J_detail_info').on('click', '#J_click_open_map', function (e) {
-                com.convert(targetLat, targetLng).done(function (res) {
+            // 打开导航
+            $('#J_detail_info').on('click', '.J_Navigation', function (e) {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                com.translateLocation(lat, lng).done(function (res) {
                     com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
                 });
+                
             });
         });
     }

@@ -19,7 +19,7 @@
     
 
 
-<link href="../css/detail-bbba894a.css" rel="stylesheet"></head>
+<link href="../css/detail-fbab650c.css" rel="stylesheet"></head>
 <body>
     <div class="wrap">
         <div class="top-detail-wrap" id="J_detail_info"></div>
@@ -57,7 +57,7 @@
                         <span>编号：{{= it.deviceId}}</span>
                     </div>
                 </div>
-                <a class="item-right" id="J_click_open_map" href="javascript:;">
+                <a class="item-right J_Navigation" data-location="{{= it.location}}" data-addr="{{= it.locationDetail}}" data-lat="{{= it.lat}}" data-lng="{{= it.lng}}">
                     <div class="item-dis-icon"></div>
                     <div class="item-dis">
                     {{? it.distance >= 1}}
@@ -137,5 +137,5 @@
     
         <script type="text/javascript" src="../lib/doT.min.js"></script>
     
-<script type="text/javascript" src="../js/detail-bbba894a.js"></script></body>
+<script type="text/javascript" src="../js/detail-fbab650c.js"></script></body>
 </html>
