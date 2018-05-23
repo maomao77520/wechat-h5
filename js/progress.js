@@ -1,5 +1,6 @@
 var css = require('../css/progress.scss');
 var com = require('./common.js');
+var countDown = require('./countDown.js');
 
 $(document).ready(function () {
     var winHeight = $(window).height();
@@ -50,7 +51,7 @@ $(document).ready(function () {
                 $('.progress-wrap').show();
                 var endTime = new Date(getEndTime(res.data.startTime, res.data.totalTime));
       
-                countDown(endTime);
+                var count = new countDown(endTime, $('.top-num-wrap'));
                 var year = endTime.getFullYear();
                 var month = endTime.getMonth() + 1;
                 var date = endTime.getDate();
@@ -102,100 +103,50 @@ $(document).ready(function () {
     });
 
     var interval;
-    function countDown(deadline) {
-        var now = new Date().getTime();
-        if (deadline.getTime() - now <= 0) {
-            clearInterval(interval);
-            $('.top-num-wrap .hour').text('00');
-            $('.top-num-wrap .minite').text('00');
-            $('.top-num-wrap .second').text('00');
-        }
-        else {
-            init(deadline);
-            interval = setInterval(function () {
-                init(deadline)
-            }, 1000);
-        }
-    }
-
-    function init(deadline) {
-        var now = new Date().getTime();
-        if (deadline - now <= 0) {
-            clearInterval(interval);
-            $('.top-num-wrap .hour').text('00');
-            $('.top-num-wrap .minite').text('00');
-            $('.top-num-wrap .second').text('00');
-        }
-        else {
-            getNum(deadline);
-        }
-    }
-
-    function getNum(deadline) {
-        var now = new Date().getTime();
-        var time = deadline.getTime() - now;
-        var hour = formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
-        var minite = formatNum(Math.floor(time / 1000 / 60 % 60));
-        var second = formatNum(Math.floor(time / 1000 % 60));
-        $('.top-num-wrap .hour').text(hour);
-        $('.top-num-wrap .minite').text(minite);
-        $('.top-num-wrap .second').text(second);
-    }
-
-    function formatNum(num) {
-        return num >= 10 ? num : '0' + num;
-    }
-
-
-    // function countDown(time) {
-    //     var arr = time.split(':');
-    //     if (arr[2] == '00') {
-    //         if (arr[1] == '00') {
-    //             arr[1] = '59';
-    //             arr[0] = arr[0] - 1;
-    //         }
-    //         arr[2] = '59';
+    // function countDown(deadline) {
+    //     var now = new Date().getTime();
+    //     if (deadline.getTime() - now <= 0) {
+    //         clearInterval(interval);
+    //         $('.top-num-wrap .hour').text('00');
+    //         $('.top-num-wrap .minite').text('00');
+    //         $('.top-num-wrap .second').text('00');
     //     }
-    //     console.log(('' + arr[0]).length)
-    //     arr[0] = ((''+arr[0]).length == 1 && arr[0] < 10) ? '0' + arr[0] : arr[0];
-
-    //     var leftTime = {
-    //         hour: arr[0],
-    //         minite: arr[1],
-    //         second: arr[2]
+    //     else {
+    //         init(deadline);
+    //         interval = setInterval(function () {
+    //             init(deadline)
+    //         }, 1000);
     //     }
-    //     console.log(leftTime)
-
-    //     $('.top-num-wrap .hour').text(leftTime.hour);
-    //     $('.top-num-wrap .minite').text(leftTime.minite);
-    //     $('.top-num-wrap .second').text(leftTime.second);
-    //     var interval = setInterval(function () {
-    //         leftTime.second--;
-    //         leftTime.second = leftTime.second >= 10 ? leftTime.second : ('0' + leftTime.second);
-    //         $('.top-num-wrap .second').text(leftTime.second);
-    //         if (leftTime.hour == '00' && leftTime.minute == '00' && leftTime.second == '00') {
-    //             clearInterval(interval);
-    //         }
-    //         if (leftTime.second == '00') {
-    //             leftTime.second = 60;
-                
-    //         }
-    //         else if (leftTime.second == '59') {
-    //             leftTime.minite--;
-    //             leftTime.minite = leftTime.minite >= 10 ? leftTime.minite : ('0' + leftTime.minite);
-    //             $('.top-num-wrap .minite').text(leftTime.minite);
-    //         }
-    //         if (leftTime.minite == '00' && leftTime.second == '00') {
-    //             leftTime.minite = 60;
-    //         }
-    //         else if (leftTime.minite == '59' && leftTime.second == '59') {
-    //             leftTime.hour--;
-    //             leftTime.hour = leftTime.hour >= 10 ? leftTime.hour : ('0' + leftTime.hour);
-    //             $('.top-num-wrap .hour').text(leftTime.hour);
-    //         }
-    //         console.log(leftTime, '<<<')
-    //     }, 1000);
     // }
+
+    // function init(deadline) {
+    //     var now = new Date().getTime();
+    //     if (deadline - now <= 0) {
+    //         clearInterval(interval);
+    //         $('.top-num-wrap .hour').text('00');
+    //         $('.top-num-wrap .minite').text('00');
+    //         $('.top-num-wrap .second').text('00');
+    //     }
+    //     else {
+    //         getNum(deadline);
+    //     }
+    // }
+
+    // function getNum(deadline) {
+    //     var now = new Date().getTime();
+    //     var time = deadline.getTime() - now;
+    //     var hour = formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
+    //     var minite = formatNum(Math.floor(time / 1000 / 60 % 60));
+    //     var second = formatNum(Math.floor(time / 1000 % 60));
+    //     $('.top-num-wrap .hour').text(hour);
+    //     $('.top-num-wrap .minite').text(minite);
+    //     $('.top-num-wrap .second').text(second);
+    // }
+
+    // function formatNum(num) {
+    //     return num >= 10 ? num : '0' + num;
+    // }
+
 
     function getEndTime(startTime, totalTime) {
         var arr = startTime.split(' ');

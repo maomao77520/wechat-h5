@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -213,62 +213,197 @@ module.exports = Common;
 
 /***/ }),
 /* 1 */,
-/* 2 */,
+/* 2 */
+/***/ (function(module, exports) {
+
+function CountDown(deadline, $ele) {
+    this.count(deadline, $ele);
+}
+
+CountDown.prototype = {
+    count: function (deadline, $ele) {
+        var now = new Date().getTime();
+        this.$ele = $ele;
+        var me = this;
+        if (deadline.getTime() - now <= 0) {
+            clearInterval(interval);
+            $ele.find('.hour').text('00');
+            $ele.find('.minite').text('00');
+            $ele.find('.second').text('00');
+        }
+        else {
+            this.init(deadline);
+            this.interval = setInterval(function () {
+                me.init(deadline)
+            }, 1000);
+        }
+    },
+
+    init: function (deadline) {
+        var now = new Date().getTime();
+        if (deadline - now <= 0) {
+            clearInterval(this.interval);
+            this.$ele.find('.hour').text('00');
+            this.$ele.find('.minite').text('00');
+            this.$ele.find('.second').text('00');
+        }
+        else {
+            this.getNum(deadline);
+        }
+    },
+
+    getNum: function (deadline) {
+        var now = new Date().getTime();
+        var time = deadline.getTime() - now;
+        var hour = this.formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
+        var minite = this.formatNum(Math.floor(time / 1000 / 60 % 60));
+        var second = this.formatNum(Math.floor(time / 1000 % 60));
+        this.$ele.find('.hour').text(hour);
+        this.$ele.find('.minite').text(minite);
+        this.$ele.find('.second').text(second);
+    },
+
+    formatNum: function (num) {
+        return num >= 10 ? num : '0' + num;
+    }
+};
+
+module.exports = CountDown;
+
+/***/ }),
 /* 3 */,
-/* 4 */
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(5);
+var css = __webpack_require__(8);
 var com = __webpack_require__(0);
+var countDown = __webpack_require__(2);
 
-$(document).ready(function () {
- 
-    var locationId = com.parseQuery('locationId');
+$(document).on('ready', function () {
+    $('#loadingToast').fadeIn(100);
+    
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
     var id = com.parseQuery('id');
 
-    $('#loadingToast').fadeIn(100);
+    var targetLat, targetLng, currentLat, currentLng, location, addr;
+    $.ajax({
+        url: '/charger/getslotcharging',
+        type: 'post',
+        data: JSON.stringify({
+            accesstoken: 'asdasdwedf565665',
+            deviceId: id,
+            lat: lat,
+            lng: lng
+        }),
+        contentType: 'application/json',
+        success: function (res) {
+// res = {
+//     status: 0,
+//     data: {
+//         content: [
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:7200,
+//                 slotIndex:2,
+//                 slotStatus:0,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:7200,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:3600,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527085725,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:10800,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             }
+//         ],
+//         deviceId: '1324',
+//         location: '开泰路口',
+//         locationDetail: '仙葫大道265号'
+//     }
+// }
+            $('#loadingToast').fadeOut(100);
+            targetLat = res.data.lat;
+            targetLng = res.data.lng;
+            location = res.data.location;
+            addr = res.data.locationDetail;
+            if (res.status == 0) {
+                var tpl1 = doT.template($('#J_detail_top_template').html())(res.data);
+                $('#J_detail_info').html(tpl1);
 
-    getList();
-    function getList() {
-        $.ajax({
-            url: '/charger/getcharging',
-            type: 'post',
-            data: JSON.stringify({
-                accesstoken: 'asdasdwedf565665',
-                locationId: locationId,
-                lat: lat,
-                lng: lng
-            }),
-            contentType: 'application/json',
-            success: function (res) {
-                $('#loadingToast').fadeOut(100);
-                if (res.status == 0) {
-                    res.data.userLat = lat;
-                    res.data.userLng = lng;
-                    var tpl = doT.template($('#second-list-template').html())(res.data);
-                    $('#J_second-list').html(tpl);
+                var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
+                $('#J_detail_list').html(tpl2);
+                var content = res.data.content;
+                for (var i = 0; i < content.length; i++) {
+                    if (content[i].slotStatus =s= 1) {
+                        var endTime = new Date((content[i].beginTimeSeconds + content[i].paymentSeconds) * 1000)
+                        var count = new countDown(endTime, $('.left-time-' + i));
+                    }
                 }
-                else {
-                    com.showToast();
-                }
+                
 
                 initEvent();
-            },
-            error: function (err) {
-                $('#loadingToast').fadeOut(100);
+            }
+            else {
                 com.showToast();
             }
-        });
-    }  
+        },
+        error: function (err) {
+            $('#loadingToast').fadeOut(100);
+            com.showToast();
+        }
+    });
+    
+
 
     function initEvent() {
-        com.getWxConfig();
+        com.getWxConfig();  
         wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
 
             // 打开导航
-            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+            $('#J_detail_info').on('click', '.J_Navigation', function (e) {
                 var location = $(this).data('location');
                 var addr = $(this).data('addr');
                 var lat = $(this).data('lat');
@@ -280,12 +415,11 @@ $(document).ready(function () {
             });
         });
     }
+
 });
 
-
-
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

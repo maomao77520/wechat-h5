@@ -60,40 +60,20 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 17:
+/***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(18);
+var css = __webpack_require__(12);
 
-$(document).ready(function () {
-    $.ajax({
-        url: '/charger/getUserProfile',
-        type: 'POST',
-        data: JSON.stringify({
-            accessToken: 'asdasdwedf565665',
-            openId: localStorage.getItem('openId')
-        }),
-        contentType: 'application/json',
-        success: function (res) {
-            if (res.status == 0) {
-                $('.user-name').text(res.data.nickname);
-                $('.user-icon').css({
-                    'background-image': 'url(' + res.data.avatar + ')'
-                })
-            }
-        }
-    });
-    
-});
 
 /***/ }),
 
-/***/ 18:
+/***/ 12:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

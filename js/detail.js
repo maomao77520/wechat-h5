@@ -1,5 +1,6 @@
 var css = require('../css/detail.scss');
 var com = require('./common.js');
+var countDown = require('./countDown.js');
 
 $(document).on('ready', function () {
     $('#loadingToast').fadeIn(100);
@@ -20,6 +21,60 @@ $(document).on('ready', function () {
         }),
         contentType: 'application/json',
         success: function (res) {
+// res = {
+//     status: 0,
+//     data: {
+//         content: [
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:7200,
+//                 slotIndex:2,
+//                 slotStatus:0,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:7200,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527084625,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:3600,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             },
+//             {
+//                 beginTimeSeconds:1527085725,
+//                 deviceId:"2112018020700166",
+//                 electricityMa:33,
+//                 lastCommandType:5,
+//                 lastUpdateTimeSeconds:1527084656,
+//                 paymentSeconds:10800,
+//                 slotIndex:2,
+//                 slotStatus:1,
+//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
+//             }
+//         ],
+//         deviceId: '1324',
+//         location: '开泰路口',
+//         locationDetail: '仙葫大道265号'
+//     }
+// }
             $('#loadingToast').fadeOut(100);
             targetLat = res.data.lat;
             targetLng = res.data.lng;
@@ -31,6 +86,14 @@ $(document).on('ready', function () {
 
                 var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
                 $('#J_detail_list').html(tpl2);
+                var content = res.data.content;
+                for (var i = 0; i < content.length; i++) {
+                    if (content[i].slotStatus =s= 1) {
+                        var endTime = new Date((content[i].beginTimeSeconds + content[i].paymentSeconds) * 1000)
+                        var count = new countDown(endTime, $('.left-time-' + i));
+                    }
+                }
+                
 
                 initEvent();
             }

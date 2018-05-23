@@ -113,6 +113,10 @@
             
             .left-time {
                 margin: 0.1rem auto 0.15rem;
+                .icon {
+                    margin-left: -0.1rem;
+                    margin-right: -0.1rem;
+                }
             }
             .battery-list {
                 display: flex;

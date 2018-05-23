@@ -256,6 +256,9 @@ html {
       padding: 0.3rem 0; }
       .middle-detail-wrap .detail-item-line .detail-item-busy .left-time {
         margin: 0.1rem auto 0.15rem; }
+        .middle-detail-wrap .detail-item-line .detail-item-busy .left-time .icon {
+          margin-left: -0.1rem;
+          margin-right: -0.1rem; }
       .middle-detail-wrap .detail-item-line .detail-item-busy .battery-list {
         display: -webkit-box;
         display: -ms-flexbox;

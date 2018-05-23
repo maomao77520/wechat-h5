@@ -29,9 +29,9 @@
                 </span>
             </div>
             <div class="bottom-price-line">
-                <div>1元/3小时</div>
-                <div>1元/3小时</div>
-                <div>1元/3小时</div>
+                <div>1元/4小时</div>
+                <div>2元/8小时</div>
+                <div>4元充满</div>
             </div>
             <p class="bottom-tips">充电过程中，充电器过载引起的意外中断，插座被人拔出等情况，充电剩余金额不予返还。</p>
         </div>
@@ -83,7 +83,13 @@
                         <a class="detail-item-wrap" href="./progress.html?deviceId={{= it.deviceId}}&slotIndex={{= item.slotIndex}}">
                             <div class="detail-item detail-item-busy">
                                 <div class="left-time-text">剩余时间</div>
-                                <div class="left-time">{{= item.time}}</div>
+                                <div class="left-time left-time-{{=index}}">
+                                    <span class="hour">00</span>
+                                    <span class="icon">:</span>
+                                    <span class="minite">00</span>
+                                    <span class="icon">:</span>
+                                    <span class="second">00</span>
+                                </div>
                                 <div class="battery-list">
                                     <div class="item-1"></div>
                                     <div class="item-2"></div>

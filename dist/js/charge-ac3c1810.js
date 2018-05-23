@@ -60,11 +60,12 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 var Common = {
@@ -212,96 +213,148 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+
+/***/ 10:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 9:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(7);
+var css = __webpack_require__(10);
 var com = __webpack_require__(0);
 
-$(document).on('ready', function () {
-    $('#loadingToast').fadeIn(100);
-    
-    var lat = com.parseQuery('lat');
-    var lng = com.parseQuery('lng');
-    var id = com.parseQuery('id');
+$(document).ready(function () {
 
-    var targetLat, targetLng, currentLat, currentLng, location, addr;
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var openId = com.parseQuery('openid');
+
+    localStorage.setItem('openId', openId);
+
     $.ajax({
-        url: '/charger/getslotcharging',
+        url: '/charger/getpaycharging',
         type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665',
-            deviceId: id,
-            lat: lat,
-            lng: lng
-        }),
         contentType: 'application/json',
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665',
+            deviceId: deviceId,
+            slotIndex: slotIndex
+        }),
         success: function (res) {
-            $('#loadingToast').fadeOut(100);
-            targetLat = res.data.lat;
-            targetLng = res.data.lng;
-            location = res.data.location;
-            addr = res.data.locationDetail;
             if (res.status == 0) {
-                var tpl1 = doT.template($('#J_detail_top_template').html())(res.data);
-                $('#J_detail_info').html(tpl1);
-
-                var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
-                $('#J_detail_list').html(tpl2);
-
-                initEvent();
+                var tpl = doT.template($('#J_top_detail_template').html())(res.data);
+                $('#J_top_detail').html(tpl);
             }
             else {
                 com.showToast();
             }
         },
-        error: function (err) {
-            $('#loadingToast').fadeOut(100);
+        fail: function (err) {
             com.showToast();
         }
-    });
+    })
     
 
+    var tpl = doT.template($('#J_top_detail_template').html())({
+        deviceId: deviceId,
+        slotIndex: slotIndex
+    });
+    $('#J_top_detail').html(tpl);
 
-    function initEvent() {
-        com.getWxConfig();  
-        wx.ready(function () {
-            $('.detail-bottom-btn').on('click', function () {
-                wx.scanQRCode({
-                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+    var price = $('.active-btn').data('price');
+    $('.price-btn').on('click', function (e) {
+        $('.price-btn').removeClass('active-btn');
+        $(this).addClass('active-btn');
+        price = $(this).data('price');
+    });
+
+
+    $('#J_top_detail').on('click', '#J_open_dialog', function (e) {
+        $('#iosDialog2').fadeIn(200);
+    });
+
+    $('#J_close_dialog').on('click', function (e) {
+        $('#iosDialog2').fadeOut(200);
+    });
+
+    $('.charge-btn').on('click', function (e) {
+        $.ajax({
+            url: '/charger/createOrder',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                payment: price * 100,
+                openId: openId,
+                deviceId: deviceId,
+                slotIndex: slotIndex
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                var d = res.data;
+                onBridgeReady(d.appid, d.timeStamp, d.nonce_str, d.prepay_id, d.sign, d.out_trade_no);
+            },
+            error: function (err) {
+            }
+        });
+    });
+
+    function onBridgeReady(appId, timeStamp, nonceStr, prepay_id, paySign, out_trade_no){
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+               document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            }else if (document.attachEvent){
+               document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+               document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        }else{
+            WeixinJSBridge.invoke(
+               'getBrandWCPayRequest', {
+                   "appId": appId,     //公众号名称，由商户传入     
+                   "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
+                   "nonceStr": nonceStr, //随机串     
+                   "package": "prepay_id=" + prepay_id,     
+                   "signType": "MD5",         //微信签名方式：     
+                   "paySign": paySign //微信签名 
+                }, function (res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        window.location.href = "http://www.shouyifenxi.com/dist/page/progress.html?deviceId="
+                        + deviceId + '&slotIndex=' + slotIndex;
                     }
-                });
-            });
+                    else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
+                        alert("取消支付!");
+                    }
+                    else {  
+                        alert("支付失败!");
+                    }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+                }
+            ); 
+        }
+    }
 
-            // 打开导航
-            $('#J_detail_info').on('click', '.J_Navigation', function (e) {
-                var location = $(this).data('location');
-                var addr = $(this).data('addr');
-                var lat = $(this).data('lat');
-                var lng = $(this).data('lng');
-                com.translateLocation(lat, lng).done(function (res) {
-                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-                });
-                
-            });
+    function checkOrderStatus(out_trade_no, cb) {
+        $.ajax({
+            url: '/charger/getPayStatus',
+            type: 'post',
+            data: JSON.stringify({
+                out_trade_no: out_trade_no
+            }),
+            success: function (res) {
+                if (res.status) {
+                    cb && cb(res);
+                }
+            }
         });
     }
+    
 
 });
 
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });
