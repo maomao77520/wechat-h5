@@ -8,7 +8,7 @@ CountDown.prototype = {
         this.$ele = $ele;
         var me = this;
         if (deadline.getTime() - now <= 0) {
-            clearInterval(interval);
+            clearInterval(this.interval);
             $ele.find('.hour').text('00');
             $ele.find('.minite').text('00');
             $ele.find('.second').text('00');

@@ -26,7 +26,7 @@ $(document).on('ready', function () {
 //     data: {
 //         content: [
 //             {
-//                 beginTimeSeconds:1527084625,
+//                 beginTimeSeconds:1527128746,
 //                 deviceId:"2112018020700166",
 //                 electricityMa:33,
 //                 lastCommandType:5,
@@ -37,7 +37,7 @@ $(document).on('ready', function () {
 //                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
 //             },
 //             {
-//                 beginTimeSeconds:1527084625,
+//                 beginTimeSeconds:1527125746,
 //                 deviceId:"2112018020700166",
 //                 electricityMa:33,
 //                 lastCommandType:5,
@@ -48,7 +48,7 @@ $(document).on('ready', function () {
 //                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
 //             },
 //             {
-//                 beginTimeSeconds:1527084625,
+//                 beginTimeSeconds:1527126746,
 //                 deviceId:"2112018020700166",
 //                 electricityMa:33,
 //                 lastCommandType:5,
