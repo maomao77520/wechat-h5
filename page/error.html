@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>出错啦</title>
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
+
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
+
+
+</head>
+<body>
+    
+    <div class="error-wrap">
+        <div class="cloud"></div>
+        <div class="error-detail">
+            <p class="error-text"></p>
+            <p>插座编号：<span class="error-slotIndex"></span></p>
+            <p>设备编号：<span class="error-deviceId"></span></p>
+        </div>
+        <div class="btn-wrap">
+            <a href="javascript:;" class="btn retry-btn">再试一次</a>
+            <a href="tel:18697987207" class="btn call-btn">我要报错</a>
+        </div>
+    </div>
+
+</body>
+</html>

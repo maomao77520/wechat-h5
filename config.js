@@ -8,7 +8,8 @@ module.exports = {
         'progress',
         'record',
         'favourite',
-        'user'
+        'user',
+        'error'
     ],
     prejs: [
         '../lib/jquery.min.js',

@@ -102,50 +102,6 @@ $(document).ready(function () {
         }
     });
 
-    var interval;
-    // function countDown(deadline) {
-    //     var now = new Date().getTime();
-    //     if (deadline.getTime() - now <= 0) {
-    //         clearInterval(interval);
-    //         $('.top-num-wrap .hour').text('00');
-    //         $('.top-num-wrap .minite').text('00');
-    //         $('.top-num-wrap .second').text('00');
-    //     }
-    //     else {
-    //         init(deadline);
-    //         interval = setInterval(function () {
-    //             init(deadline)
-    //         }, 1000);
-    //     }
-    // }
-
-    // function init(deadline) {
-    //     var now = new Date().getTime();
-    //     if (deadline - now <= 0) {
-    //         clearInterval(interval);
-    //         $('.top-num-wrap .hour').text('00');
-    //         $('.top-num-wrap .minite').text('00');
-    //         $('.top-num-wrap .second').text('00');
-    //     }
-    //     else {
-    //         getNum(deadline);
-    //     }
-    // }
-
-    // function getNum(deadline) {
-    //     var now = new Date().getTime();
-    //     var time = deadline.getTime() - now;
-    //     var hour = formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
-    //     var minite = formatNum(Math.floor(time / 1000 / 60 % 60));
-    //     var second = formatNum(Math.floor(time / 1000 % 60));
-    //     $('.top-num-wrap .hour').text(hour);
-    //     $('.top-num-wrap .minite').text(minite);
-    //     $('.top-num-wrap .second').text(second);
-    // }
-
-    // function formatNum(num) {
-    //     return num >= 10 ? num : '0' + num;
-    // }
 
 
     function getEndTime(startTime, totalTime) {

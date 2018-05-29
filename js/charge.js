@@ -40,6 +40,8 @@ $(document).ready(function () {
     $('#J_top_detail').html(tpl);
 
     var price = $('.active-btn').data('price');
+    var time = $('.active-btn').data('time');
+
     $('.price-btn').on('click', function (e) {
         $('.price-btn').removeClass('active-btn');
         $(this).addClass('active-btn');
@@ -62,6 +64,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
                 payment: price * 100,
+                payHours: time,
                 openId: openId,
                 deviceId: deviceId,
                 slotIndex: slotIndex
