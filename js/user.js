@@ -5,8 +5,7 @@ $(document).ready(function () {
         url: '/charger/getUserProfile',
         type: 'POST',
         data: JSON.stringify({
-            accessToken: 'asdasdwedf565665',
-            openId: localStorage.getItem('openId')
+            accessToken: 'asdasdwedf565665'
         }),
         contentType: 'application/json',
         success: function (res) {

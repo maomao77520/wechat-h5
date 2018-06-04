@@ -6,13 +6,25 @@ var slotIndex = com.parseQuery('slotIndex');
 var errorCode = com.parseQuery('errorCode');
 
 var map = {
-    1001: '设备故障'
-}
+    1001: '插座开小差啦，换一个试试~',
+    1002: '插座被别人占用啦，换一个试试~'
+};
 
 $(document).ready(function () {
-    $('.error-text').text(map[errorCode]);
-    $('.error-deviceId').text(deviceId);
-    $('.error-slotIndex').text(slotIndex);
+    var winHeight = $(window).height();
+    var winWidth = $(window).width();
+    $('body').height(winHeight);
+    $('body').width(winWidth);
+
+    
+    var tpl = doT.template($('#J_template').html())({
+        errorCode: errorCode,
+        errorText: map[errorCode] || '出错啦',
+        deviceId: deviceId,
+        slotIndex: slotIndex
+    });
+    $('#J_error_wrap').append(tpl);
+
     com.getWxConfig();  
     wx.ready(function () {
         $('.retry-btn').on('click', function () {

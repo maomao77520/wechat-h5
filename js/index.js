@@ -60,6 +60,10 @@ $(document).on('ready', function () {
         });
     });
 
+    wx.error(function (err) {
+        console.log('wx.error: ', err);
+    });
+
     var p1 = $.ajax({
         url: '/charger/getCity',
         type: 'post',
@@ -201,6 +205,7 @@ $(document).on('ready', function () {
     var deboun = com.debounce(function () {
         searchList();
     }, 500, this);
+
     function initSearch() {
         var $searchBar = $('#searchBar'),
             $searchResult = $('#searchResult'),
@@ -239,6 +244,11 @@ $(document).on('ready', function () {
             cancelSearch();
             $searchInput.blur();
         });
+
+        $('#J_search_form').on('submit', function (e) {
+            e.preventDefault();
+            searchList();
+        })
     }
 
 });

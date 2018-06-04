@@ -2,12 +2,9 @@ var css = require('../css/charge.scss');
 var com = require('./common.js');
 
 $(document).ready(function () {
-
     var deviceId = com.parseQuery('deviceId');
     var slotIndex = com.parseQuery('slotIndex');
     var openId = com.parseQuery('openid');
-
-    localStorage.setItem('openId', openId);
 
     $.ajax({
         url: '/charger/getpaycharging',
@@ -57,7 +54,12 @@ $(document).ready(function () {
         $('#iosDialog2').fadeOut(200);
     });
 
+    var lock = false;
     $('.charge-btn').on('click', function (e) {
+        if (lock) {
+            return;
+        }
+        lock = true;
         $.ajax({
             url: '/charger/createOrder',
             type: 'post',
@@ -71,10 +73,18 @@ $(document).ready(function () {
             }),
             contentType: 'application/json',
             success: function (res) {
-                var d = res.data;
-                onBridgeReady(d.appid, d.timeStamp, d.nonce_str, d.prepay_id, d.sign, d.out_trade_no);
+                lock = false;
+                if (res.status == 0 && res.data) {
+                    var d = res.data;
+                    onBridgeReady(d.appid, d.timeStamp, d.nonce_str, d.prepay_id, d.sign, d.out_trade_no);
+                }
+                else if (res.status == 1 && res.data) { // errorCode=1002, 插座被占用
+                    window.location.href = './error.html?deviceId='
+                    + deviceId + '&slotIndex=' + slotIndex + '&errorCode=' + res.data.errorCode;
+                }
             },
             error: function (err) {
+                lock = false;
             }
         });
     });
@@ -99,13 +109,13 @@ $(document).ready(function () {
                 }, function (res) {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
                         window.location.href = "http://www.shouyifenxi.com/dist/page/progress.html?deviceId="
-                        + deviceId + '&slotIndex=' + slotIndex;
+                        + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no;
                     }
                     else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
-                        alert("取消支付!");
+                        // alert("取消支付!");
                     }
                     else {  
-                        alert("支付失败!");
+                        // alert("支付失败!");
                     }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
                 }
             ); 

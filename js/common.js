@@ -7,6 +7,7 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
+                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -137,7 +138,28 @@ var Common = {
         setTimeout(function () {
             $toast.fadeOut(100);
         }, 2000);
-    }
+    },
+
+    formatTime: function (timestamp) {
+        var date = new Date(timestamp);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var d = date.getDate();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var second = date.getSeconds();
+        month = month >= 10 ? month : '0' + month;
+        d = d >= 10 ? d : '0' + d;
+        hour = hour >= 10 ? hour : '0' + hour;
+        min = min >= 10 ? min : '0' + min;
+        second = second >= 10 ? second : '0' + second;
+        return year + '-' + month + '-' + d + ' ' + hour + ':' + min + ':' + second;
+    },
+    errorMap: {
+        101: '电流过小',
+        102: '电流过大',
+        '-1': '设备故障'
+    },
 };
 
 module.exports = Common;

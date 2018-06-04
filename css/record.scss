@@ -18,6 +18,7 @@
         .record-item {
             padding: $primary-padding-top $primary-padding-left;
             border-bottom: 1px solid $border-color;
+            display: block;
             .line-1 {
                 display: flex;
                 .order-addr {

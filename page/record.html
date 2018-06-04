@@ -25,7 +25,7 @@
         </div>
         <div class="record-list">
             {{~ it.content:item:index}}
-            <div class="record-item">
+            <a class="record-item" href="./finish.html?deviceId={{= item.deviceId}}&slotIndex={{= item.slotIndex}}&outTradeNo={{= item.outTradeNo}}">
                 <div class="line-1">
                     <div class="order-addr">{{= item.location}}</div>
                     <div class="order-status">{{= item.state}}</div>
@@ -34,11 +34,11 @@
                     <div class="left-block">
                         <div class="order-time-wrap">
                             <i class="time-icon"></i>
-                            <span>充电开始时间：{{= item.paytime}}</span>
+                            <span>下单时间：{{= item.startTime}}</span>
                         </div>
                         <div>
                             <i class="price-icon"></i>
-                            <span>消费金额：{{= item.payment}}元</span>
+                            <span>消费金额：{{= (item.payment/100).toFixed(2)}}元</span>
                         </div>
                     </div>
                     <div class="right-block">
@@ -51,7 +51,7 @@
                         </span>
                     </div>
                 </div>
-            </div>
+            </a>
             {{~}}
         </div>
     </script>

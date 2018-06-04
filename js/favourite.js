@@ -55,7 +55,6 @@ $(document).on('ready', function () {
             contentType: 'application/json',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
-                openId: localStorage.getItem('openId'),
                 lat: lat,
                 lng: lng
             }),

@@ -4,25 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>充电站列表</title>
-    
-        <link href="../lib/weui.min.css" rel="stylesheet">
-    
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
 
-    
-        <script type="text/javascript" src="../lib/jquery.min.js"></script>
-    
-        <script type="text/javascript" src="../lib/flexible.min.js"></script>
-    
-        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
-    
-        <script type="text/javascript" src="../lib/weui.min.js"></script>
-    
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
 
 
-<link href="../css/list-64a7a759.css" rel="stylesheet"></head>
+</head>
 <body>
-    <div class="second-list-wrap" id="J_second-list">    
-    </div>
+    <div class="second-list-wrap" id="J_second-list"></div>
 
     <script type="text/template" id="second-list-template">
         <div class="second-list-top">
@@ -42,6 +35,8 @@
                     <div class="item-dis">
                     {{? it.distance >= 1}}
                         {{= it.distance.toFixed(2)}}km
+                    {{?? it.distance < 0}}
+
                     {{??}}
                         {{= parseInt(it.distance * 1000)}}m
                     {{?}}
@@ -99,8 +94,8 @@
         </div>
     </div>
 
-    
-        <script type="text/javascript" src="../lib/doT.min.js"></script>
-    
-<script type="text/javascript" src="../js/list-64a7a759.js"></script></body>
+    <% for (var js in htmlWebpackPlugin.options.js) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.js[js] %>"></script>
+    <% } %>
+</body>
 </html>

@@ -32,6 +32,11 @@ html {
 .normal-btn {
     width: 90%;
 }
+* {
+    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    tap-highlight-color: rgba(0, 0, 0, 0);
+}
 
 .list-item-wrap {
     line-height: 1;
@@ -41,6 +46,9 @@ html {
     border-bottom: 1px solid $border-color;
     display: flex;
     align-items: center;
+    &:last-child {
+        border-bottom: 0;
+    };
     .item-left {
         flex: 1;
     }

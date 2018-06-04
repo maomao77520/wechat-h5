@@ -9,7 +9,10 @@ module.exports = {
         'record',
         'favourite',
         'user',
-        'error'
+        'error',
+        'complete',
+        'finish',
+        'scanqrcode'
     ],
     prejs: [
         '../lib/jquery.min.js',
