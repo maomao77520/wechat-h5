@@ -92,14 +92,12 @@ $(document).ready(function () {
                         var endTimeStr = com.formatTime(endTimeStp).replace(/-/g, '.');
                         var endTmp= endTimeStr.split(' ');
                         res.data.endDateStr = endTmp[0];
-                        res.data.endTimeStr = endTmp[1];
-
-                console.log('>>>', endTime, endTmp);      
+                        res.data.endTimeStr = endTmp[1];     
 
                         var startTime = com.formatTime(res.data.beginTimeSeconds * 1000).replace(/-/g, '.').split(' ');
                         res.data.startDateStr = startTime[0];
                         res.data.startTimeStr = startTime[1];
-console.log('***', startTime)
+
                         var progress = res.data.progress;
                         var top = winHeight - 25;
                         if (progress == 100) {
@@ -116,7 +114,7 @@ console.log('***', startTime)
                         });
                         var tpl = doT.template($('#J_progress_template').html())(res.data);
                         $('#J_progress_detail').html(tpl);
-console.log(tpl)
+
                     }
                     else if (res.data.slotStatus == -1 || res.data.slotStatus == 101 || res.data.slotStatus == 102) {  // 插座错误
                         $('#loadingToast').fadeOut(100);
@@ -132,7 +130,14 @@ console.log(tpl)
                 else if (res.status == 1 || (res.status == 2 && !res.data)) {
                     $('#loadingToast').fadeOut(100);
                     clearInterval(interval);
-                    $('body').html('<div class="list-empty">没有正在充电哦~</div>');
+                    $('body').html('<div class="list-empty">没有正在充电的订单哦~</div>'
+                        + '<div class="detail-btn-wrap">'
+                            + '<a href="javascript:;" class="weui-btn weui-btn_primary detail-bottom-btn">'
+                                + '<i></i>'
+                                + '<span>扫码充电</span>'
+                            + '</a>'
+                        + '</div>');
+                    initEvent();
                 }
                 else {
                     $('#loadingToast').fadeOut(100);
@@ -148,16 +153,22 @@ console.log(tpl)
         });
     }
 
-window.onerror(function (err) {
-    console.log('&&&&',err)
-})
-
-    function getEndTime(startTime, totalTime) {
-        var arr = startTime.split(' ');
-        var date = arr[0].split('.');
-        var time = arr[1].split(':');
-        var start = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]).getTime();
-        return start + totalTime * 60 * 60 * 1000;
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+        });
+        wx.error(function (err) {
+            console.log('wx.error: ', err);
+        });
     }
     
 });

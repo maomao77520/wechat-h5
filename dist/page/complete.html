@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>充电结束</title>
-    <% for (var css in htmlWebpackPlugin.options.css) { %>
-        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
-    <% } %>
+    
+        <link href="../lib/weui.min.css" rel="stylesheet">
+    
 
-    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
-        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
-    <% } %>
+    
+        <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    
+        <script type="text/javascript" src="../lib/flexible.min.js"></script>
+    
+        <script type="text/javascript" src="../lib/weixin-1.2.0.js"></script>
+    
+        <script type="text/javascript" src="../lib/weui.min.js"></script>
+    
 
 
-</head>
+<link href="../css/complete-81f9e3e4.css" rel="stylesheet"></head>
 <body>
     <div class="complete-wrap" id="J_complete"></div>
     <script type="text/template" id="J_template">    
@@ -90,8 +96,8 @@
         </div>
     </div>
 
-    <% for (var js in htmlWebpackPlugin.options.js) { %>
-        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.js[js] %>"></script>
-    <% } %>
-</body>
+    
+        <script type="text/javascript" src="../lib/doT.min.js"></script>
+    
+<script type="text/javascript" src="../js/complete-81f9e3e4.js"></script></body>
 </html>

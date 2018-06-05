@@ -710,4 +710,25 @@
         }
     }
 }
+.detail-btn-wrap {
+    width: 90%;
+    margin: 1rem auto;
+    .detail-bottom-btn {
+        background: $primary-color;
+        i {
+            display: inline-block;
+            content: '';
+            width: 0.4rem;
+            height: 0.4rem;
+            background-image: url(./images/sao-icon.png);
+            background-size: 0.4rem 0.4rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+            margin-right: 4px;
+            position: relative;
+            top: -1px;
+        }
+    }
+}
 
