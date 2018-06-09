@@ -277,9 +277,9 @@ $(document).ready(function () {
 //         "slotSN": "211201802070012301",
 //         "slotIndex":1,
 //         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 1527591600,
+//         "beginTimeSeconds": 0,
 //         "refundAmount": 0,
-//         "slotStatus": 98,
+//         "slotStatus": 101,
 //     }
 // }
             if (res.status == 0 && res.data) {
@@ -300,8 +300,8 @@ $(document).ready(function () {
                 }).appendTo($body);
 
                 res.data.reason = com.errorMap[res.data.slotStatus];
-                res.data.endTime = com.formatTime(res.data.endChargeTime * 1000);
-                res.data.startTime = com.formatTime(res.data.beginTimeSeconds * 1000);
+                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
+                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
                 var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
                 var h = Math.floor(chargedTime / 60 / 60 % 24);
                 var m = Math.floor(chargedTime / 60 % 60);
