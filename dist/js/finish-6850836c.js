@@ -279,7 +279,7 @@ $(document).ready(function () {
 //         "endChargeTime": 1527595810,
 //         "beginTimeSeconds": 0,
 //         "refundAmount": 0,
-//         "slotStatus": 101,
+//         "slotStatus": 98,
 //     }
 // }
             if (res.status == 0 && res.data) {

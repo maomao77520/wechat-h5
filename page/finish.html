@@ -35,7 +35,7 @@
                 </div>
                 <div class="line">
                     <div class="name">订单金额</div>
-                    <div class="value">{{= Math.round(it.payment/100)}}元</div>
+                    <div class="value">{{= (it.payment/100).toFixed(2)}}元</div>
                 </div>
                 <div class="line">
                     <div class="name">平均功率</div>
