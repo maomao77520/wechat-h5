@@ -63,7 +63,7 @@
         <script type="text/template" id="list-template">
             {{~ it:item:index}}
             <div class="list-item-wrap clearfix item">
-                <a class="item-left J_to_list" href="./list.html?locationId={{= item.locationId}}&lat={{= it.userLat}}&lng={{= it.userLng}}">
+                <a class="item-left J_to_list" href="./list.html?locationId={{= item.locationId}}&lat={{= it.userLat}}&lng={{= it.userLng}}&locationLat={{= item.lat}}&locationLng={{= item.lng}}">
                     <div class="item-name">{{= item.location}}</div>
                     <div class="item-addr">{{= item.locationDetail}}</div>
                     <div class="item-detail">

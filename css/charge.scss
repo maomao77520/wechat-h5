@@ -131,4 +131,14 @@
         font-size: $md-font-size;
         color: $dark-font-color;
     }
+    .bottom-logo {
+        width: 100%;
+        height: 1.16rem;
+        background-image: url(./images/bottom-logo.png);
+        background-repeat: no-repeat;
+        background-size: 4.32rem 1.16rem;
+        background-position: center center;
+        position: fixed;
+        bottom: 10px;
+    }
 }

@@ -60,11 +60,12 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 var Common = {
@@ -234,87 +235,113 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+
+/***/ 24:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(6);
+var css = __webpack_require__(25);
 var com = __webpack_require__(0);
 
+
 $(document).ready(function () {
-    var winHeight = $(window).height();
-    var winWidth = $(window).width();
-    $('body').height(winHeight);
-    $('body').width(winWidth);
-    var locationId = com.parseQuery('locationId');
-    var lat = com.parseQuery('lat');
-    var lng = com.parseQuery('lng');
-    var id = com.parseQuery('id');
 
-    $('#loadingToast').fadeIn(100);
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var outTradeNo = com.parseQuery('outTradeNo');
 
-    getList();
-    function getList() {
-        $.ajax({
-            url: '/charger/getcharging',
-            type: 'post',
-            data: JSON.stringify({
-                accesstoken: 'asdasdwedf565665',
-                locationId: locationId,
-                lat: lat,
-                lng: lng
-            }),
-            contentType: 'application/json',
-            success: function (res) {
-                $('#loadingToast').fadeOut(100);
-                if (res.status == 0) {
-                    res.data.userLat = lat;
-                    res.data.userLng = lng;
-                    var tpl = doT.template($('#second-list-template').html())(res.data);
-                    $('#J_second-list').html(tpl);
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    };
+
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(params),
+        contentType: 'application/json',
+        success: function (res) {
+// res = {
+//     status: 0,
+//     data: {
+//         totalTime: 4,
+//         startTime: '2018.05.29 11:00:00',
+//         payment: 1,
+//         electricityMa: 4545,
+//         "location":"仙葫管委会",
+//         "locationDetail":"仙葫荣沫大道",
+//         "chargerIndex":1,
+//         "deviceId": "2112018020700123",
+//         "slotSN": "211201802070012301",
+//         "slotIndex":1,
+//         "endChargeTime": 1527595810,
+//         "beginTimeSeconds": 0,
+//         "refundAmount": 0,
+//         "slotStatus": 98,
+//     }
+// }
+            if (res.status == 0 && res.data) {
+                if (res.data.slotStatus == 97) {
+                    window.location.href = './progress.html?deviceId='
+                    + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+                    return;
                 }
-                else {
-                    com.showToast();
-                }
 
-                initEvent();
-            },
-            error: function (err) {
-                $('#loadingToast').fadeOut(100);
+                var $body = $('body');
+                document.title = '充电结束';
+                 
+                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
+                $iframe.on('load',function() {
+                  setTimeout(function() {
+                      $iframe.off('load').remove();
+                  }, 0);
+                }).appendTo($body);
+
+                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
+                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
+                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
+                res.data.outTradeNo = outTradeNo;
+                var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
+                var h = Math.floor(chargedTime / 60 / 60 % 24);
+                var m = Math.floor(chargedTime / 60 % 60);
+                var s = Math.floor(chargedTime % 60);
+                h = h >= 10 ? h : '0' + h;
+                m = m >= 10 ? m : '0' + m;
+                s = s >= 10 ? s : '0' + s;
+                res.data.chargedTime = h + ':' + m + ':' + s;
+
+                var tpl = doT.template($('#J_template').html())(res.data);
+                $('#J_finish').html(tpl);
+            }
+            else {
+                var $body = $('body');
+                document.title = '充电结束';
+                 
+                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
+                $iframe.on('load',function() {
+                  setTimeout(function() {
+                      $iframe.off('load').remove();
+                  }, 0);
+                }).appendTo($body);
                 com.showToast();
             }
-        });
-    }  
+        },
+        error: function (error) {
 
-    function initEvent() {
-        com.getWxConfig();
-        wx.ready(function () {
-            $('.detail-bottom-btn').on('click', function () {
-                wx.scanQRCode({
-                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    }
-                });
-            });
-        });
-        wx.error(function (err) {
-            console.log('wx.error: ', err);
-        });
-    }
+            com.showToast();
+        }
+    });
 });
 
-
-
 /***/ }),
-/* 6 */
+
+/***/ 25:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });

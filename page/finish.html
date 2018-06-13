@@ -26,6 +26,10 @@
             </div>
             <div class="center">
                 <div class="line">
+                    <div class="name">订单编号</div>
+                    <div class="value">{{= it.outTradeNo}}</div>
+                </div>
+                <div class="line">
                     <div class="name">充电时长</div>
                     <div class="value">{{= it.totalTime}}小时</div>
                 </div>
@@ -33,6 +37,7 @@
                     <div class="name">开始时间</div>
                     <div class="value">{{= it.startTime}}</div>
                 </div>
+                
                 <div class="line">
                     <div class="name">订单金额</div>
                     <div class="value">{{= (it.payment/100).toFixed(2)}}元</div>
@@ -51,6 +56,10 @@
             </div>
             <div class="center" id="J_center_wrap">
                 <div class="line">
+                    <div class="name">订单编号</div>
+                    <div class="value">{{= it.outTradeNo}}</div>
+                </div>
+                <div class="line">
                     <div class="name">断开原因</div>
                     <div class="value">{{= it.reason}}</div>
                 </div>
@@ -66,6 +75,7 @@
                     <div class="name">已充时长</div>
                     <div class="value">{{= it.chargedTime}}</div>
                 </div>
+                
                 <div class="line">
                     <div class="name">订单金额</div>
                     <div class="value">{{= (it.payment/100).toFixed(2)}}元</div>

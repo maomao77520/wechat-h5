@@ -26,15 +26,14 @@
 
     <script type="text/template" id="J_record_template">
         <div class="top-bar">
-            <div class="order-finish">完成订单：{{= it.finishedOrder}}</div>
-            <div class="order-cancel">取消订单：{{= it.cancalledOrder}}</div>
+            <div class="order-finish">已支付订单：{{= it.finishedOrder}}</div>
         </div>
         <div class="record-list">
             {{~ it.content:item:index}}
             <a class="record-item" href="./finish.html?deviceId={{= item.deviceId}}&slotIndex={{= item.slotIndex}}&outTradeNo={{= item.outTradeNo}}">
                 <div class="line-1">
                     <div class="order-addr">{{= item.location}}</div>
-                    <div class="order-status">{{= item.state}}</div>
+                    <div class="order-status">{{? item.status == 0}}已支付{{?}}</div>
                 </div>
                 <div class="line-2">
                     <div class="left-block">

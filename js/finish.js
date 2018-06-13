@@ -58,9 +58,10 @@ $(document).ready(function () {
                   }, 0);
                 }).appendTo($body);
 
-                res.data.reason = com.errorMap[res.data.slotStatus];
+                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
                 res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
                 res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
+                res.data.outTradeNo = outTradeNo;
                 var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
                 var h = Math.floor(chargedTime / 60 / 60 % 24);
                 var m = Math.floor(chargedTime / 60 % 60);

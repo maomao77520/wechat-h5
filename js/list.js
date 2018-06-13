@@ -10,6 +10,8 @@ $(document).ready(function () {
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
     var id = com.parseQuery('id');
+    var locLat = com.parseQuery('locationLat'); 
+    var locLng = com.parseQuery('locationLng');
 
     $('#loadingToast').fadeIn(100);
 
@@ -57,6 +59,18 @@ $(document).ready(function () {
                         var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                     }
                 });
+            });
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                // var lat = $(this).data('lat');
+                // var lng = $(this).data('lng');
+                com.translateLocation(locLat, locLng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+                
             });
         });
         wx.error(function (err) {

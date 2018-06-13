@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   padding: 0;
   margin: 0;
@@ -152,43 +153,107 @@ html {
     -webkit-transform: rotate3d(0, 0, 1, 360deg);
             transform: rotate3d(0, 0, 1, 360deg); } }
 
-.qrcode-wrap {
-  background: #fff;
-  padding: 0.4rem 0.3rem; }
-  .qrcode-wrap .title {
-    font-size: 0.5rem;
-    color: #111; }
-  .qrcode-wrap .time-wrap {
-    font-size: 0.425rem;
-    color: #999; }
-    .qrcode-wrap .time-wrap a {
-      color: #ff8500; }
-  .qrcode-wrap .step-wrap {
-    margin-top: 1rem; }
-    .qrcode-wrap .step-wrap .step-title {
-      font-size: 0.5rem;
-      color: #ff8500;
-      margin-bottom: 5px; }
-    .qrcode-wrap .step-wrap .step {
-      font-size: 0.373rem;
-      color: #111;
-      line-height: 2.4; }
-    .qrcode-wrap .step-wrap .step-icon {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      border-radius: 10px;
-      background: #ff8500;
-      color: #fff;
-      text-align: center; }
-  .qrcode-wrap .qrcode-block {
-    font-size: 0.373rem;
+/* 附近电桩 */
+.wrap {
+  height: 100%;
+  line-height: 1; }
+  .wrap .clearfix:after {
+    display: block;
+    content: '';
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  .wrap .top-bar {
+    background: #efeff4;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px solid #eaeaea;
+    height: 1rem; }
+  .wrap #pull-down, .wrap #pull-up {
+    font-size: 12px;
     color: #999;
+    text-align: center; }
+  .wrap .city-select-wrap {
+    display: inline-block;
+    font-size: 0.373rem;
+    padding: 0.32rem 0.32rem; }
+    .wrap .city-select-wrap .picker-wrap {
+      display: block;
+      vertical-align: middle;
+      color: #111;
+      width: 4em;
+      font-size: 0.373rem; }
+      .wrap .city-select-wrap .picker-wrap i {
+        content: ' ';
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        vertical-align: middle;
+        border-top: 1px solid #111;
+        border-left: 1px solid #111;
+        -webkit-transform: rotate(-135deg) translate(3px);
+                transform: rotate(-135deg) translate(3px);
+        position: relative;
+        top: -1px;
+        margin-left: 4px; }
+  .wrap .search-bar-wrap {
+    padding: 0; }
+    .wrap .search-bar-wrap:before, .wrap .search-bar-wrap:after {
+      border: 0; }
+    .wrap .search-bar-wrap .search-input-box {
+      float: left; }
+  .wrap .search-input-label {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+  .wrap .history-wrap {
+    font-size: 0.373rem;
+    padding: 0 0.32rem;
+    width: 5em;
+    height: 1rem;
+    position: relative; }
+    .wrap .history-wrap a {
+      color: #111;
+      position: absolute;
+      top: 0.32rem;
+      left: 0.8rem; }
+    .wrap .history-wrap i {
+      position: absolute;
+      top: 50%;
+      margin-top: -0.2rem;
+      display: inline-block;
+      content: '';
+      width: 0.4rem;
+      height: 0.4rem;
+      vertical-align: middle;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAfCAYAAACGVs+MAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkVEQTNEQTRFNDZFOTExRTg5ODhDQzBGMUQ5MDM5NDk0IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkVEQTNEQTRGNDZFOTExRTg5ODhDQzBGMUQ5MDM5NDk0Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RURBM0RBNEM0NkU5MTFFODk4OENDMEYxRDkwMzk0OTQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RURBM0RBNEQ0NkU5MTFFODk4OENDMEYxRDkwMzk0OTQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6KN/aiAAABs0lEQVR42mL838pALkgGYpBuZiBuAOKp5BjCSKYDDID4LBAzQfn/gdgYiM+TahATmb6vQNPLCMT15BhEjgO0gDgMi7g/NGRo7oA6qI9xhQxNHaACxKF45MOgIUQzB9QQ0MMIDSGaOADk+xgi1IVA1VLVAaxAXAnN84QArFxgJbccEAFifSDWg9L60HhlIzG6/gDxDSC+jIYfojuAE0jnA7Ed1FJpBtqCz1CHHALidhYgsZBAyqY24AViKyjWAIXAXwpKRErBH5DFTxgGDjwDOSAbiH8PgOUgO9NBDtgCxIFA/J2OloPs8gDiHbC43wrEnkD8iQ6Wg+xwBuJ96AXRQajEGxpaDjLbAYiP4yoJzwCxPRA/pYHlT6FmnydUFF8DYlsgvktFy+9CfX6N2LrgPhDPoqID5gPxHVIrI0MqOkCPnNqQmg4wINUB3ECsRkUHgNoHXKQ4QB9Pu4/cxq8uKQ4wpEE21B9oBxiQ4gAjIgzcCFVnBGVTNQQUibA4AFqqnYeyCTlEgRQHnCfCYmx68DnkIikOSAPiI0D8HojXErAYl0MsgHgzEH8D4sNQMzEAQIABAPiVU/NbPQhmAAAAAElFTkSuQmCC);
+      background-size: 0.4rem 0.4rem;
+      background-position: center center;
+      background-repeat: no-repeat; }
+  .wrap #wrapper {
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    bottom: 0;
+    width: 100%;
+    z-index: 10; }
+  .wrap .list-wrap {
+    background: #fff;
+    position: relative; }
+  .wrap .bottom-tips {
+    font-size: 0.32rem;
+    color: #aaa;
     text-align: center;
-    margin-top: 0.5rem; }
-    .qrcode-wrap .qrcode-block .qrcode {
-      text-align: center; }
+    margin: 0.6rem auto; }
 
-.weui-picker__item {
-  font-size: 17px; }
+/* end 附近电桩 */

@@ -43,6 +43,7 @@ $(document).ready(function () {
         $('.price-btn').removeClass('active-btn');
         $(this).addClass('active-btn');
         price = $(this).data('price');
+        time = $(this).data('time');
     });
 
 

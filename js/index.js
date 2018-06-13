@@ -10,7 +10,6 @@ $(document).on('ready', function () {
     var currentCity = '南宁';
 
     $('#loadingToast').fadeIn(100);
-
     com.getWxConfig();
     wx.ready(function () {
         wx.getLocation({
@@ -145,7 +144,11 @@ $(document).on('ready', function () {
             contentType: 'application/json',
             success: function (res) {
                 $('#loadingToast').fadeOut(100);   
-                if (res.status == 0) {
+                if (res.status == 0 && res.data.content) {
+                    if (res.data.content.length <= 0) {
+                        $('#J_list-wrap').html('<div class="list-empty">附近找不到充电站~</div>');
+                        return;
+                    }
                     res.data.content.userLat = lat;
                     res.data.content.userLng = lng;
                     var tpl = doT.template($('#list-template').html())(res.data.content);
