@@ -119,12 +119,12 @@ $(document).ready(function () {
                     else if (res.data.slotStatus == -1 || res.data.slotStatus == 101 || res.data.slotStatus == 102) {  // 插座错误
                         $('#loadingToast').fadeOut(100);
                         clearInterval(interval);
-                        window.location.href = './finish.html?deviceId=' + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
                     }
                     else if (res.data.slotStatus == 98 || res.data.slotStatus == 99) { // 正常结束
                         $('#loadingToast').fadeOut(100);
                         clearInterval(interval);
-                        window.location.href = './finish.html?deviceId=' + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
                     }
                 }
                 else if (res.status == 1 || (res.status == 2 && !res.data)) {
