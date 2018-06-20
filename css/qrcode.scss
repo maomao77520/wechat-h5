@@ -45,6 +45,7 @@
         text-align: center;
         margin-top: 0.5rem;
         position: relative;
+        z-index: 2;
         .tips-text {
             margin-top: -0.9rem;
             color: #fff;
@@ -58,7 +59,7 @@
             top: 0.5rem;
             left: 50%;
             margin-left: 0.5rem;
-            opacity: 0;
+            opacity: 1;
             animation: moveLine 2s linear infinite;
             animation-fill-mode: forwards;
         }
@@ -74,14 +75,12 @@
         opacity: 1;
         top: 0.5rem;
     }
-    89% {
+    95% {
         opacity: 1;
         top: 3.6rem;
     }
-    90% {
-        opacity: 0;
-    }
     100% {
         opacity: 0;
+        top: 0.5rem;
     }
 }
