@@ -38,7 +38,10 @@ module.exports = {
         }, {
             from: __dirname + '/page',
             to: __dirname + '/dist/page'
-        }])
+        }]),
+        new webpack.DefinePlugin({
+            __ENV: JSON.stringify(process.env.NODE_ENV || 'pro') 
+        })
     ].concat(hbsHtmlWebpackPlugins),
     // 页面入口文件配置
     entry: (function() {

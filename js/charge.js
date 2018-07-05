@@ -1,10 +1,62 @@
 var css = require('../css/charge.scss');
 var com = require('./common.js');
 
+var defaultPriceData = [
+    {
+      "lineId": 1,
+      "packageId": 1,
+      "price": 1,
+      "chargeDuration": 4,
+      "isDefault": 1
+    }, {
+      "lineId": 2,
+      "packageId": 1,
+      "price": 2,
+      "chargeDuration": 8,
+      "isDefault": 0
+    }, {
+      "lineId": 3,
+      "packageId": 1,
+      "price": 3,
+      "chargeDuration": 12,
+      "isDefault": 0
+    }];
+var price = 1;
+var time = 4;
+
 $(document).ready(function () {
     var deviceId = com.parseQuery('deviceId');
     var slotIndex = com.parseQuery('slotIndex');
     var openId = com.parseQuery('openid');
+
+    $.ajax({
+        url: '/charger/getPricePackage',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665',
+            deviceId: deviceId
+        }),
+        success: function (res) {
+            if (res.status == 0) {
+                var priceData = res.data;
+                if (res.data.length < 3) {
+                    priceData = defaultPriceData;
+                }
+                for (var i = 0; i < priceData.length; i++) {
+                    $('#J_price_wrap a').eq(i).attr('data-price', priceData[i].price);
+                    $('#J_price_wrap a').eq(i).attr('data-time', priceData[i].chargeDuration);
+                    $('#J_price_wrap a').eq(i).text(priceData[i].price + '元/' + priceData[i].chargeDuration + '小时');
+                    if (priceData[i].isDefault == 1) {
+                        $('#J_price_wrap a').eq(i).addClass('active-btn');
+                    }
+                }
+                price = $('.active-btn').data('price');
+                time = $('.active-btn').data('time');
+            }
+        }
+    });
+
 
     $.ajax({
         url: '/charger/getpaycharging',
@@ -36,10 +88,8 @@ $(document).ready(function () {
     });
     $('#J_top_detail').html(tpl);
 
-    var price = $('.active-btn').data('price');
-    var time = $('.active-btn').data('time');
-
-    $('.price-btn').on('click', function (e) {
+    
+    $('#J_price_wrap').on('click', '.price-btn', function (e) {
         $('.price-btn').removeClass('active-btn');
         $(this).addClass('active-btn');
         price = $(this).data('price');
