@@ -146,9 +146,10 @@ html {
     font-size: $md-font-size;
 }
 #toast .toast-wrap {
+    padding: 20px 15px;
+    min-height: 0.5rem;
+    width: 8em;
     .toast-text {
-        height: 8em;
-        line-height: 8em;
         margin-bottom: 0;
     }
 }

@@ -111,6 +111,9 @@
         width: 90%;
         margin: 0.4rem auto;
         background: $primary-color;
+        &:active {
+            background: $primary-color;
+        }
     }
     .pay-wrap {
         display: flex;

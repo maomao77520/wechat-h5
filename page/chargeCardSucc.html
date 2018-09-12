@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>电卡充值</title>
+    <% for (var css in htmlWebpackPlugin.options.css) { %>
+        <link href="<%=htmlWebpackPlugin.options.css[css] %>" rel="stylesheet">
+    <% } %>
+
+    <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
+        <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
+    <% } %>
+</head>
+<body>
+    <div class="charge-card-result card-wrap">
+        <div class="circle-bg">
+            <div class="icon"></div>
+        </div>
+        <div class="success-text">充值成功</div>
+        <div class="success-detail">
+            <span id="J_card_id">卡号：123456789</span>
+            <span id="J_card_balance">可用余额：100.00元</span>
+        </div>
+
+        <a href="./record.html" class="weui-btn weui-btn_primary history-btn">查看消费记录</a>
+    </div>
+    
+</body>
+</html>

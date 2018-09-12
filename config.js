@@ -12,7 +12,10 @@ module.exports = {
         'error',
         'complete',
         'finish',
-        'scanqrcode'
+        'scanqrcode',
+        'applyCard',
+        'chargeCard',
+        'chargeCardSucc'
     ],
     prejs: [
         '../lib/jquery.min.js',
