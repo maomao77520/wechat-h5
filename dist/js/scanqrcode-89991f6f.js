@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,6 +69,7 @@
 /***/ (function(module, exports) {
 
 var Common = {
+    host: 'http://dev.shouyifenxi.com/',
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -77,7 +78,6 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -236,41 +236,80 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 16:
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(17);
+var css = __webpack_require__(28);
 var com = __webpack_require__(0);
 
 $(document).ready(function () {
-    $.ajax({
-        url: '/charger/getrecordcharging',
-        type: 'post',
-        data: JSON.stringify({
-            accessToken: 'asdasdwedf565665'
-        }),
-        contentType: 'application/json',
-        success: function (res) {
-            if (res.status == 0) {
-                res.data.content.map(function (item) {
-                    item.startTime = com.formatTime(item.createTime * 1000);
-                })
-                var tpl = doT.template($('#J_record_template').html())(res.data);
-                $('#J_record_wrap').html(tpl);
-            }
-            else {
+
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
+
+    $('#loadingToast').fadeIn(100);
+
+    getList();
+    function getList() {
+        $.ajax({
+            url: '/charger/getcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                locationId: locationId,
+                lat: lat,
+                lng: lng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                $('#loadingToast').fadeOut(100);
+                if (res.status == 0) {
+                    res.data.userLat = lat;
+                    res.data.userLng = lng;
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
+                }
+
+                initEvent();
+            },
+            error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
-        },
-        fail: function () {
-            com.showToast();
-        }
-    });
+        });
+    }  
+
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                com.translateLocation(lat, lng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+                
+            });
+        });
+    }
 });
+
+
 
 /***/ }),
 
-/***/ 17:
+/***/ 28:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

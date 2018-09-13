@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 23);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,6 +69,7 @@
 /***/ (function(module, exports) {
 
 var Common = {
+    host: 'http://dev.shouyifenxi.com/',
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -77,7 +78,6 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -236,55 +236,68 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 21:
+/***/ 23:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(22);
+var css = __webpack_require__(24);
 var com = __webpack_require__(0);
 
-var deviceId = com.parseQuery('deviceId');
-var slotIndex = com.parseQuery('slotIndex');
-var errorCode = com.parseQuery('errorCode');
-
-var map = {
-    1001: '插座开小差啦，换一个试试~',
-    1002: '插座被别人占用啦，换一个试试~'
-};
-
 $(document).ready(function () {
-    var winHeight = $(window).height();
-    var winWidth = $(window).width();
-    $('body').height(winHeight);
-    $('body').width(winWidth);
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var outTradeNo = com.parseQuery('outTradeNo');
 
-    
-    var tpl = doT.template($('#J_template').html())({
-        errorCode: errorCode,
-        errorText: map[errorCode] || '出错啦',
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
         deviceId: deviceId,
-        slotIndex: slotIndex
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    };
+
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(params),
+        contentType: 'application/json',
+        success: function (res) {
+// res = {
+//     status: 0,
+//     data: {
+//         totalTime: 4,
+//         startTime: '2018.05.29 11:00:00',
+//         payment: 1,
+//         electricityMa: 4545,
+//         "location":"仙葫管委会",
+//         "locationDetail":"仙葫荣沫大道",
+//         "chargerIndex":1,
+//         "deviceId": "2112018020700123",
+//         "slotSN": "211201802070012301",
+//         "slotIndex":1,
+//         "endChargeTime": 1527595810,
+//         "beginTimeSeconds": 1527591600,
+//         "refundAmount": 0,
+//         slotStatus: 101,
+//     }
+// }
+            if (res.status == 0 && res.data) {
+                res.data.startTime = com.formatTime(res.data.beginTimeSeconds * 1000);
+                var tpl = doT.template($('#J_template').html())(res.data);
+                $('#J_complete').html(tpl);
+            }
+            else {
+                com.showToast();
+            }
+        },
+        error: function (error) {
+            com.showToast();
+        }
     });
-    $('#J_error_wrap').append(tpl);
-
-    com.getWxConfig();  
-    wx.ready(function () {
-        $('.retry-btn').on('click', function () {
-            wx.scanQRCode({
-                needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                success: function (res) {
-                    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                }
-            });
-        });
-    });
-})
-
-
+});
 
 /***/ }),
 
-/***/ 22:
+/***/ 24:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

@@ -4,7 +4,8 @@ var com = require('./common.js');
 $(document).ready(function() {
     var lat = 0;
     var lng = 0;
-    
+    var cardId, balance;
+
     com.getWxConfig();
     getLocation();
 
@@ -15,7 +16,8 @@ $(document).ready(function() {
     });
 
     // 卡号输入框的清空
-    $('#J_clear_icon').on('click', function(e) {
+    $('#J_clear_icon').on('touchstart', function(e) {
+        e.stopPropagation();
         $('#J_card_no').val('');
         $('.card-charge-balance').hide();
         $('.card-error').text('').hide();
@@ -29,6 +31,7 @@ $(document).ready(function() {
         }
     }).on('blur', function(e) {
         var cardId = $(this).val();
+
         if (cardId == '' || $('.card-charge-balance').css('display') !== 'none') {
             return;
         }
@@ -46,7 +49,7 @@ $(document).ready(function() {
     // 充值按钮
     var lock = false;
     $('#J_charge_btn').on('click', function(e) {
-        var cardId = $('#J_card_no').val();
+        cardId = $('#J_card_no').val();
         var payment = $('.active-btn').data('price') * 100;
         if (!cardId) {
             $('.card-error').text('请输入电卡卡号');
@@ -129,7 +132,7 @@ $(document).ready(function() {
                    "paySign": paySign //微信签名 
                 }, function (res) {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
-                        window.location.href = "http://www.shouyifenxi.com/dist/page/chargeCardSucc.html?out_trade_no=" + out_trade_no;
+                        window.location.href = com.host + "dist/page/chargeCardSucc.html?outTradeNo=" + out_trade_no + "&cardId=" + cardId;
                     }
                     else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
                         // alert("取消支付!");
@@ -141,6 +144,7 @@ $(document).ready(function() {
             ); 
         }
     }
+
 
     // 获取当前位置坐标
     function getLocation() {

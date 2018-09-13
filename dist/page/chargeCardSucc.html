@@ -17,20 +17,34 @@
     
         <script type="text/javascript" src="../lib/weui.min.js"></script>
     
-<link href="../css/chargeCardSucc-de9f8fa4.css" rel="stylesheet"></head>
+<link href="../css/chargeCardSucc-1b6b8499.css" rel="stylesheet"></head>
 <body>
-    <div class="charge-card-result card-wrap">
+    <div class="charge-card-result card-wrap" style="display: none;">
         <div class="circle-bg">
             <div class="icon"></div>
         </div>
         <div class="success-text">充值成功</div>
         <div class="success-detail">
-            <span id="J_card_id">卡号：123456789</span>
-            <span id="J_card_balance">可用余额：100.00元</span>
+            <span id="J_card_id"></span>
+            <span id="J_card_balance"></span>
         </div>
 
         <a href="./record.html" class="weui-btn weui-btn_primary history-btn">查看消费记录</a>
     </div>
-    
-<script type="text/javascript" src="../js/chargeCardSucc-de9f8fa4.js"></script></body>
+
+    <div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast toast-wrap">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content toast-text">数据加载中</p>
+        </div>
+    </div>
+
+    <div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast toast-wrap">
+            <p class="weui-toast__content toast-text">加载失败</p>
+        </div>
+    </div>
+<script type="text/javascript" src="../js/chargeCardSucc-1b6b8499.js"></script></body>
 </html>

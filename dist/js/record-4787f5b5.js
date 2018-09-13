@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,6 +69,7 @@
 /***/ (function(module, exports) {
 
 var Common = {
+    host: 'http://dev.shouyifenxi.com/',
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -77,7 +78,6 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -236,100 +236,33 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 25:
+/***/ 16:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(26);
+var css = __webpack_require__(17);
 var com = __webpack_require__(0);
 
-
 $(document).ready(function () {
-
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
-
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    };
-
     $.ajax({
-        url: url,
+        url: '/charger/getrecordcharging',
         type: 'post',
-        data: JSON.stringify(params),
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665'
+        }),
         contentType: 'application/json',
         success: function (res) {
-// res = {
-//     status: 0,
-//     data: {
-//         totalTime: 4,
-//         startTime: '2018.05.29 11:00:00',
-//         payment: 1,
-//         electricityMa: 4545,
-//         "location":"仙葫管委会",
-//         "locationDetail":"仙葫荣沫大道",
-//         "chargerIndex":1,
-//         "deviceId": "2112018020700123",
-//         "slotSN": "211201802070012301",
-//         "slotIndex":1,
-//         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 0,
-//         "refundAmount": 0,
-//         "slotStatus": 98,
-//     }
-// }
-            if (res.status == 0 && res.data) {
-                if (res.data.slotStatus == 97) {
-                    window.location.href = './progress.html?deviceId='
-                    + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
-                    return;
-                }
-
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
-
-                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
-                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
-                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
-                res.data.outTradeNo = outTradeNo;
-                var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
-                var h = Math.floor(chargedTime / 60 / 60 % 24);
-                var m = Math.floor(chargedTime / 60 % 60);
-                var s = Math.floor(chargedTime % 60);
-                h = h >= 10 ? h : '0' + h;
-                m = m >= 10 ? m : '0' + m;
-                s = s >= 10 ? s : '0' + s;
-                res.data.chargedTime = h + ':' + m + ':' + s;
-
-                var tpl = doT.template($('#J_template').html())(res.data);
-                $('#J_finish').html(tpl);
+            if (res.status == 0) {
+                res.data.content.map(function (item) {
+                    item.startTime = com.formatTime(item.createTime * 1000);
+                })
+                var tpl = doT.template($('#J_record_template').html())(res.data);
+                $('#J_record_wrap').html(tpl);
             }
             else {
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
                 com.showToast();
             }
         },
-        error: function (error) {
-
+        fail: function () {
             com.showToast();
         }
     });
@@ -337,7 +270,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 26:
+/***/ 17:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

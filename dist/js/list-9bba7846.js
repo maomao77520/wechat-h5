@@ -60,15 +60,15 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 var Common = {
+    host: 'http://dev.shouyifenxi.com/',
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -77,7 +77,6 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -235,19 +234,28 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-
-/***/ 27:
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(28);
+var css = __webpack_require__(7);
 var com = __webpack_require__(0);
 
 $(document).ready(function () {
-
+    var winHeight = $(window).height();
+    var winWidth = $(window).width();
+    $('body').height(winHeight);
+    $('body').width(winWidth);
     var locationId = com.parseQuery('locationId');
     var lat = com.parseQuery('lat');
     var lng = com.parseQuery('lng');
     var id = com.parseQuery('id');
+    var locLat = com.parseQuery('locationLat'); 
+    var locLng = com.parseQuery('locationLng');
 
     $('#loadingToast').fadeIn(100);
 
@@ -287,20 +295,30 @@ $(document).ready(function () {
     function initEvent() {
         com.getWxConfig();
         wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
 
             // 打开导航
             $('#J_second-list').on('click', '.J_Navigation', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
                 var location = $(this).data('location');
                 var addr = $(this).data('addr');
-                var lat = $(this).data('lat');
-                var lng = $(this).data('lng');
-                com.translateLocation(lat, lng).done(function (res) {
+                // var lat = $(this).data('lat');
+                // var lng = $(this).data('lng');
+                com.translateLocation(locLat, locLng).done(function (res) {
                     com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
                 });
                 
             });
+        });
+        wx.error(function (err) {
+            console.log('wx.error: ', err);
         });
     }
 });
@@ -308,12 +326,10 @@ $(document).ready(function () {
 
 
 /***/ }),
-
-/***/ 28:
+/* 7 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-
-/******/ });
+/******/ ]);

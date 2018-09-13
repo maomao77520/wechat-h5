@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,6 +69,7 @@
 /***/ (function(module, exports) {
 
 var Common = {
+    host: 'http://dev.shouyifenxi.com/',
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -77,7 +78,6 @@ var Common = {
             contentType: 'application/json',
             data: JSON.stringify({url: window.location.href}),
             success: function (res) {
-                console.log('LLLL')
                 // if (res.status == 0) {
                     wx.config({
                         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -236,123 +236,249 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 1:
+/***/ 14:
+/***/ (function(module, exports, __webpack_require__) {
+
+var css = __webpack_require__(15);
+var com = __webpack_require__(0);
+var countDown = __webpack_require__(3);
+
+$(document).ready(function () {
+    var winHeight = $(window).height();
+    var winWidth = $(window).width();
+    $('body').height(winHeight);
+    $('body').width(winWidth);
+
+    $('#loadingToast').fadeIn(100);
+
+    $('.left-time-text').css({
+        'padding-left': $('.top-num-wrap .hour').position().left
+    });
+
+    $('#J_question_icon').on('click', function (e) {
+        $('#iosDialog2').fadeIn(200);
+    });
+
+    $('#J_close_dialog').on('click', function (e) {
+        $('#iosDialog2').fadeOut(200);
+    });
+
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var outTradeNo = com.parseQuery('outTradeNo');
+
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    }
+
+    if (!deviceId || !slotIndex) {
+        url = '/charger/getmycharging';
+        params = {
+            accesstoken: 'asdasdwedf565665'
+        }
+    }
+
+    getData(url, params);
+    var interval = setInterval(function () {
+        getData(url, params);  
+    }, 1000);
+
+    function getData(url, params) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: JSON.stringify(params),
+            contentType: 'application/json',
+            success: function (res) {
+// res = {
+//     status: 0,
+//     "data": {
+//         "deviceId": "2112018020700123",
+//         "slotIndex": 3,
+//         "location": "仙葫管委会",
+//         "locationDetail": "仙葫荣沫大道",
+//         "electricityMa": 0,
+//         "paymentSeconds": 960,
+//         "beginTimeSeconds": 1528089760,
+//         "endChargeTime": 0,
+//         "payment": 2,
+//         "refundAmount": 0,
+//         "slotStatus": 97,
+//         "slotSN": "211201802070012303",
+//         "startTime": "2018.06.04 13:22:40",
+//         "time": "00:15:57",
+//         "chargingTime": "00:00:03",
+//         "totalTime": "8",
+//         "progress": 0,
+//         "chargerIndex": 1
+//     }
+// }
+
+                
+                if (res.status == 0 && res.data) {
+                    if (res.data.slotStatus == 1) { // 打开插座成功
+                        // $('#loadingToast').fadeIn(100);
+                    }
+                    else if (res.data.slotStatus == 97) { // 正在充电
+                        $('#loadingToast').fadeOut(100);
+                        clearInterval(interval);
+                        $('.progress-wrap').show();
+                        var endTimeStp = (res.data.beginTimeSeconds + res.data.paymentSeconds) * 1000;
+                        var endTime = new Date(endTimeStp);
+                        var count = new countDown(endTime, $('.top-num-wrap'));
+                        var endTimeStr = com.formatTime(endTimeStp).replace(/-/g, '.');
+                        var endTmp= endTimeStr.split(' ');
+                        res.data.endDateStr = endTmp[0];
+                        res.data.endTimeStr = endTmp[1];     
+
+                        var startTime = com.formatTime(res.data.beginTimeSeconds * 1000).replace(/-/g, '.').split(' ');
+                        res.data.startDateStr = startTime[0];
+                        res.data.startTimeStr = startTime[1];
+
+                        var progress = res.data.progress;
+                        var top = winHeight - 25;
+                        if (progress == 100) {
+                            top = -100;
+                            $('.wave').css({
+                                'background-size': '50% 120%'
+                            });
+                        }
+                        else if (progress / 100 * winHeight > 25) {
+                            top = (100 - progress) / 100 * winHeight;
+                        }
+                        $('.wave').css({
+                            'background-position': '0 ' + top + 'px'
+                        });
+                        var tpl = doT.template($('#J_progress_template').html())(res.data);
+                        $('#J_progress_detail').html(tpl);
+
+                    }
+                    else if (res.data.slotStatus == -1 || res.data.slotStatus == 101 || res.data.slotStatus == 102) {  // 插座错误
+                        $('#loadingToast').fadeOut(100);
+                        clearInterval(interval);
+                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
+                    }
+                    else if (res.data.slotStatus == 98 || res.data.slotStatus == 99) { // 正常结束
+                        $('#loadingToast').fadeOut(100);
+                        clearInterval(interval);
+                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
+                    }
+                }
+                else if (res.status == 1 || (res.status == 2 && !res.data)) {
+                    $('#loadingToast').fadeOut(100);
+                    clearInterval(interval);
+                    $('body').html('<div class="list-empty">没有正在充电的订单哦~</div>'
+                        + '<div class="detail-btn-wrap">'
+                            + '<a href="javascript:;" class="weui-btn weui-btn_primary detail-bottom-btn">'
+                                + '<i></i>'
+                                + '<span>扫码充电</span>'
+                            + '</a>'
+                        + '</div>');
+                    initEvent();
+                }
+                else {
+                    $('#loadingToast').fadeOut(100);
+                    clearInterval(interval);
+                    com.showToast();
+                }
+            },
+            error: function (error) {
+                $('#loadingToast').fadeOut(100);
+                clearInterval(interval);
+                com.showToast();
+            }
+        });
+    }
+
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+        });
+        wx.error(function (err) {
+            console.log('wx.error: ', err);
+        });
+    }
+    
+});
+
+/***/ }),
+
+/***/ 15:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 29:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 3:
+/***/ (function(module, exports) {
 
-var css = __webpack_require__(1);
-var com = __webpack_require__(0);
+function CountDown(deadline, $ele) {
+    this.count(deadline, $ele);
+}
 
-$(document).ready(function() {
-    // 初始化所在地区下拉内容
-    var cityList = [];
-    $.ajax({
-        url: '/charger/getCity',
-        type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665'
-        }),
-        contentType: 'application/json',
-        success: function (res) {
-            if (res.status == 0) {
-                for (var i = 0; i < res.data.length; i++) {
-                    cityList.push({
-                        label: res.data[i].city,
-                        value: res.data[i].city,
-                        province: res.data[i].province,
-                    });
-                }
-                // 地点下拉框
-                $('#J_city_picker').on('click', function () {
-                    $this = $(this);
-                    weui.picker(cityList, {
-                        onChange: function (result) {
-                        },
-                        onConfirm: function (result) {
-                            $('#J_city_input').val(result[0].label);
-                        }
-                    });
-                });
-            }
-        },
-        fail: function (err) {
-
-        },
-    });
-
-
-    $('input, textarea').on('input', function(e) {
-        $('.error-tips').text('');
-    });
-
-    // 提交按钮
-    $('.apply-btn').on('click', function(e) {
-        var consignee = $('input[name="consignee"]').val();
-        var phone = $('input[name="phone"]').val();
-        var location = $('input[name="location"]').val();
-        var locationDetail = $('textarea[name="locationDetail"]').val();
-
-        if (!consignee || consignee.trim() == '') {
-            $('.error-tips').text('请输入收货人');
-            return;
+CountDown.prototype = {
+    count: function (deadline, $ele) {
+        var now = new Date().getTime();
+        this.$ele = $ele;
+        var me = this;
+        if (deadline.getTime() - now <= 0) {
+            clearInterval(this.interval);
+            $ele.find('.hour').text('00');
+            $ele.find('.minite').text('00');
+            $ele.find('.second').text('00');
         }
-        if (!phone || !phone.match(/^1[0-9]{10}$/g)) {
-            $('.error-tips').text('请输入正确的手机号码');
-            return;
+        else {
+            this.init(deadline);
+            this.interval = setInterval(function () {
+                me.init(deadline)
+            }, 1000);
         }
-        if (!location) {
-            $('.error-tips').text('请选择所在地区');
-            return;
+    },
+
+    init: function (deadline) {
+        var now = new Date().getTime();
+        if (deadline - now <= 0) {
+            clearInterval(this.interval);
+            this.$ele.find('.hour').text('00');
+            this.$ele.find('.minite').text('00');
+            this.$ele.find('.second').text('00');
         }
-        if (!locationDetail || locationDetail.trim() == '') {
-            $('.error-tips').text('请输入详细地址');
-            return;
+        else {
+            this.getNum(deadline);
         }
+    },
 
-        $.ajax({
-            url: '/card/cardApply',
-            type: 'post',
-            data: JSON.stringify({
-                accesstoken: 'asdasdwedf565665',
-                consignee: encodeURIComponent(consignee),
-                phone: phone,
-                location: encodeURIComponent(location),
-                locationDetail: encodeURIComponent(locationDetail)
-            }),
-            contentType: 'application/json',
-            success: function (res) {
-                if (res.status == 0) {
-                    $('#iosDialog2').fadeIn(200);
-                }
-                else {
-                    $('#toast p').text('提交失败！' + res.msg);
-                    com.showToast();
-                }
-            },
-            error: function(err) {
-                $('#toast p').text('提交失败！' + err.msg);
-                com.showToast();
-            }
-        });
-    });
+    getNum: function (deadline) {
+        var now = new Date().getTime();
+        var time = deadline.getTime() - now;
+        var hour = this.formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
+        var minite = this.formatNum(Math.floor(time / 1000 / 60 % 60));
+        var second = this.formatNum(Math.floor(time / 1000 % 60));
+        this.$ele.find('.hour').text(hour);
+        this.$ele.find('.minite').text(minite);
+        this.$ele.find('.second').text(second);
+    },
 
-    $(document).on('click', '#J_close_dialog', function(e) {
-        $('#iosDialog2').fadeOut(200);
-        window.location.href = './user.html';
+    formatNum: function (num) {
+        return num >= 10 ? num : '0' + num;
+    }
+};
 
-    });
-});
-
-
-
-
-
+module.exports = CountDown;
 
 /***/ })
 

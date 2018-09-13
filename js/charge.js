@@ -159,7 +159,7 @@ $(document).ready(function () {
                    "paySign": paySign //微信签名 
                 }, function (res) {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
-                        window.location.href = "http://www.shouyifenxi.com/dist/page/progress.html?deviceId="
+                        window.location.href = com.host + "dist/page/progress.html?deviceId="
                         + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no;
                     }
                     else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
@@ -173,20 +173,21 @@ $(document).ready(function () {
         }
     }
 
-    function checkOrderStatus(out_trade_no, cb) {
-        $.ajax({
-            url: '/charger/getPayStatus',
-            type: 'post',
-            data: JSON.stringify({
-                out_trade_no: out_trade_no
-            }),
-            success: function (res) {
-                if (res.status) {
-                    cb && cb(res);
-                }
-            }
-        });
-    }
+    // function checkOrderStatus(out_trade_no, cb) {
+    //     $.ajax({
+    //         url: '/charger/getPayStatus',
+    //         type: 'post',
+    //         data: JSON.stringify({
+    //             out_trade_no: out_trade_no
+    //         }),
+    //         contentType: 'application/json',
+    //         success: function (res) {
+    //             if (res.status) {
+    //                 cb && cb(res);
+    //             }
+    //         }
+    //     });
+    // }
     
 
 });
