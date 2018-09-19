@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,7 +69,9 @@
 /***/ (function(module, exports) {
 
 var Common = {
-    host: 'http://dev.shouyifenxi.com/',
+    host: (function() {
+        return 'http://' + window.location.hostname + '/';
+    })(),
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -236,68 +238,80 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 23:
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(24);
+var css = __webpack_require__(28);
 var com = __webpack_require__(0);
 
 $(document).ready(function () {
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
 
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    };
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
 
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: JSON.stringify(params),
-        contentType: 'application/json',
-        success: function (res) {
-// res = {
-//     status: 0,
-//     data: {
-//         totalTime: 4,
-//         startTime: '2018.05.29 11:00:00',
-//         payment: 1,
-//         electricityMa: 4545,
-//         "location":"仙葫管委会",
-//         "locationDetail":"仙葫荣沫大道",
-//         "chargerIndex":1,
-//         "deviceId": "2112018020700123",
-//         "slotSN": "211201802070012301",
-//         "slotIndex":1,
-//         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 1527591600,
-//         "refundAmount": 0,
-//         slotStatus: 101,
-//     }
-// }
-            if (res.status == 0 && res.data) {
-                res.data.startTime = com.formatTime(res.data.beginTimeSeconds * 1000);
-                var tpl = doT.template($('#J_template').html())(res.data);
-                $('#J_complete').html(tpl);
-            }
-            else {
+    $('#loadingToast').fadeIn(100);
+
+    getList();
+    function getList() {
+        $.ajax({
+            url: '/charger/getcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                locationId: locationId,
+                lat: lat,
+                lng: lng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                $('#loadingToast').fadeOut(100);
+                if (res.status == 0) {
+                    res.data.userLat = lat;
+                    res.data.userLng = lng;
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
+                }
+
+                initEvent();
+            },
+            error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
-        },
-        error: function (error) {
-            com.showToast();
-        }
-    });
+        });
+    }  
+
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                var lat = $(this).data('lat');
+                var lng = $(this).data('lng');
+                com.translateLocation(lat, lng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+                
+            });
+        });
+    }
 });
+
+
 
 /***/ }),
 
-/***/ 24:
+/***/ 28:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,7 +69,9 @@
 /***/ (function(module, exports) {
 
 var Common = {
-    host: 'http://dev.shouyifenxi.com/',
+    host: (function() {
+        return 'http://' + window.location.hostname + '/';
+    })(),
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -236,26 +238,109 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 14:
+/***/ 10:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(15);
+var css = __webpack_require__(11);
 var com = __webpack_require__(0);
-var countDown = __webpack_require__(3);
+
+var defaultPriceData = [
+    {
+      "lineId": 1,
+      "packageId": 1,
+      "price": 1,
+      "chargeDuration": 4,
+      "isDefault": 1
+    }, {
+      "lineId": 2,
+      "packageId": 1,
+      "price": 2,
+      "chargeDuration": 8,
+      "isDefault": 0
+    }, {
+      "lineId": 3,
+      "packageId": 1,
+      "price": 3,
+      "chargeDuration": 12,
+      "isDefault": 0
+    }];
+var price = 1;
+var time = 4;
 
 $(document).ready(function () {
-    var winHeight = $(window).height();
-    var winWidth = $(window).width();
-    $('body').height(winHeight);
-    $('body').width(winWidth);
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var openId = com.parseQuery('openid');
 
-    $('#loadingToast').fadeIn(100);
-
-    $('.left-time-text').css({
-        'padding-left': $('.top-num-wrap .hour').position().left
+    $.ajax({
+        url: '/charger/getPricePackage',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665',
+            deviceId: deviceId
+        }),
+        success: function (res) {
+            if (res.status == 0) {
+                var priceData = res.data;
+                if (res.data.length < 3) {
+                    priceData = defaultPriceData;
+                }
+                for (var i = 0; i < priceData.length; i++) {
+                    $('#J_price_wrap a').eq(i).attr('data-price', priceData[i].price);
+                    $('#J_price_wrap a').eq(i).attr('data-time', priceData[i].chargeDuration);
+                    $('#J_price_wrap a').eq(i).text(priceData[i].price + '元/' + priceData[i].chargeDuration + '小时');
+                    if (priceData[i].isDefault == 1) {
+                        $('#J_price_wrap a').eq(i).addClass('active-btn');
+                    }
+                }
+                price = $('.active-btn').data('price');
+                time = $('.active-btn').data('time');
+            }
+        }
     });
 
-    $('#J_question_icon').on('click', function (e) {
+
+    $.ajax({
+        url: '/charger/getpaycharging',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665',
+            deviceId: deviceId,
+            slotIndex: slotIndex
+        }),
+        success: function (res) {
+            if (res.status == 0) {
+                var tpl = doT.template($('#J_top_detail_template').html())(res.data);
+                $('#J_top_detail').html(tpl);
+            }
+            else {
+                com.showToast();
+            }
+        },
+        fail: function (err) {
+            com.showToast();
+        }
+    })
+    
+
+    var tpl = doT.template($('#J_top_detail_template').html())({
+        deviceId: deviceId,
+        slotIndex: slotIndex
+    });
+    $('#J_top_detail').html(tpl);
+
+    
+    $('#J_price_wrap').on('click', '.price-btn', function (e) {
+        $('.price-btn').removeClass('active-btn');
+        $(this).addClass('active-btn');
+        price = $(this).data('price');
+        time = $(this).data('time');
+    });
+
+
+    $('#J_top_detail').on('click', '#J_open_dialog', function (e) {
         $('#iosDialog2').fadeIn(200);
     });
 
@@ -263,222 +348,101 @@ $(document).ready(function () {
         $('#iosDialog2').fadeOut(200);
     });
 
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
+    var lock = false;
+    $('.charge-btn').on('click', function (e) {
+        if (lock) {
+            return;
+        }
+        lock = true;
+        $.ajax({
+            url: '/charger/createOrder',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                payment: price * 100,
+                payHours: time,
+                openId: openId,
+                deviceId: deviceId,
+                slotIndex: slotIndex
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                lock = false;
+                if (res.status == 0 && res.data) {
+                    var d = res.data;
+                    onBridgeReady(d.appid, d.timeStamp, d.nonce_str, d.prepay_id, d.sign, d.out_trade_no);
+                }
+                else if (res.status == 1 && res.data) { // errorCode=1002, 插座被占用
+                    window.location.href = './error.html?deviceId='
+                    + deviceId + '&slotIndex=' + slotIndex + '&errorCode=' + res.data.errorCode;
+                }
+            },
+            error: function (err) {
+                lock = false;
+            }
+        });
+    });
 
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    }
-
-    if (!deviceId || !slotIndex) {
-        url = '/charger/getmycharging';
-        params = {
-            accesstoken: 'asdasdwedf565665'
+    function onBridgeReady(appId, timeStamp, nonceStr, prepay_id, paySign, out_trade_no){
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+               document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            }else if (document.attachEvent){
+               document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+               document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        }else{
+            WeixinJSBridge.invoke(
+               'getBrandWCPayRequest', {
+                   "appId": appId,     //公众号名称，由商户传入     
+                   "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
+                   "nonceStr": nonceStr, //随机串     
+                   "package": "prepay_id=" + prepay_id,     
+                   "signType": "MD5",         //微信签名方式：     
+                   "paySign": paySign //微信签名 
+                }, function (res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        window.location.href = com.host + "dist/page/progress.html?deviceId="
+                        + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no;
+                    }
+                    else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
+                        // alert("取消支付!");
+                    }
+                    else {  
+                        // alert("支付失败!");
+                    }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+                }
+            ); 
         }
     }
 
-    getData(url, params);
-    var interval = setInterval(function () {
-        getData(url, params);  
-    }, 1000);
-
-    function getData(url, params) {
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: JSON.stringify(params),
-            contentType: 'application/json',
-            success: function (res) {
-// res = {
-//     status: 0,
-//     "data": {
-//         "deviceId": "2112018020700123",
-//         "slotIndex": 3,
-//         "location": "仙葫管委会",
-//         "locationDetail": "仙葫荣沫大道",
-//         "electricityMa": 0,
-//         "paymentSeconds": 960,
-//         "beginTimeSeconds": 1528089760,
-//         "endChargeTime": 0,
-//         "payment": 2,
-//         "refundAmount": 0,
-//         "slotStatus": 97,
-//         "slotSN": "211201802070012303",
-//         "startTime": "2018.06.04 13:22:40",
-//         "time": "00:15:57",
-//         "chargingTime": "00:00:03",
-//         "totalTime": "8",
-//         "progress": 0,
-//         "chargerIndex": 1
-//     }
-// }
-
-                
-                if (res.status == 0 && res.data) {
-                    if (res.data.slotStatus == 1) { // 打开插座成功
-                        // $('#loadingToast').fadeIn(100);
-                    }
-                    else if (res.data.slotStatus == 97) { // 正在充电
-                        $('#loadingToast').fadeOut(100);
-                        clearInterval(interval);
-                        $('.progress-wrap').show();
-                        var endTimeStp = (res.data.beginTimeSeconds + res.data.paymentSeconds) * 1000;
-                        var endTime = new Date(endTimeStp);
-                        var count = new countDown(endTime, $('.top-num-wrap'));
-                        var endTimeStr = com.formatTime(endTimeStp).replace(/-/g, '.');
-                        var endTmp= endTimeStr.split(' ');
-                        res.data.endDateStr = endTmp[0];
-                        res.data.endTimeStr = endTmp[1];     
-
-                        var startTime = com.formatTime(res.data.beginTimeSeconds * 1000).replace(/-/g, '.').split(' ');
-                        res.data.startDateStr = startTime[0];
-                        res.data.startTimeStr = startTime[1];
-
-                        var progress = res.data.progress;
-                        var top = winHeight - 25;
-                        if (progress == 100) {
-                            top = -100;
-                            $('.wave').css({
-                                'background-size': '50% 120%'
-                            });
-                        }
-                        else if (progress / 100 * winHeight > 25) {
-                            top = (100 - progress) / 100 * winHeight;
-                        }
-                        $('.wave').css({
-                            'background-position': '0 ' + top + 'px'
-                        });
-                        var tpl = doT.template($('#J_progress_template').html())(res.data);
-                        $('#J_progress_detail').html(tpl);
-
-                    }
-                    else if (res.data.slotStatus == -1 || res.data.slotStatus == 101 || res.data.slotStatus == 102) {  // 插座错误
-                        $('#loadingToast').fadeOut(100);
-                        clearInterval(interval);
-                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
-                    }
-                    else if (res.data.slotStatus == 98 || res.data.slotStatus == 99) { // 正常结束
-                        $('#loadingToast').fadeOut(100);
-                        clearInterval(interval);
-                        window.location.href = './finish.html?deviceId=' + res.data.deviceId + '&slotIndex=' + res.data.slotIndex + '&outTradeNo=' + res.data.outTradeNo;
-                    }
-                }
-                else if (res.status == 1 || (res.status == 2 && !res.data)) {
-                    $('#loadingToast').fadeOut(100);
-                    clearInterval(interval);
-                    $('body').html('<div class="list-empty">没有正在充电的订单哦~</div>'
-                        + '<div class="detail-btn-wrap">'
-                            + '<a href="javascript:;" class="weui-btn weui-btn_primary detail-bottom-btn">'
-                                + '<i></i>'
-                                + '<span>扫码充电</span>'
-                            + '</a>'
-                        + '</div>');
-                    initEvent();
-                }
-                else {
-                    $('#loadingToast').fadeOut(100);
-                    clearInterval(interval);
-                    com.showToast();
-                }
-            },
-            error: function (error) {
-                $('#loadingToast').fadeOut(100);
-                clearInterval(interval);
-                com.showToast();
-            }
-        });
-    }
-
-    function initEvent() {
-        com.getWxConfig();
-        wx.ready(function () {
-            $('.detail-bottom-btn').on('click', function () {
-                wx.scanQRCode({
-                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    }
-                });
-            });
-        });
-        wx.error(function (err) {
-            console.log('wx.error: ', err);
-        });
-    }
+    // function checkOrderStatus(out_trade_no, cb) {
+    //     $.ajax({
+    //         url: '/charger/getPayStatus',
+    //         type: 'post',
+    //         data: JSON.stringify({
+    //             out_trade_no: out_trade_no
+    //         }),
+    //         contentType: 'application/json',
+    //         success: function (res) {
+    //             if (res.status) {
+    //                 cb && cb(res);
+    //             }
+    //         }
+    //     });
+    // }
     
+
 });
+
+
 
 /***/ }),
 
-/***/ 15:
+/***/ 11:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 3:
-/***/ (function(module, exports) {
-
-function CountDown(deadline, $ele) {
-    this.count(deadline, $ele);
-}
-
-CountDown.prototype = {
-    count: function (deadline, $ele) {
-        var now = new Date().getTime();
-        this.$ele = $ele;
-        var me = this;
-        if (deadline.getTime() - now <= 0) {
-            clearInterval(this.interval);
-            $ele.find('.hour').text('00');
-            $ele.find('.minite').text('00');
-            $ele.find('.second').text('00');
-        }
-        else {
-            this.init(deadline);
-            this.interval = setInterval(function () {
-                me.init(deadline)
-            }, 1000);
-        }
-    },
-
-    init: function (deadline) {
-        var now = new Date().getTime();
-        if (deadline - now <= 0) {
-            clearInterval(this.interval);
-            this.$ele.find('.hour').text('00');
-            this.$ele.find('.minite').text('00');
-            this.$ele.find('.second').text('00');
-        }
-        else {
-            this.getNum(deadline);
-        }
-    },
-
-    getNum: function (deadline) {
-        var now = new Date().getTime();
-        var time = deadline.getTime() - now;
-        var hour = this.formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
-        var minite = this.formatNum(Math.floor(time / 1000 / 60 % 60));
-        var second = this.formatNum(Math.floor(time / 1000 % 60));
-        this.$ele.find('.hour').text(hour);
-        this.$ele.find('.minite').text(minite);
-        this.$ele.find('.second').text(second);
-    },
-
-    formatNum: function (num) {
-        return num >= 10 ? num : '0' + num;
-    }
-};
-
-module.exports = CountDown;
 
 /***/ })
 

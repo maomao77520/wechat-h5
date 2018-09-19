@@ -26,7 +26,7 @@ $(document).ready(function() {
     // 卡号输入框，校验卡号，错误提示，余额提示
     $('#J_card_no').on('input', function(e) {
         var cardId = $(this).val();
-        if (cardId.length >= 9) {
+        if (cardId.length >= 10) {
             checkCardId(cardId);
         }
     }).on('blur', function(e) {
@@ -35,7 +35,7 @@ $(document).ready(function() {
         if (cardId == '' || $('.card-charge-balance').css('display') !== 'none') {
             return;
         }
-        if (cardId.length < 9) {
+        if (cardId.length < 10) {
             $('.card-error').text('卡号格式不正确').show();
             return;
         }
@@ -43,6 +43,13 @@ $(document).ready(function() {
     }).on('input', function(e) {
         $('.card-charge-balance').hide();
         $('.card-error').text('').hide();
+    });
+
+    $('#J_question_icon').on('click', function(e) {
+        $('#J_question_dialog').fadeIn(200);
+    });
+    $('#J_close_dialog').on('click', function (e) {
+        $('#J_question_dialog').fadeOut(200);
     });
 
 

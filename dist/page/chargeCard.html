@@ -17,11 +17,11 @@
     
         <script type="text/javascript" src="../lib/weui.min.js"></script>
     
-<link href="../css/chargeCard-518735b6.css" rel="stylesheet"></head>
+<link href="../css/chargeCard-f7124d1a.css" rel="stylesheet"></head>
 <body>
     <div class="card-charge-wrap card-wrap">
         <div class="card-no-wrap">
-            <div class="card-charge-title card-no">卡号<i></i></div>
+            <div class="card-charge-title card-no">卡号<i id="J_question_icon"></i></div>
             
             <div class="input-wrap">
                 <input class="weui-input card-no-input" type="number" id="J_card_no" placeholder="请输入电卡卡号"/>
@@ -33,9 +33,9 @@
         <div class="card-no-wrap">
             <div class="card-charge-title">选择充值面额</div>
             <div class="btn-wrap" id="J_price_wrap">
-                <a href="javascript:;" class="price-btn" data-price="0.02">0.02元</a>
-                <a href="javascript:;" class="price-btn active-btn" data-price="0.05">0.05元</a>
-                <a href="javascript:;" class="price-btn" data-price="0.01">0.01元</a>
+                <a href="javascript:;" class="price-btn active-btn" data-price="50">50元</a>
+                <a href="javascript:;" class="price-btn" data-price="100">100元</a>
+                <a href="javascript:;" class="price-btn" data-price="200">200元</a>
             </div>
         </div>
         
@@ -48,12 +48,25 @@
         </div>
         
         <a href="javascript:;" id="J_charge_btn" class="weui-btn weui-btn_primary charge-btn" id="J_charge_btn">充值</a>
-    </div>   
+    </div> 
+
+    <div class="js_dialog" id="J_question_dialog" style="display: none;">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__bd dialog-tips">
+                    <p>输入卡片背后9位卡号</p>
+                </div>
+                <div class="weui-dialog__ft">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary dialog-btn" id="J_close_dialog">知道了</a>
+                </div>
+            </div>
+        </div>
+
     <div id="toast" style="display: none;">
         <div class="weui-mask_transparent"></div>
         <div class="weui-toast toast-wrap">
             <p class="weui-toast__content toast-text"></p>
         </div>
     </div> 
-<script type="text/javascript" src="../js/chargeCard-518735b6.js"></script></body>
+<script type="text/javascript" src="../js/chargeCard-f7124d1a.js"></script></body>
 </html>

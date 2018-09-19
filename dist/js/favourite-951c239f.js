@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -69,7 +69,9 @@
 /***/ (function(module, exports) {
 
 var Common = {
-    host: 'http://dev.shouyifenxi.com/',
+    host: (function() {
+        return 'http://' + window.location.hostname + '/';
+    })(),
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -236,108 +238,91 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 25:
+/***/ 18:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(26);
+var css = __webpack_require__(2);
 var com = __webpack_require__(0);
 
+$(document).on('ready', function () {
 
-$(document).ready(function () {
+    var lat = com.parseQuery('lat') || '';
+    var lng = com.parseQuery('lng') || '';
 
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
-
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    };
-
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: JSON.stringify(params),
-        contentType: 'application/json',
-        success: function (res) {
-// res = {
-//     status: 0,
-//     data: {
-//         totalTime: 4,
-//         startTime: '2018.05.29 11:00:00',
-//         payment: 1,
-//         electricityMa: 4545,
-//         "location":"仙葫管委会",
-//         "locationDetail":"仙葫荣沫大道",
-//         "chargerIndex":1,
-//         "deviceId": "2112018020700123",
-//         "slotSN": "211201802070012301",
-//         "slotIndex":1,
-//         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 0,
-//         "refundAmount": 0,
-//         "slotStatus": 98,
-//     }
-// }
-            if (res.status == 0 && res.data) {
-                if (res.data.slotStatus == 97) {
-                    window.location.href = './progress.html?deviceId='
-                    + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
-                    return;
-                }
-
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
-
-                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
-                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
-                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
-                res.data.outTradeNo = outTradeNo;
-                var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
-                var h = Math.floor(chargedTime / 60 / 60 % 24);
-                var m = Math.floor(chargedTime / 60 % 60);
-                var s = Math.floor(chargedTime % 60);
-                h = h >= 10 ? h : '0' + h;
-                m = m >= 10 ? m : '0' + m;
-                s = s >= 10 ? s : '0' + s;
-                res.data.chargedTime = h + ':' + m + ':' + s;
-
-                var tpl = doT.template($('#J_template').html())(res.data);
-                $('#J_finish').html(tpl);
+    com.getWxConfig();
+    wx.ready(function () {
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                lat = res.latitude;
+                lng = res.longitude;
+                console.log(lat,lng)
+                getList();
+            },
+            fail: function (err) {
+                getList();
             }
-            else {
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
+        });
+
+        // 打开导航
+        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
+            var location = $(this).data('location');
+            var addr = $(this).data('addr');
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            com.translateLocation(lat, lng).done(function (res) {
+                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+            });
+            
+        });
+    });
+
+    // 打开导航
+    $('#J_favourite-list').on('click', '.J_Navigation', function (e) {
+        var location = $(this).data('location');
+        var addr = $(this).data('addr');
+        var lat = $(this).data('lat');
+        var lng = $(this).data('lng');
+
+        console.log(lat,lng)
+        com.translateLocation(lat, lng).done(function (res) {
+            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+        });
+        
+    });
+
+    function getList() {
+        $.ajax({
+            url: '/charger/getcollectioncharging',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                lat: lat,
+                lng: lng
+            }),
+            success: function (res) {
+                if (res.status == 0 && res.data && res.data.content) {
+                    res.data.content.userLat = lat;
+                    res.data.content.userLng = lng;
+                    var tpl = doT.template($('#list-template').html())(res.data.content);
+                    $('#J_favourite-list').html(tpl);
+                }
+                else {
+                    com.showToast();
+                }
+            },
+            fail: function () {
                 com.showToast();
             }
-        },
-        error: function (error) {
+        });
+    }
 
-            com.showToast();
-        }
-    });
 });
 
 /***/ }),
 
-/***/ 26:
+/***/ 2:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

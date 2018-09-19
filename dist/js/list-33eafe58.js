@@ -60,16 +60,17 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 var Common = {
-    host: 'http://dev.shouyifenxi.com/',
+    host: (function() {
+        return 'http://' + window.location.hostname + '/';
+    })(),
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
@@ -235,96 +236,102 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-
-/***/ 18:
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(2);
+var css = __webpack_require__(7);
 var com = __webpack_require__(0);
 
-$(document).on('ready', function () {
+$(document).ready(function () {
+    var winHeight = $(window).height();
+    var winWidth = $(window).width();
+    $('body').height(winHeight);
+    $('body').width(winWidth);
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
+    var locLat = com.parseQuery('locationLat'); 
+    var locLng = com.parseQuery('locationLng');
 
-    var lat = com.parseQuery('lat') || '';
-    var lng = com.parseQuery('lng') || '';
+    $('#loadingToast').fadeIn(100);
 
-    com.getWxConfig();
-    wx.ready(function () {
-        wx.getLocation({
-            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-            success: function (res) {
-                lat = res.latitude;
-                lng = res.longitude;
-                console.log(lat,lng)
-                getList();
-            },
-            fail: function (err) {
-                getList();
-            }
-        });
-
-        // 打开导航
-        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
-            var location = $(this).data('location');
-            var addr = $(this).data('addr');
-            var lat = $(this).data('lat');
-            var lng = $(this).data('lng');
-            com.translateLocation(lat, lng).done(function (res) {
-                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-            });
-            
-        });
-    });
-
-    // 打开导航
-    $('#J_favourite-list').on('click', '.J_Navigation', function (e) {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
-
-        console.log(lat,lng)
-        com.translateLocation(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-        });
-        
-    });
-
+    getList();
     function getList() {
         $.ajax({
-            url: '/charger/getcollectioncharging',
+            url: '/charger/getcharging',
             type: 'post',
-            contentType: 'application/json',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
+                locationId: locationId,
                 lat: lat,
                 lng: lng
             }),
+            contentType: 'application/json',
             success: function (res) {
-                if (res.status == 0 && res.data && res.data.content) {
-                    res.data.content.userLat = lat;
-                    res.data.content.userLng = lng;
-                    var tpl = doT.template($('#list-template').html())(res.data.content);
-                    $('#J_favourite-list').html(tpl);
+                $('#loadingToast').fadeOut(100);
+                if (res.status == 0) {
+                    res.data.userLat = lat;
+                    res.data.userLng = lng;
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
                 }
                 else {
                     com.showToast();
                 }
+
+                initEvent();
             },
-            fail: function () {
+            error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
         });
-    }
+    }  
 
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                // var lat = $(this).data('lat');
+                // var lng = $(this).data('lng');
+                com.translateLocation(locLat, locLng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+                
+            });
+        });
+        wx.error(function (err) {
+            console.log('wx.error: ', err);
+        });
+    }
 });
 
-/***/ }),
 
-/***/ 2:
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-
-/******/ });
+/******/ ]);

@@ -1,5 +1,7 @@
 var Common = {
-    host: 'http://dev.shouyifenxi.com/',
+    host: (function() {
+        return 'http://' + window.location.hostname + '/';
+    })(),
     getWxConfig: function (cb) {
         $.ajax({
             url: '/charger/config',
