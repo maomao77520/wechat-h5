@@ -1,7 +1,6 @@
 var css = require('../css/finish.scss');
 var com = require('./common.js');
 
-
 $(document).ready(function () {
 
     var deviceId = com.parseQuery('deviceId');
@@ -36,9 +35,9 @@ $(document).ready(function () {
 //         "slotSN": "211201802070012301",
 //         "slotIndex":1,
 //         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 0,
+//         "beginTimeSeconds": 1527595809,
 //         "refundAmount": 0,
-//         "slotStatus": 98,
+//         "slotStatus": 101,
 //     }
 // }
             if (res.status == 0 && res.data) {
@@ -63,6 +62,17 @@ $(document).ready(function () {
                 res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
                 res.data.outTradeNo = outTradeNo;
                 var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
+
+                if (res.data.slotStatus == 101) {
+                    if (chargedTime <= 70) {
+                        res.data.reason = '没有插好充电线或功率过低'
+                    }
+                    else {
+                        res.data.reason = '电池已充满';
+                    }
+                }
+                
+
                 var h = Math.floor(chargedTime / 60 / 60 % 24);
                 var m = Math.floor(chargedTime / 60 % 60);
                 var s = Math.floor(chargedTime % 60);
