@@ -34,10 +34,10 @@ $(document).ready(function () {
 //         "deviceId": "2112018020700123",
 //         "slotSN": "211201802070012301",
 //         "slotIndex":1,
-//         "endChargeTime": 1527595810,
+//         "endChargeTime": 1527595801,
 //         "beginTimeSeconds": 1527595809,
 //         "refundAmount": 0,
-//         "slotStatus": 101,
+//         "slotStatus": 103,
 //     }
 // }
             if (res.status == 0 && res.data) {
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
                 if (res.data.slotStatus == 101) {
                     if (chargedTime <= 70) {
-                        res.data.reason = '没有插好充电线或功率过低'
+                        res.data.reason = '功率过低'
                     }
                     else {
                         res.data.reason = '电池已充满';

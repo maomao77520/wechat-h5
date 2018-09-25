@@ -60,12 +60,11 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 var Common = {
@@ -230,6 +229,7 @@ var Common = {
     errorMap: {
         101: '电流过小',
         102: '电流过大',
+        103: '未检测到充电器',
         '-1': '设备故障'
     },
 };
@@ -237,123 +237,102 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-
-/***/ 25:
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(26);
+var css = __webpack_require__(7);
 var com = __webpack_require__(0);
 
 $(document).ready(function () {
+    var winHeight = $(window).height();
+    var winWidth = $(window).width();
+    $('body').height(winHeight);
+    $('body').width(winWidth);
+    var locationId = com.parseQuery('locationId');
+    var lat = com.parseQuery('lat');
+    var lng = com.parseQuery('lng');
+    var id = com.parseQuery('id');
+    var locLat = com.parseQuery('locationLat'); 
+    var locLng = com.parseQuery('locationLng');
 
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
+    $('#loadingToast').fadeIn(100);
 
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    };
-
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: JSON.stringify(params),
-        contentType: 'application/json',
-        success: function (res) {
-// res = {
-//     status: 0,
-//     data: {
-//         totalTime: 4,
-//         startTime: '2018.05.29 11:00:00',
-//         payment: 1,
-//         electricityMa: 4545,
-//         "location":"仙葫管委会",
-//         "locationDetail":"仙葫荣沫大道",
-//         "chargerIndex":1,
-//         "deviceId": "2112018020700123",
-//         "slotSN": "211201802070012301",
-//         "slotIndex":1,
-//         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 1527595809,
-//         "refundAmount": 0,
-//         "slotStatus": 101,
-//     }
-// }
-            if (res.status == 0 && res.data) {
-                if (res.data.slotStatus == 97) {
-                    window.location.href = './progress.html?deviceId='
-                    + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
-                    return;
+    getList();
+    function getList() {
+        $.ajax({
+            url: '/charger/getcharging',
+            type: 'post',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                locationId: locationId,
+                lat: lat,
+                lng: lng
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                $('#loadingToast').fadeOut(100);
+                if (res.status == 0) {
+                    res.data.userLat = lat;
+                    res.data.userLng = lng;
+                    var tpl = doT.template($('#second-list-template').html())(res.data);
+                    $('#J_second-list').html(tpl);
+                }
+                else {
+                    com.showToast();
                 }
 
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
-
-                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
-                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
-                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
-                res.data.outTradeNo = outTradeNo;
-                var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
-
-                if (res.data.slotStatus == 101) {
-                    if (chargedTime <= 70) {
-                        res.data.reason = '没有插好充电线或功率过低'
-                    }
-                    else {
-                        res.data.reason = '电池已充满';
-                    }
-                }
-                
-
-                var h = Math.floor(chargedTime / 60 / 60 % 24);
-                var m = Math.floor(chargedTime / 60 % 60);
-                var s = Math.floor(chargedTime % 60);
-                h = h >= 10 ? h : '0' + h;
-                m = m >= 10 ? m : '0' + m;
-                s = s >= 10 ? s : '0' + s;
-                res.data.chargedTime = h + ':' + m + ':' + s;
-
-                var tpl = doT.template($('#J_template').html())(res.data);
-                $('#J_finish').html(tpl);
-            }
-            else {
-                var $body = $('body');
-                document.title = '充电结束';
-                 
-                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
-                $iframe.on('load',function() {
-                  setTimeout(function() {
-                      $iframe.off('load').remove();
-                  }, 0);
-                }).appendTo($body);
+                initEvent();
+            },
+            error: function (err) {
+                $('#loadingToast').fadeOut(100);
                 com.showToast();
             }
-        },
-        error: function (error) {
+        });
+    }  
 
-            com.showToast();
-        }
-    });
+    function initEvent() {
+        com.getWxConfig();
+        wx.ready(function () {
+            $('.detail-bottom-btn').on('click', function () {
+                wx.scanQRCode({
+                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    }
+                });
+            });
+
+            // 打开导航
+            $('#J_second-list').on('click', '.J_Navigation', function (e) {
+                var location = $(this).data('location');
+                var addr = $(this).data('addr');
+                // var lat = $(this).data('lat');
+                // var lng = $(this).data('lng');
+                com.translateLocation(locLat, locLng).done(function (res) {
+                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+                });
+                
+            });
+        });
+        wx.error(function (err) {
+            console.log('wx.error: ', err);
+        });
+    }
 });
 
-/***/ }),
 
-/***/ 26:
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-
-/******/ });
+/******/ ]);

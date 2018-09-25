@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -230,6 +230,7 @@ var Common = {
     errorMap: {
         101: '电流过小',
         102: '电流过大',
+        103: '未检测到充电器',
         '-1': '设备故障'
     },
 };
@@ -238,123 +239,94 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 1:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 29:
+/***/ 18:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(1);
+var css = __webpack_require__(2);
 var com = __webpack_require__(0);
 
-$(document).ready(function() {
-    // 初始化所在地区下拉内容
-    var cityList = [];
-    $.ajax({
-        url: '/charger/getCity',
-        type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665'
-        }),
-        contentType: 'application/json',
-        success: function (res) {
-            if (res.status == 0) {
-                for (var i = 0; i < res.data.length; i++) {
-                    cityList.push({
-                        label: res.data[i].city,
-                        value: res.data[i].city,
-                        province: res.data[i].province,
-                    });
-                }
-                // 地点下拉框
-                $('#J_city_picker').on('click', function () {
-                    $this = $(this);
-                    weui.picker(cityList, {
-                        onChange: function (result) {
-                        },
-                        onConfirm: function (result) {
-                            $('#J_city_input').val(result[0].label);
-                        }
-                    });
-                });
-            }
-        },
-        fail: function (err) {
+$(document).on('ready', function () {
 
-        },
-    });
+    var lat = com.parseQuery('lat') || '';
+    var lng = com.parseQuery('lng') || '';
 
-
-    $('input, textarea').on('input', function(e) {
-        $('.error-tips').text('');
-    });
-
-    // 提交按钮
-    $('.apply-btn').on('click', function(e) {
-        var consignee = $('input[name="consignee"]').val();
-        var phone = $('input[name="phone"]').val();
-        var location = $('input[name="location"]').val();
-        var locationDetail = $('textarea[name="locationDetail"]').val();
-
-        if (!consignee || consignee.trim() == '') {
-            $('.error-tips').text('请输入收货人');
-            return;
-        }
-        if (!phone || !phone.match(/^1[0-9]{10}$/g)) {
-            $('.error-tips').text('请输入正确的手机号码');
-            return;
-        }
-        if (!location) {
-            $('.error-tips').text('请选择所在地区');
-            return;
-        }
-        if (!locationDetail || locationDetail.trim() == '') {
-            $('.error-tips').text('请输入详细地址');
-            return;
-        }
-
-        $.ajax({
-            url: '/card/cardApply',
-            type: 'post',
-            data: JSON.stringify({
-                accesstoken: 'asdasdwedf565665',
-                consignee: encodeURIComponent(consignee),
-                phone: phone,
-                location: encodeURIComponent(location),
-                locationDetail: encodeURIComponent(locationDetail)
-            }),
-            contentType: 'application/json',
+    com.getWxConfig();
+    wx.ready(function () {
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
             success: function (res) {
-                if (res.status == 0) {
-                    $('#iosDialog2').fadeIn(200);
-                }
-                else {
-                    $('#toast p').text('提交失败！' + res.msg);
-                    com.showToast();
-                }
+                lat = res.latitude;
+                lng = res.longitude;
+                console.log(lat,lng)
+                getList();
             },
-            error: function(err) {
-                $('#toast p').text('提交失败！' + err.msg);
-                com.showToast();
+            fail: function (err) {
+                getList();
             }
+        });
+
+        // 打开导航
+        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
+            var location = $(this).data('location');
+            var addr = $(this).data('addr');
+            var lat = $(this).data('lat');
+            var lng = $(this).data('lng');
+            com.translateLocation(lat, lng).done(function (res) {
+                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+            });
+            
         });
     });
 
-    $(document).on('click', '#J_close_dialog', function(e) {
-        $('#iosDialog2').fadeOut(200);
-        window.location.href = './user.html';
+    // 打开导航
+    $('#J_favourite-list').on('click', '.J_Navigation', function (e) {
+        var location = $(this).data('location');
+        var addr = $(this).data('addr');
+        var lat = $(this).data('lat');
+        var lng = $(this).data('lng');
 
+        console.log(lat,lng)
+        com.translateLocation(lat, lng).done(function (res) {
+            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
+        });
+        
     });
+
+    function getList() {
+        $.ajax({
+            url: '/charger/getcollectioncharging',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                accesstoken: 'asdasdwedf565665',
+                lat: lat,
+                lng: lng
+            }),
+            success: function (res) {
+                if (res.status == 0 && res.data && res.data.content) {
+                    res.data.content.userLat = lat;
+                    res.data.content.userLng = lng;
+                    var tpl = doT.template($('#list-template').html())(res.data.content);
+                    $('#J_favourite-list').html(tpl);
+                }
+                else {
+                    com.showToast();
+                }
+            },
+            fail: function () {
+                com.showToast();
+            }
+        });
+    }
+
 });
 
+/***/ }),
 
+/***/ 2:
+/***/ (function(module, exports) {
 
-
-
+// removed by extract-text-webpack-plugin
 
 /***/ })
 

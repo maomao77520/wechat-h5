@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -230,6 +230,7 @@ var Common = {
     errorMap: {
         101: '电流过小',
         102: '电流过大',
+        103: '未检测到充电器',
         '-1': '设备故障'
     },
 };
@@ -238,94 +239,81 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 18:
+/***/ 1:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 31:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(2);
+var css = __webpack_require__(1);
 var com = __webpack_require__(0);
 
-$(document).on('ready', function () {
+$('#loadingToast').fadeIn(100);
 
-    var lat = com.parseQuery('lat') || '';
-    var lng = com.parseQuery('lng') || '';
+$(document).ready(function() {
+    var cardId = com.parseQuery('cardId');
+    var outTradeNo = com.parseQuery('outTradeNo');
 
-    com.getWxConfig();
-    wx.ready(function () {
-        wx.getLocation({
-            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-            success: function (res) {
-                lat = res.latitude;
-                lng = res.longitude;
-                console.log(lat,lng)
-                getList();
-            },
-            fail: function (err) {
-                getList();
+    var flag = 0;
+
+    getData();
+
+    var interval = setInterval(function() {
+        checkOrderStatus(outTradeNo, function(res) {
+            if (res.status == 0) {
+                getData();
+                clearInterval(interval);
+            }
+            else if (flag == 10) {
+                flag ++;
+                $('.charge-card-result').text('支付失败，请重新充值');
+                clearInterval(interval);
             }
         });
+    }, 500);
 
-        // 打开导航
-        $('#J_list-wrap').on('click', '.J_Navigation', function (e) {
-            var location = $(this).data('location');
-            var addr = $(this).data('addr');
-            var lat = $(this).data('lat');
-            var lng = $(this).data('lng');
-            com.translateLocation(lat, lng).done(function (res) {
-                com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-            });
-            
-        });
-    });
 
-    // 打开导航
-    $('#J_favourite-list').on('click', '.J_Navigation', function (e) {
-        var location = $(this).data('location');
-        var addr = $(this).data('addr');
-        var lat = $(this).data('lat');
-        var lng = $(this).data('lng');
 
-        console.log(lat,lng)
-        com.translateLocation(lat, lng).done(function (res) {
-            com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-        });
-        
-    });
-
-    function getList() {
+    function getData() {
         $.ajax({
-            url: '/charger/getcollectioncharging',
+            url: '/card/queryCard',
             type: 'post',
-            contentType: 'application/json',
             data: JSON.stringify({
                 accesstoken: 'asdasdwedf565665',
-                lat: lat,
-                lng: lng
+                cardId: cardId
             }),
-            success: function (res) {
-                if (res.status == 0 && res.data && res.data.content) {
-                    res.data.content.userLat = lat;
-                    res.data.content.userLng = lng;
-                    var tpl = doT.template($('#list-template').html())(res.data.content);
-                    $('#J_favourite-list').html(tpl);
-                }
-                else {
-                    com.showToast();
-                }
+            contentType: 'application/json',
+            success: function(res) {
+                $('#loadingToast').fadeOut(100);
+                $('.charge-card-result').show();
+                $('#J_card_id').text('卡号：' + cardId);
+                $('#J_card_balance').text('可用余额：' + (res.data.currentAmount / 100).toFixed(2) + '元');
             },
-            fail: function () {
-                com.showToast();
+            fail: function(err) {
+                $('#loadingToast').fadeOut(100);
+                $('#toast').fadeIn(100);
             }
         });
     }
 
+    function checkOrderStatus(out_trade_no, cb) {
+        $.ajax({
+            url: '/charger/getPayStatus',
+            type: 'post',
+            data: JSON.stringify({
+                out_trade_no: out_trade_no
+            }),
+            contentType: 'application/json',
+            success: function (res) {
+                cb && cb(res);
+            }
+        });
+    }
 });
-
-/***/ }),
-
-/***/ 2:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 

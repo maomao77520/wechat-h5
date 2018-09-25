@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -230,6 +230,7 @@ var Common = {
     errorMap: {
         101: '电流过小',
         102: '电流过大',
+        103: '未检测到充电器',
         '-1': '设备故障'
     },
 };
@@ -238,60 +239,33 @@ module.exports = Common;
 
 /***/ }),
 
-/***/ 23:
+/***/ 16:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(24);
+var css = __webpack_require__(17);
 var com = __webpack_require__(0);
 
 $(document).ready(function () {
-    var deviceId = com.parseQuery('deviceId');
-    var slotIndex = com.parseQuery('slotIndex');
-    var outTradeNo = com.parseQuery('outTradeNo');
-
-    var url = '/charger/getChargingProgress';
-    var params = {
-        accesstoken: 'asdasdwedf565665',
-        deviceId: deviceId,
-        slotIndex: slotIndex,
-        outTradeNo: outTradeNo
-    };
-
     $.ajax({
-        url: url,
+        url: '/charger/getrecordcharging',
         type: 'post',
-        data: JSON.stringify(params),
+        data: JSON.stringify({
+            accessToken: 'asdasdwedf565665'
+        }),
         contentType: 'application/json',
         success: function (res) {
-// res = {
-//     status: 0,
-//     data: {
-//         totalTime: 4,
-//         startTime: '2018.05.29 11:00:00',
-//         payment: 1,
-//         electricityMa: 4545,
-//         "location":"仙葫管委会",
-//         "locationDetail":"仙葫荣沫大道",
-//         "chargerIndex":1,
-//         "deviceId": "2112018020700123",
-//         "slotSN": "211201802070012301",
-//         "slotIndex":1,
-//         "endChargeTime": 1527595810,
-//         "beginTimeSeconds": 1527591600,
-//         "refundAmount": 0,
-//         slotStatus: 101,
-//     }
-// }
-            if (res.status == 0 && res.data) {
-                res.data.startTime = com.formatTime(res.data.beginTimeSeconds * 1000);
-                var tpl = doT.template($('#J_template').html())(res.data);
-                $('#J_complete').html(tpl);
+            if (res.status == 0) {
+                res.data.content.map(function (item) {
+                    item.startTime = com.formatTime(item.createTime * 1000);
+                })
+                var tpl = doT.template($('#J_record_template').html())(res.data);
+                $('#J_record_wrap').html(tpl);
             }
             else {
                 com.showToast();
             }
         },
-        error: function (error) {
+        fail: function () {
             com.showToast();
         }
     });
@@ -299,7 +273,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 24:
+/***/ 17:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

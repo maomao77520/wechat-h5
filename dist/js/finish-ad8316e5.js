@@ -60,11 +60,12 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 var Common = {
@@ -229,6 +230,7 @@ var Common = {
     errorMap: {
         101: '电流过小',
         102: '电流过大',
+        103: '未检测到充电器',
         '-1': '设备故障'
     },
 };
@@ -236,218 +238,123 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */
-/***/ (function(module, exports) {
 
-function CountDown(deadline, $ele) {
-    this.count(deadline, $ele);
-}
-
-CountDown.prototype = {
-    count: function (deadline, $ele) {
-        var now = new Date().getTime();
-        this.$ele = $ele;
-        var me = this;
-        if (deadline.getTime() - now <= 0) {
-            clearInterval(this.interval);
-            $ele.find('.hour').text('00');
-            $ele.find('.minite').text('00');
-            $ele.find('.second').text('00');
-        }
-        else {
-            this.init(deadline);
-            this.interval = setInterval(function () {
-                me.init(deadline)
-            }, 1000);
-        }
-    },
-
-    init: function (deadline) {
-        var now = new Date().getTime();
-        if (deadline - now <= 0) {
-            clearInterval(this.interval);
-            this.$ele.find('.hour').text('00');
-            this.$ele.find('.minite').text('00');
-            this.$ele.find('.second').text('00');
-        }
-        else {
-            this.getNum(deadline);
-        }
-    },
-
-    getNum: function (deadline) {
-        var now = new Date().getTime();
-        var time = deadline.getTime() - now;
-        var hour = this.formatNum(Math.floor(time / 1000 / 60 / 60 % 24));
-        var minite = this.formatNum(Math.floor(time / 1000 / 60 % 60));
-        var second = this.formatNum(Math.floor(time / 1000 % 60));
-        this.$ele.find('.hour').text(hour);
-        this.$ele.find('.minite').text(minite);
-        this.$ele.find('.second').text(second);
-    },
-
-    formatNum: function (num) {
-        return num >= 10 ? num : '0' + num;
-    }
-};
-
-module.exports = CountDown;
-
-/***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */
+/***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(9);
+var css = __webpack_require__(26);
 var com = __webpack_require__(0);
-var countDown = __webpack_require__(3);
 
-$(document).on('ready', function () {
-    $('#loadingToast').fadeIn(100);
-    
-    var lat = com.parseQuery('lat');
-    var lng = com.parseQuery('lng');
-    var id = com.parseQuery('id');
+$(document).ready(function () {
 
-    var targetLat, targetLng, currentLat, currentLng, location, addr;
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var outTradeNo = com.parseQuery('outTradeNo');
+
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    };
+
     $.ajax({
-        url: '/charger/getslotcharging',
+        url: url,
         type: 'post',
-        data: JSON.stringify({
-            accesstoken: 'asdasdwedf565665',
-            deviceId: id,
-            lat: lat,
-            lng: lng
-        }),
+        data: JSON.stringify(params),
         contentType: 'application/json',
         success: function (res) {
 // res = {
 //     status: 0,
 //     data: {
-//         content: [
-//             {
-//                 beginTimeSeconds:1527128746,
-//                 deviceId:"2112018020700166",
-//                 electricityMa:33,
-//                 lastCommandType:5,
-//                 lastUpdateTimeSeconds:1527084656,
-//                 paymentSeconds:7200,
-//                 slotIndex:2,
-//                 slotStatus:0,
-//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
-//             },
-//             {
-//                 beginTimeSeconds:1527125746,
-//                 deviceId:"2112018020700166",
-//                 electricityMa:33,
-//                 lastCommandType:5,
-//                 lastUpdateTimeSeconds:1527084656,
-//                 paymentSeconds:7200,
-//                 slotIndex:2,
-//                 slotStatus:1,
-//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
-//             },
-//             {
-//                 beginTimeSeconds:1527126746,
-//                 deviceId:"2112018020700166",
-//                 electricityMa:33,
-//                 lastCommandType:5,
-//                 lastUpdateTimeSeconds:1527084656,
-//                 paymentSeconds:3600,
-//                 slotIndex:2,
-//                 slotStatus:1,
-//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
-//             },
-//             {
-//                 beginTimeSeconds:1527085725,
-//                 deviceId:"2112018020700166",
-//                 electricityMa:33,
-//                 lastCommandType:5,
-//                 lastUpdateTimeSeconds:1527084656,
-//                 paymentSeconds:10800,
-//                 slotIndex:2,
-//                 slotStatus:1,
-//                 userId:"oqUQA1SNkYjb9wJE5k-_VBIthn-k"
-//             }
-//         ],
-//         deviceId: '1324',
-//         location: '开泰路口',
-//         locationDetail: '仙葫大道265号'
+//         totalTime: 4,
+//         startTime: '2018.05.29 11:00:00',
+//         payment: 1,
+//         electricityMa: 4545,
+//         "location":"仙葫管委会",
+//         "locationDetail":"仙葫荣沫大道",
+//         "chargerIndex":1,
+//         "deviceId": "2112018020700123",
+//         "slotSN": "211201802070012301",
+//         "slotIndex":1,
+//         "endChargeTime": 1527595801,
+//         "beginTimeSeconds": 1527595809,
+//         "refundAmount": 0,
+//         "slotStatus": 103,
 //     }
 // }
-            $('#loadingToast').fadeOut(100);
-            targetLat = res.data.lat;
-            targetLng = res.data.lng;
-            location = res.data.location;
-            addr = res.data.locationDetail;
-            if (res.status == 0) {
-                var tpl1 = doT.template($('#J_detail_top_template').html())(res.data);
-                $('#J_detail_info').html(tpl1);
+            if (res.status == 0 && res.data) {
+                if (res.data.slotStatus == 97) {
+                    window.location.href = './progress.html?deviceId='
+                    + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+                    return;
+                }
 
-                var tpl2 = doT.template($('#J_detail_list_template').html())(res.data);
-                $('#J_detail_list').html(tpl2);
-                var content = res.data.content;
-                for (var i = 0; i < content.length; i++) {
-                    if (content[i].slotStatus =s= 1) {
-                        var endTime = new Date((content[i].beginTimeSeconds + content[i].paymentSeconds) * 1000)
-                        var count = new countDown(endTime, $('.left-time-' + i));
+                var $body = $('body');
+                document.title = '充电结束';
+                 
+                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
+                $iframe.on('load',function() {
+                  setTimeout(function() {
+                      $iframe.off('load').remove();
+                  }, 0);
+                }).appendTo($body);
+
+                res.data.reason = com.errorMap[res.data.slotStatus] || '系统故障';
+                res.data.endTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.endChargeTime * 1000);
+                res.data.startTime = res.data.beginTimeSeconds == 0 ? '-' : com.formatTime(res.data.beginTimeSeconds * 1000);
+                res.data.outTradeNo = outTradeNo;
+                var chargedTime = res.data.endChargeTime - res.data.beginTimeSeconds;
+
+                if (res.data.slotStatus == 101) {
+                    if (chargedTime <= 70) {
+                        res.data.reason = '功率过低'
+                    }
+                    else {
+                        res.data.reason = '电池已充满';
                     }
                 }
                 
 
-                initEvent();
+                var h = Math.floor(chargedTime / 60 / 60 % 24);
+                var m = Math.floor(chargedTime / 60 % 60);
+                var s = Math.floor(chargedTime % 60);
+                h = h >= 10 ? h : '0' + h;
+                m = m >= 10 ? m : '0' + m;
+                s = s >= 10 ? s : '0' + s;
+                res.data.chargedTime = h + ':' + m + ':' + s;
+
+                var tpl = doT.template($('#J_template').html())(res.data);
+                $('#J_finish').html(tpl);
             }
             else {
+                var $body = $('body');
+                document.title = '充电结束';
+                 
+                var $iframe = $('<iframe src="/favicon.ico" style="width:1px;height:1px; position: absolute; top: -100px;"></iframe>');
+                $iframe.on('load',function() {
+                  setTimeout(function() {
+                      $iframe.off('load').remove();
+                  }, 0);
+                }).appendTo($body);
                 com.showToast();
             }
         },
-        error: function (err) {
-            $('#loadingToast').fadeOut(100);
+        error: function (error) {
+
             com.showToast();
         }
     });
-    
-
-
-    function initEvent() {
-        com.getWxConfig();  
-        wx.ready(function () {
-            $('.detail-bottom-btn').on('click', function () {
-                wx.scanQRCode({
-                    needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    }
-                });
-            });
-
-            // 打开导航
-            $('#J_detail_info').on('click', '.J_Navigation', function (e) {
-                var location = $(this).data('location');
-                var addr = $(this).data('addr');
-                var lat = $(this).data('lat');
-                var lng = $(this).data('lng');
-                com.translateLocation(lat, lng).done(function (res) {
-                    com.openMap(location, addr, res.locations[0].lat, res.locations[0].lng);
-                });
-                
-            });
-        });
-    }
-
 });
 
 /***/ }),
-/* 9 */
+
+/***/ 26:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });
