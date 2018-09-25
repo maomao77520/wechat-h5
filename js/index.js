@@ -138,7 +138,7 @@ $(document).on('ready', function () {
                 lat: lat,
                 lng: lng,
                 accesstoken: 'asdasdwedf565665',
-                pagesize: 20,
+                pagesize: 50,
                 pageindex: pageIndex
             }),
             contentType: 'application/json',
@@ -158,7 +158,7 @@ $(document).on('ready', function () {
                     else {
                         $('#J_list-wrap').append(tpl);
                     }
-                    cb && cb();
+                    // cb && cb();
                 }
                 else {
                     com.showToast();
