@@ -395,7 +395,7 @@ $(document).on('ready', function () {
             success: function (res) {
                 $('#loadingToast').fadeOut(100);   
                 if (res.status == 0 && res.data.content) {
-                    if (pageIndex == 1 && res.data.content.length <= 0) {
+                    if (res.data.content.length <= 0) {
                         $('#J_list-wrap').html('<div class="list-empty">附近找不到充电站~</div>');
                         return;
                     }
