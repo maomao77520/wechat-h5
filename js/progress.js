@@ -1,6 +1,7 @@
 var css = require('../css/progress.scss');
 var com = require('./common.js');
 var countDown = require('./countDown.js');
+var initAn = require('./initAnboadv.js');
 
 $(document).ready(function () {
     var winHeight = $(window).height();
@@ -45,6 +46,9 @@ $(document).ready(function () {
     var interval = setInterval(function () {
         getData(url, params);  
     }, 1000);
+
+    // 广告
+    initAn.init(4);
 
     function getData(url, params) {
         $.ajax({

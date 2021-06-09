@@ -1,3 +1,73 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "../";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 0:
+/***/ (function(module, exports) {
+
 var Common = {
     host: (function() {
         return 'http://' + window.location.host + '/';
@@ -166,3 +236,93 @@ var Common = {
 };
 
 module.exports = Common;
+
+/***/ }),
+
+/***/ 1:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var com = __webpack_require__(0);
+module.exports = {
+    init: function(adPosId) {
+        var openId = com.parseQuery('openId');
+        __anbo_adv_sdk__.init({
+            appid: 'abN4i04b19Na3gg089', // 接入key（必填）
+            adPosId: adPosId || 3, // 广告位置 3:输入车牌页面广告、 4:收银台广告、5:支付后广告（必填）
+            parkId: "450100202106089424",
+            wxAppid: 'wxe9999a08364e91f5', // 微信公众号appid （必填）
+            wxOpenid: openId // 微信公众号openid （必填）
+        });
+    }
+};
+
+/***/ }),
+
+/***/ 33:
+/***/ (function(module, exports, __webpack_require__) {
+
+var css = __webpack_require__(34);
+var com = __webpack_require__(0);
+var initAn = __webpack_require__(1);
+
+$(document).ready(function() {
+    var deviceId = com.parseQuery('deviceId');
+    var slotIndex = com.parseQuery('slotIndex');
+    var outTradeNo = com.parseQuery('outTradeNo');
+    var openId = com.parseQuery('openId');
+
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    };
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify(params),
+        contentType: 'application/json',
+        success: function (res) {
+            if (res.status == 0) {
+                var tpl = doT.template($('#J_top_detail_template').html())(res.data);
+                $('#J_top_detail').html(tpl);
+
+                var detailTpl = doT.template($('#J_template').html())(res.data);
+                $('#J_detail').html(detailTpl);
+            }
+            else {
+                com.showToast();
+            }
+        },
+        fail: function (err) {
+            com.showToast();
+        }
+    });
+
+    // 广告
+    initAn.init(5);
+
+    $('.pay-finish-btn').on('click', function(e) {
+        window.location.href = com.host + "dist/page/progress.html?deviceId="
+            + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo
+            + '&openId=' + openId;
+    });
+
+    $('.order-btn').on('click', function(e) {
+        window.location.href = com.host + "dist/page/finish.html?deviceId="
+            + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+    });
+});
+
+/***/ }),
+
+/***/ 34:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ })
+
+/******/ });

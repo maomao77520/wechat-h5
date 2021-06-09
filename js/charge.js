@@ -1,5 +1,6 @@
 var css = require('../css/charge.scss');
 var com = require('./common.js');
+var initAn = require('./initAnboadv.js');
 
 var defaultPriceData = [
     {
@@ -105,6 +106,9 @@ $(document).ready(function () {
         $('#iosDialog2').fadeOut(200);
     });
 
+    // 广告
+    initAn.init(3);
+
     var lock = false;
     $('.charge-btn').on('click', function (e) {
         if (lock) {
@@ -159,8 +163,9 @@ $(document).ready(function () {
                    "paySign": paySign //微信签名 
                 }, function (res) {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
-                        window.location.href = com.host + "dist/page/progress.html?deviceId="
-                        + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no;
+                        window.location.href = com.host + "dist/page/paySuccess.html?deviceId="
+                        + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no
+                        + '&openId=' + openId;
                     }
                     else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
                         // alert("取消支付!");

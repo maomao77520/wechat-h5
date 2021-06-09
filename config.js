@@ -15,7 +15,8 @@ module.exports = {
         'scanqrcode',
         'applyCard',
         'chargeCard',
-        'chargeCardSucc'
+        'chargeCardSucc',
+        'paySuccess'
     ],
     prejs: [
         '../lib/jquery.min.js',
