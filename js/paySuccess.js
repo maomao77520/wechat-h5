@@ -38,7 +38,9 @@ $(document).ready(function() {
     });
 
     // 广告
-    initAn.init(5);
+    initAn.init({ios: 5, android: 11, c: 'xtycdzzhifucg'});
+    
+    
 
     $('.pay-finish-btn').on('click', function(e) {
         window.location.href = com.host + "dist/page/progress.html?deviceId="

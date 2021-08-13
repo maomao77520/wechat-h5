@@ -11,8 +11,8 @@
     <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
         <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
     <% } %>
-    <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script>
-
+    <script src="../lib/vconsole.min.js"></script>
+    <!-- <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script> -->
 </head>
 <body>
     <div class="charge-wrap">
@@ -38,6 +38,7 @@
         <a href="javascript:;" class="weui-btn weui-btn_primary charge-btn">开始充电</a>
 
         <anboadv type="10001"></anboadv>
+        <div id="J_ad_dom"></div>
 
         <div class="bottom-logo"></div>
 

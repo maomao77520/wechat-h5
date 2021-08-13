@@ -48,7 +48,7 @@ $(document).ready(function () {
     }, 1000);
 
     // 广告
-    initAn.init(4);
+    initAn.init({ios: 4, android: 12, c: 'xtycdzzzcd'});
 
     function getData(url, params) {
         $.ajax({

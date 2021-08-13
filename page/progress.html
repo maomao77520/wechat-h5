@@ -11,8 +11,8 @@
     <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
         <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
     <% } %>
-
-    <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script>
+    <script src="../lib/vconsole.min.js"></script>
+    <!-- <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script> -->
     
 </head>
 <body>
@@ -142,6 +142,7 @@
         <div class="anboadv-wrap">
             <anboadv type="10001"></anboadv>
         </div>
+        <div id="J_ad_dom"></div>
     </div>
 
     <div id="loadingToast" style="display:none;">

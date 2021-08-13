@@ -1122,68 +1122,68 @@ html {
         position: absolute;
         opacity: 0; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-1 {
-        -webkit-animation: dot-move-1 3s 0.68095s linear infinite;
-                animation: dot-move-1 3s 0.68095s linear infinite; }
+        -webkit-animation: dot-move-1 3s 0.62115s linear infinite;
+                animation: dot-move-1 3s 0.62115s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-2 {
-        -webkit-animation: dot-move-2 3s 0.38448s linear infinite;
-                animation: dot-move-2 3s 0.38448s linear infinite; }
+        -webkit-animation: dot-move-2 3s 0.48181s linear infinite;
+                animation: dot-move-2 3s 0.48181s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-3 {
-        -webkit-animation: dot-move-3 3s 0.45877s linear infinite;
-                animation: dot-move-3 3s 0.45877s linear infinite; }
+        -webkit-animation: dot-move-3 3s 0.11051s linear infinite;
+                animation: dot-move-3 3s 0.11051s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-4 {
-        -webkit-animation: dot-move-4 3s 0.08688s linear infinite;
-                animation: dot-move-4 3s 0.08688s linear infinite; }
+        -webkit-animation: dot-move-4 3s 0.19978s linear infinite;
+                animation: dot-move-4 3s 0.19978s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-5 {
-        -webkit-animation: dot-move-5 3s 0.73539s linear infinite;
-                animation: dot-move-5 3s 0.73539s linear infinite; }
+        -webkit-animation: dot-move-5 3s 0.06135s linear infinite;
+                animation: dot-move-5 3s 0.06135s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-6 {
-        -webkit-animation: dot-move-6 3s 0.63217s linear infinite;
-                animation: dot-move-6 3s 0.63217s linear infinite; }
+        -webkit-animation: dot-move-6 3s 0.03066s linear infinite;
+                animation: dot-move-6 3s 0.03066s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-7 {
-        -webkit-animation: dot-move-7 3s 0.30634s linear infinite;
-                animation: dot-move-7 3s 0.30634s linear infinite; }
+        -webkit-animation: dot-move-7 3s 0.33156s linear infinite;
+                animation: dot-move-7 3s 0.33156s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-8 {
-        -webkit-animation: dot-move-8 3s 0.42625s linear infinite;
-                animation: dot-move-8 3s 0.42625s linear infinite; }
+        -webkit-animation: dot-move-8 3s 0.15467s linear infinite;
+                animation: dot-move-8 3s 0.15467s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-9 {
-        -webkit-animation: dot-move-9 3s 0.10662s linear infinite;
-                animation: dot-move-9 3s 0.10662s linear infinite; }
+        -webkit-animation: dot-move-9 3s 0.64289s linear infinite;
+                animation: dot-move-9 3s 0.64289s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-10 {
-        -webkit-animation: dot-move-10 3s 0.75577s linear infinite;
-                animation: dot-move-10 3s 0.75577s linear infinite; }
+        -webkit-animation: dot-move-10 3s 0.67132s linear infinite;
+                animation: dot-move-10 3s 0.67132s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-11 {
-        -webkit-animation: dot-move-11 3s 0.59173s linear infinite;
-                animation: dot-move-11 3s 0.59173s linear infinite; }
+        -webkit-animation: dot-move-11 3s 0.79055s linear infinite;
+                animation: dot-move-11 3s 0.79055s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-12 {
-        -webkit-animation: dot-move-12 3s 0.93309s linear infinite;
-                animation: dot-move-12 3s 0.93309s linear infinite; }
+        -webkit-animation: dot-move-12 3s 0.75841s linear infinite;
+                animation: dot-move-12 3s 0.75841s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-13 {
-        -webkit-animation: dot-move-13 3s 0.53164s linear infinite;
-                animation: dot-move-13 3s 0.53164s linear infinite; }
+        -webkit-animation: dot-move-13 3s 0.89605s linear infinite;
+                animation: dot-move-13 3s 0.89605s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-14 {
-        -webkit-animation: dot-move-14 3s 0.18423s linear infinite;
-                animation: dot-move-14 3s 0.18423s linear infinite; }
+        -webkit-animation: dot-move-14 3s 0.13679s linear infinite;
+                animation: dot-move-14 3s 0.13679s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-15 {
-        -webkit-animation: dot-move-15 3s 0.42392s linear infinite;
-                animation: dot-move-15 3s 0.42392s linear infinite; }
+        -webkit-animation: dot-move-15 3s 0.65736s linear infinite;
+                animation: dot-move-15 3s 0.65736s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-16 {
-        -webkit-animation: dot-move-16 3s 0.82571s linear infinite;
-                animation: dot-move-16 3s 0.82571s linear infinite; }
+        -webkit-animation: dot-move-16 3s 0.57628s linear infinite;
+                animation: dot-move-16 3s 0.57628s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-17 {
-        -webkit-animation: dot-move-17 3s 0.05795s linear infinite;
-                animation: dot-move-17 3s 0.05795s linear infinite; }
+        -webkit-animation: dot-move-17 3s 0.67741s linear infinite;
+                animation: dot-move-17 3s 0.67741s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-18 {
-        -webkit-animation: dot-move-18 3s 0.51833s linear infinite;
-                animation: dot-move-18 3s 0.51833s linear infinite; }
+        -webkit-animation: dot-move-18 3s 0.42578s linear infinite;
+                animation: dot-move-18 3s 0.42578s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-19 {
-        -webkit-animation: dot-move-19 3s 0.85913s linear infinite;
-                animation: dot-move-19 3s 0.85913s linear infinite; }
+        -webkit-animation: dot-move-19 3s 0.81824s linear infinite;
+                animation: dot-move-19 3s 0.81824s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-20 {
-        -webkit-animation: dot-move-20 3s 0.32384s linear infinite;
-                animation: dot-move-20 3s 0.32384s linear infinite; }
+        -webkit-animation: dot-move-20 3s 0.96537s linear infinite;
+                animation: dot-move-20 3s 0.96537s linear infinite; }
       .progress-wrap .bottom-detail-wrap .dot-wrap .dot-21 {
-        -webkit-animation: dot-move-21 3s 0.39123s linear infinite;
-                animation: dot-move-21 3s 0.39123s linear infinite; }
+        -webkit-animation: dot-move-21 3s 0.01427s linear infinite;
+                animation: dot-move-21 3s 0.01427s linear infinite; }
     .progress-wrap .bottom-detail-wrap .time-wrap {
       width: 88%;
       margin: 0 auto;

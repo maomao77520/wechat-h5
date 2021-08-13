@@ -107,7 +107,7 @@ $(document).ready(function () {
     });
 
     // 广告
-    initAn.init(3);
+    initAn.init({ios: 3, android: 9, c: 'xtycdzfukuan'});
 
     var lock = false;
     $('.charge-btn').on('click', function (e) {

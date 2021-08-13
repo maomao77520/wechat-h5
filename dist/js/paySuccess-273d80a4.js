@@ -60,11 +60,12 @@
 /******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 33);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 var Common = {
@@ -237,111 +238,95 @@ var Common = {
 module.exports = Common;
 
 /***/ }),
-/* 1 */
+
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 var com = __webpack_require__(0);
 module.exports = {
-    init: function(adPosId) {
-        var openId = com.parseQuery('openId');
-        __anbo_adv_sdk__.init({
-            appid: 'abN4i04b19Na3gg089', // 接入key（必填）
-            adPosId: adPosId || 3, // 广告位置 3:输入车牌页面广告、 4:收银台广告、5:支付后广告（必填）
-            parkId: "450100202106089424",
-            wxAppid: 'wxe9999a08364e91f5', // 微信公众号appid （必填）
-            wxOpenid: openId // 微信公众号openid （必填）
-        });
+    init: function({ios, android, c}) {
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = isAndroid
+            ? `http://x5ad.dearclick.com/cdn/h5ad.core.js?c=${c}`
+            : 'https://sdk.anbokeji.net/adv/index.js';
+        document.getElementsByTagName('head').item(0).appendChild(s);
+        s.onload = function() {
+            if (isAndroid) {
+                if (window.location.search.indexOf('isAndroid') > -1) {
+                    var vConsole = new VConsole();
+                    console.log('Hello world'); 
+                    console.log(android, c)
+                }
+                new H5AD_CORE({
+                    'advDom': "J_ad_dom", // ad-test-2为页面中需要加载广告的dom元素的id
+                    'advType': android, //  9:大图广告  ~~10：图文广告~~  11：视频广告 12：左文右图  13：左图右文
+                    'autoShow': true, // 是否自动显示广告
+                    'advShow': function() { // 广告渲染后回调事件
+                        console.log(`广告${android}已展示`);
+                    },
+                    // 'advClick': function() { // 广告点击后回调事件
+                    //     console.log("广告2已点击");
+                    // },
+                    'advError': function() { // 广告加载失败回调事件
+                        console.log(`广告${android}加载失败`)
+                    },
+                    // 'handleAdEventName': "handleAdEventName2", //广告回调事件名称，可不传
+                    // 'handleAdErrorName': "handleadErrorName2" //广告加载出错事件名称，可不传
+                });
+            } else {
+                var openId = com.parseQuery('openId');
+                __anbo_adv_sdk__.init({
+                    appid: 'abN4i04b19Na3gg089', // 接入key（必填）
+                    adPosId: ios || 3, // 广告位置 3:输入车牌页面广告、 4:收银台广告、5:支付后广告（必填）
+                    parkId: "450100202106089424",
+                    wxAppid: 'wxe9999a08364e91f5', // 微信公众号appid （必填）
+                    wxOpenid: openId // 微信公众号openid （必填）
+                });
+            }
+        }
+        
+        
     }
 };
 
 /***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
+
+/***/ 33:
 /***/ (function(module, exports, __webpack_require__) {
 
-var css = __webpack_require__(12);
+var css = __webpack_require__(34);
 var com = __webpack_require__(0);
 var initAn = __webpack_require__(1);
 
-var defaultPriceData = [
-    {
-      "lineId": 1,
-      "packageId": 1,
-      "price": 1,
-      "chargeDuration": 4,
-      "isDefault": 1
-    }, {
-      "lineId": 2,
-      "packageId": 1,
-      "price": 2,
-      "chargeDuration": 8,
-      "isDefault": 0
-    }, {
-      "lineId": 3,
-      "packageId": 1,
-      "price": 3,
-      "chargeDuration": 12,
-      "isDefault": 0
-    }];
-var price = 1;
-var time = 4;
-
-$(document).ready(function () {
+$(document).ready(function() {
     var deviceId = com.parseQuery('deviceId');
     var slotIndex = com.parseQuery('slotIndex');
-    var openId = com.parseQuery('openid');
+    var outTradeNo = com.parseQuery('outTradeNo');
+    var openId = com.parseQuery('openId');
 
+    var url = '/charger/getChargingProgress';
+    var params = {
+        accesstoken: 'asdasdwedf565665',
+        deviceId: deviceId,
+        slotIndex: slotIndex,
+        outTradeNo: outTradeNo
+    };
     $.ajax({
-        url: '/charger/getPricePackage',
+        url: url,
         type: 'post',
+        data: JSON.stringify(params),
         contentType: 'application/json',
-        data: JSON.stringify({
-            accessToken: 'asdasdwedf565665',
-            deviceId: deviceId
-        }),
-        success: function (res) {
-            if (res.status == 0) {
-                var priceData = res.data;
-                if (res.data.length < 3) {
-                    priceData = defaultPriceData;
-                }
-                for (var i = 0; i < priceData.length; i++) {
-                    $('#J_price_wrap a').eq(i).attr('data-price', priceData[i].price);
-                    $('#J_price_wrap a').eq(i).attr('data-time', priceData[i].chargeDuration);
-                    $('#J_price_wrap a').eq(i).text(priceData[i].price + '元/' + priceData[i].chargeDuration + '小时');
-                    if (priceData[i].isDefault == 1) {
-                        $('#J_price_wrap a').eq(i).addClass('active-btn');
-                    }
-                }
-                price = $('.active-btn').data('price');
-                time = $('.active-btn').data('time');
-            }
-        }
-    });
-
-
-    $.ajax({
-        url: '/charger/getpaycharging',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            accessToken: 'asdasdwedf565665',
-            deviceId: deviceId,
-            slotIndex: slotIndex
-        }),
         success: function (res) {
             if (res.status == 0) {
                 var tpl = doT.template($('#J_top_detail_template').html())(res.data);
                 $('#J_top_detail').html(tpl);
+
+                var detailTpl = doT.template($('#J_template').html())(res.data);
+                $('#J_detail').html(detailTpl);
             }
             else {
                 com.showToast();
@@ -350,130 +335,32 @@ $(document).ready(function () {
         fail: function (err) {
             com.showToast();
         }
-    })
-    
-
-    var tpl = doT.template($('#J_top_detail_template').html())({
-        deviceId: deviceId,
-        slotIndex: slotIndex
-    });
-    $('#J_top_detail').html(tpl);
-
-    
-    $('#J_price_wrap').on('click', '.price-btn', function (e) {
-        $('.price-btn').removeClass('active-btn');
-        $(this).addClass('active-btn');
-        price = $(this).data('price');
-        time = $(this).data('time');
-    });
-
-
-    $('#J_top_detail').on('click', '#J_open_dialog', function (e) {
-        $('#iosDialog2').fadeIn(200);
-    });
-
-    $('#J_close_dialog').on('click', function (e) {
-        $('#iosDialog2').fadeOut(200);
     });
 
     // 广告
-    initAn.init(3);
-
-    var lock = false;
-    $('.charge-btn').on('click', function (e) {
-        if (lock) {
-            return;
-        }
-        lock = true;
-        $.ajax({
-            url: '/charger/createOrder',
-            type: 'post',
-            data: JSON.stringify({
-                accesstoken: 'asdasdwedf565665',
-                payment: price * 100,
-                payHours: time,
-                openId: openId,
-                deviceId: deviceId,
-                slotIndex: slotIndex
-            }),
-            contentType: 'application/json',
-            success: function (res) {
-                lock = false;
-                if (res.status == 0 && res.data) {
-                    var d = res.data;
-                    onBridgeReady(d.appid, d.timeStamp, d.nonce_str, d.prepay_id, d.sign, d.out_trade_no);
-                }
-                else if (res.status == 1 && res.data) { // errorCode=1002, 插座被占用
-                    window.location.href = './error.html?deviceId='
-                    + deviceId + '&slotIndex=' + slotIndex + '&errorCode=' + res.data.errorCode;
-                }
-            },
-            error: function (err) {
-                lock = false;
-            }
-        });
-    });
-
-    function onBridgeReady(appId, timeStamp, nonceStr, prepay_id, paySign, out_trade_no){
-        if (typeof WeixinJSBridge == "undefined"){
-            if( document.addEventListener ){
-               document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-            }else if (document.attachEvent){
-               document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
-               document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-            }
-        }else{
-            WeixinJSBridge.invoke(
-               'getBrandWCPayRequest', {
-                   "appId": appId,     //公众号名称，由商户传入     
-                   "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
-                   "nonceStr": nonceStr, //随机串     
-                   "package": "prepay_id=" + prepay_id,     
-                   "signType": "MD5",         //微信签名方式：     
-                   "paySign": paySign //微信签名 
-                }, function (res) {
-                    if (res.err_msg == "get_brand_wcpay_request:ok") {
-                        window.location.href = com.host + "dist/page/paySuccess.html?deviceId="
-                        + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + out_trade_no
-                        + '&openId=' + openId;
-                    }
-                    else if (res.err_msg == "get_brand_wcpay_request:cancel") {  
-                        // alert("取消支付!");
-                    }
-                    else {  
-                        // alert("支付失败!");
-                    }  // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
-                }
-            ); 
-        }
-    }
-
-    // function checkOrderStatus(out_trade_no, cb) {
-    //     $.ajax({
-    //         url: '/charger/getPayStatus',
-    //         type: 'post',
-    //         data: JSON.stringify({
-    //             out_trade_no: out_trade_no
-    //         }),
-    //         contentType: 'application/json',
-    //         success: function (res) {
-    //             if (res.status) {
-    //                 cb && cb(res);
-    //             }
-    //         }
-    //     });
-    // }
+    initAn.init({ios: 5, android: 11, c: 'xtycdzzhifucg'});
+    
     
 
+    $('.pay-finish-btn').on('click', function(e) {
+        window.location.href = com.host + "dist/page/progress.html?deviceId="
+            + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo
+            + '&openId=' + openId;
+    });
+
+    $('.order-btn').on('click', function(e) {
+        window.location.href = com.host + "dist/page/finish.html?deviceId="
+            + deviceId + '&slotIndex=' + slotIndex + '&outTradeNo=' + outTradeNo;
+    });
 });
 
-
-
 /***/ }),
-/* 12 */
+
+/***/ 34:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ })
-/******/ ]);
+
+/******/ });

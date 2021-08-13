@@ -11,9 +11,9 @@
     <% for (var prejs in htmlWebpackPlugin.options.prejs) { %>
         <script type="text/javascript" src="<%=htmlWebpackPlugin.options.prejs[prejs] %>"></script>
     <% } %>
+    <script src="../lib/vconsole.min.js"></script>
 
-
-    <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script>
+    <!-- <script type="text/javascript" src="https://sdk.anbokeji.net/adv/index.js"></script> -->
 
 </head>
 <body>
@@ -25,6 +25,8 @@
         <a href="javascript:;" class="weui-btn order-btn">查看订单信息</a>
         
         <anboadv type="10001"></anboadv>
+        <div id="J_ad_dom"></div>
+        
         <div class="bottom-logo"></div>
     </div>
 
